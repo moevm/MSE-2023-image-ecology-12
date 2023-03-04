@@ -18,6 +18,7 @@
               ref="fileInput"
               class="form-control"
               type="file"
+              :accept="extensions"
             />
           </div>
         </div>
@@ -42,6 +43,7 @@ const modalDiv = ref<HTMLDivElement>();
 let modalObject: Modal | null = null;
 
 const fileInput = ref<HTMLInputElement>();
+const extensions = ".tiff .jpg .png";
 
 onMounted(() => {
   if (modalDiv.value) modalObject = new Modal(modalDiv.value);
