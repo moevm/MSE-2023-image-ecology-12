@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" :id="id" tabindex="-1" data-bs-backdrop="static">
+  <div :id="id" class="modal fade" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -9,10 +9,10 @@
         <div class="modal-body">
           <div class="mb-3">
             <input
-              class="form-control"
-              type="file"
               id="formFile"
               ref="fileInput"
+              class="form-control"
+              type="file"
             />
           </div>
         </div>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, defineExpose } from "vue";
+import { onMounted, ref } from "vue";
 import { Modal } from "bootstrap";
 
 const id = "addImageModal";

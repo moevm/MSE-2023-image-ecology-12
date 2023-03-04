@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps } from "vue";
+import { computed } from "vue";
 import { Report } from "@/types/reports";
 import { routeNames } from "@/router";
 import ObjectGroupsList from "@/components/common/ObjectGroupsList.vue";

@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { QueueItemObject } from "@/types/queue";
 
 const props = defineProps<{ item: QueueItemObject }>();

@@ -17,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { MapObjectsGroup } from "@/types/reports";
 
 const props = defineProps<{ groups: MapObjectsGroup[] }>();
