@@ -1,5 +1,10 @@
 <template>
-  <div :id="id" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+  <div
+    ref="modalDiv"
+    class="modal fade"
+    tabindex="-1"
+    data-bs-backdrop="static"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -33,13 +38,13 @@
 import { onMounted, ref } from "vue";
 import { Modal } from "bootstrap";
 
-const id = "addImageModal";
+const modalDiv = ref<HTMLDivElement>();
 let modalObject: Modal | null = null;
 
 const fileInput = ref<HTMLInputElement>();
 
 onMounted(() => {
-  modalObject = new Modal(`#${id}`);
+  if (modalDiv.value) modalObject = new Modal(modalDiv.value);
 });
 
 function open() {
