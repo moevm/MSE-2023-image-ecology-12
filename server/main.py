@@ -32,6 +32,6 @@ def home_page():
     return f'Worker response: {workerRes.text} | \n {str(list(entries))}'
 
 
-port = os.environ['FLASK_PORT'] if ('FLASK_PORT' in os.environ) else 5005
+port = os.environ['FLASK_PORT'] if ('FLASK_PORT' in os.environ) else 5000
 # Запуск приложения
 app.run(host='0.0.0.0', port=port)
