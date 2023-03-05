@@ -47,7 +47,7 @@ services:
       - "80:80"
     volumes:
       - ./nginx/templates/:/etc/nginx/templates
-      - ./nginx/default.conf:/etc/nginx/default.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     environment:
       NGINX_ENVSUBST_TEMPLATE_SUFFIX: ".conf"
       CLIENT: "client:80"
