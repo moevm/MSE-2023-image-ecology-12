@@ -10,7 +10,7 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse fs-5 fw-semibold" id="navbar">
+      <div id="navbar" class="collapse navbar-collapse fs-5 fw-semibold">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li v-for="route of routes" :key="route" class="nav-item">
             <router-link
