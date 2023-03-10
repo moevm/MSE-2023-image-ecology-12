@@ -10,7 +10,7 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div id="navbar" class="collapse navbar-collapse fs-5 fw-semibold">
+      <div id="navbar" class="collapse navbar-collapse fs-5">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li v-for="route of routes" :key="route" class="nav-item">
             <router-link
@@ -33,10 +33,19 @@
 <script setup lang="ts">
 import { routeNames } from "@/router";
 
-const routes = [routeNames.Reports, routeNames.Queue];
+const routes = [
+  routeNames.MapsList,
+  routeNames.Queue,
+  routeNames.ReportsList,
+  routeNames.AnomaliesList,
+  routeNames.Upload,
+];
 const routesTranslation = {
-  [routeNames.Reports]: "Отчёты",
+  [routeNames.MapsList]: "Карты",
   [routeNames.Queue]: "Очередь",
+  [routeNames.ReportsList]: "Отчёты",
+  [routeNames.AnomaliesList]: "Аномалии",
+  [routeNames.Upload]: "Загрузить",
 };
 </script>
 
