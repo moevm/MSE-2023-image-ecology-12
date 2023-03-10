@@ -1,6 +1,6 @@
 <template>
   <div class="container-lg mt-3">
-    <h3>Отчёты обработанных карт</h3>
+    <h3>База аномалий</h3>
     <AgGridVue
       class="ag-theme-alpine"
       :column-defs="columnDefs"
