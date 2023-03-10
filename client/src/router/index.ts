@@ -5,6 +5,7 @@ export const routeNames = {
   Queue: "Queue",
   ReportsList: "Reports",
   AnomaliesList: "Anomalies",
+  Upload: "Upload",
   Map: "Map",
 };
 
@@ -13,6 +14,7 @@ export const routePaths = {
   [routeNames.Queue]: "/queue",
   [routeNames.ReportsList]: "/reports",
   [routeNames.AnomaliesList]: "/map/:id",
+  [routeNames.Upload]: "/upload",
   [routeNames.Map]: "/map/:id",
 };
 
@@ -34,6 +36,11 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     name: routeNames.AnomaliesList,
+    path: routePaths[routeNames.AnomaliesList],
+    component: () => import("@/views/AnomaliesListView.vue"),
+  },
+  {
+    name: routeNames.Upload,
     path: routePaths[routeNames.AnomaliesList],
     component: () => import("@/views/AnomaliesListView.vue"),
   },
