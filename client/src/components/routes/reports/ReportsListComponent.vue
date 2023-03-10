@@ -16,10 +16,16 @@ import { ColDef, GridOptions } from "ag-grid-community";
 import { getDefaultGridOptions } from "@/ag-grid/factory";
 import { getReportsInfo } from "@/components/routes/reports/api";
 import { ReportInfo } from "@/types/reports";
+import { dateFormatter } from "@/ag-grid/formatters";
 
 const columnDefs: ColDef<ReportInfo>[] = [
   { headerName: "Id", field: "id", flex: 2, rowDrag: true },
-  { headerName: "Дата загрузки", field: "date", flex: 5 },
+  {
+    headerName: "Дата загрузки",
+    field: "date",
+    flex: 5,
+    valueFormatter: dateFormatter,
+  },
 ];
 
 const options: GridOptions<ReportInfo> = {

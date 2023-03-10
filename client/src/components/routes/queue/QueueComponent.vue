@@ -16,10 +16,16 @@ import { ColDef, GridOptions } from "ag-grid-community";
 import { getDefaultGridOptions } from "@/ag-grid/factory";
 import { getQueueInfo } from "@/components/routes/queue/api";
 import { QueueItemInfo } from "@/types/queue";
+import { dateFormatter } from "@/ag-grid/formatters";
 
 const columnDefs: ColDef<QueueItemInfo>[] = [
   { headerName: "Id", field: "id", flex: 2, rowDrag: true },
-  { headerName: "Дата загрузки", field: "uploadDate", flex: 5 },
+  {
+    headerName: "Дата загрузки",
+    field: "uploadDate",
+    flex: 5,
+    valueFormatter: dateFormatter,
+  },
   { headerName: "Прогресс", field: "progress", flex: 6 },
   { headerName: "Статус", field: "status", flex: 7 },
 ];

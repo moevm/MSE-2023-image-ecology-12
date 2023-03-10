@@ -16,10 +16,16 @@ import { ColDef, GridOptions } from "ag-grid-community";
 import { getDefaultGridOptions } from "@/ag-grid/factory";
 import { getMapsInfo } from "@/components/routes/maps/api";
 import { MapInfo } from "@/types/maps";
+import { dateFormatter } from "@/ag-grid/formatters";
 
 const columnDefs: ColDef<MapInfo>[] = [
   { headerName: "Id", field: "id", flex: 2 },
-  { headerName: "Дата загрузки", field: "date", flex: 5 },
+  {
+    headerName: "Дата загрузки",
+    field: "date",
+    flex: 5,
+    valueFormatter: dateFormatter,
+  },
   { headerName: "Размер", field: "size", flex: 6 },
   { headerName: "Обработано", field: "ready", flex: 7 },
 ];
