@@ -42,7 +42,7 @@ export const routes: RouteRecordRaw[] = [
   {
     name: routeNames.Upload,
     path: routePaths[routeNames.Upload],
-    component: () => import("@/views/AnomaliesListView.vue"),
+    component: () => import("@/views/UploadView.vue"),
   },
   {
     name: routeNames.Map,
