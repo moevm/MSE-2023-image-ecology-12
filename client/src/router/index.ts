@@ -1,27 +1,41 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 export const routeNames = {
-  Reports: "Reports",
+  MapsList: "Maps",
   Queue: "Queue",
+  ReportsList: "Reports",
+  AnomaliesList: "Anomalies",
   Map: "Map",
 };
 
 export const routePaths = {
-  [routeNames.Reports]: "/",
+  [routeNames.MapsList]: "/",
   [routeNames.Queue]: "/queue",
+  [routeNames.ReportsList]: "/reports",
+  [routeNames.AnomaliesList]: "/map/:id",
   [routeNames.Map]: "/map/:id",
 };
 
 export const routes: RouteRecordRaw[] = [
   {
-    name: routeNames.Reports,
-    path: routePaths[routeNames.Reports],
-    component: () => import("@/views/ReportsView.vue"),
+    name: routeNames.MapsList,
+    path: routePaths[routeNames.MapsList],
+    component: () => import("@/views/MapsListView.vue"),
   },
   {
     name: routeNames.Queue,
     path: routePaths[routeNames.Queue],
     component: () => import("@/views/QueueView.vue"),
+  },
+  {
+    name: routeNames.ReportsList,
+    path: routePaths[routeNames.ReportsList],
+    component: () => import("@/views/ReportsListView.vue"),
+  },
+  {
+    name: routeNames.AnomaliesList,
+    path: routePaths[routeNames.AnomaliesList],
+    component: () => import("@/views/AnomaliesListView.vue"),
   },
   {
     name: routeNames.Map,
