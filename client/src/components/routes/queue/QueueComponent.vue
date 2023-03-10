@@ -14,17 +14,17 @@
 import { AgGridVue } from "ag-grid-vue3";
 import { ColDef, GridOptions } from "ag-grid-community";
 import { getDefaultGridOptions } from "@/ag-grid/factory";
-import { MapInfo } from "@/types/maps";
 import { getQueueInfo } from "@/components/routes/queue/api";
+import { QueueItemInfo } from "@/types/queue";
 
-const columnDefs: ColDef<MapInfo>[] = [
+const columnDefs: ColDef<QueueItemInfo>[] = [
   { headerName: "Id", field: "id", flex: 2, rowDrag: true },
   { headerName: "Дата загрузки", field: "uploadDate", flex: 5 },
   { headerName: "Прогресс", field: "progress", flex: 6 },
   { headerName: "Статус", field: "status", flex: 7 },
 ];
 
-const options: GridOptions<MapInfo> = {
+const options: GridOptions<QueueItemInfo> = {
   ...getDefaultGridOptions(),
   domLayout: "autoHeight",
   rowDragManaged: true,
