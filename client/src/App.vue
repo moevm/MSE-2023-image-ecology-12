@@ -1,7 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid px-3">
-      <a class="navbar-brand" href="#"><i class="bi bi-map fs-2" /></a>
+      <router-link :to="{ name: routeNames.MapsList }" class="navbar-brand">
+        <i class="bi bi-map fs-2" />
+      </router-link>
       <button
         class="navbar-toggler"
         type="button"
