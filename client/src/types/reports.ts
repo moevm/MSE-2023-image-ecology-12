@@ -1,3 +1,8 @@
+export interface ReportInfo {
+  id: number;
+  date: string;
+}
+
 export interface MapObject {
   name: string;
   coordinates: [number, number];

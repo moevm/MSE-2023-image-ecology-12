@@ -1,5 +1,12 @@
-export interface QueueItemObject {
+export enum QueueStatus {
+  processing = "processing",
+  stopped = "paused",
+  enqueued = "enqueued",
+}
+
+export interface QueueItemInfo {
   id: number;
   upload: string;
-  processingTime: number;
+  progress: number;
+  status: QueueStatus;
 }
