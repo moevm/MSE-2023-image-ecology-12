@@ -1,32 +1,33 @@
 <template>
-  <section class="container-md mt-3">
-    <button class="btn btn-primary" @click="addImageModal?.open()">
-      Загрузить карту
-    </button>
-    <div :id="accordionId" class="accordion mt-3">
-      <ReportListItem
-        v-for="report of reports"
-        :key="report.id"
-        :report="report"
-        :parent-id="accordionId"
-        class="accordion-item"
-      />
-    </div>
-  </section>
-  <AddImageModal ref="addImageModal" />
+  <div class="container-lg mt-3">
+    <h3>Отчёты обработанных карт</h3>
+    <AgGridVue
+      class="ag-theme-alpine"
+      :column-defs="columnDefs"
+      :row-data="data"
+      :grid-options="options"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
-import ReportListItem from "@/components/routes/reports/components/ReportListItem.vue";
-import { Report } from "@/types/reports";
-import AddImageModal from "@/components/routes/reports/components/AddImageModal.vue";
-import { ref } from "vue";
-import { getReportsList } from "@/components/routes/reports/api";
+import { AgGridVue } from "ag-grid-vue3";
+import { ColDef, GridOptions } from "ag-grid-community";
+import { getDefaultGridOptions } from "@/ag-grid/factory";
+import { getReportsInfo } from "@/components/routes/reports/api";
+import { ReportInfo } from "@/types/reports";
 
-const addImageModal = ref<InstanceType<typeof AddImageModal>>();
-const accordionId = "reportsAccordion";
+const columnDefs: ColDef<ReportInfo>[] = [
+  { headerName: "Id", field: "id", flex: 2, rowDrag: true },
+  { headerName: "Дата загрузки", field: "date", flex: 5 },
+];
 
-const reports: Report[] = await getReportsList();
+const options: GridOptions<ReportInfo> = {
+  ...getDefaultGridOptions(),
+  domLayout: "autoHeight",
+};
+
+const data = await getReportsInfo();
 </script>
 
 <style scoped lang="scss"></style>
