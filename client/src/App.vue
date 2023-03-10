@@ -12,7 +12,7 @@
       </button>
       <div id="navbar" class="collapse navbar-collapse fs-5">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li v-for="route of routes" :key="route" class="nav-item">
+          <li v-for="route of routes" :key="route" class="nav-item ps-4">
             <router-link
               :to="{ name: route }"
               class="nav-link"
