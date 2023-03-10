@@ -13,7 +13,7 @@ export const routePaths = {
   [routeNames.MapsList]: "/",
   [routeNames.Queue]: "/queue",
   [routeNames.ReportsList]: "/reports",
-  [routeNames.AnomaliesList]: "/map/:id",
+  [routeNames.AnomaliesList]: "/anomalies",
   [routeNames.Upload]: "/upload",
   [routeNames.Map]: "/map/:id",
 };
@@ -41,7 +41,7 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     name: routeNames.Upload,
-    path: routePaths[routeNames.AnomaliesList],
+    path: routePaths[routeNames.Upload],
     component: () => import("@/views/AnomaliesListView.vue"),
   },
   {
