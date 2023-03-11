@@ -1,5 +1,7 @@
 import { ColDef, GridOptions } from "ag-grid-community";
 import { agGridLocalization } from "@/ag-grid/localization";
+import { Action } from "@/types/ag-grid/actions";
+import ActionsRenderer from "@/components/renderers/ActionsRenderer.vue";
 
 export function getDefaultColDef(): ColDef {
   return {
@@ -17,5 +19,20 @@ export function getDefaultGridOptions(): GridOptions {
     suppressMenuHide: true,
     enableCellTextSelection: true,
     suppressDragLeaveHidesColumns: true,
+  };
+}
+
+export function getActionsColDef<T>(actions: Action<T>[]): ColDef<T> {
+  return {
+    headerName: "Действия",
+    cellRenderer: ActionsRenderer,
+    cellRendererParams: {
+      actions,
+    },
+    sortable: false,
+    filter: false,
+    resizable: false,
+    pinned: "right",
+    suppressMovable: true,
   };
 }
