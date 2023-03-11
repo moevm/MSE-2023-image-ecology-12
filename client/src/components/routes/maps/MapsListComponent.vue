@@ -23,15 +23,16 @@ import { routeNames } from "@/router";
 const router = useRouter();
 
 const columnDefs: ColDef<MapInfo>[] = [
-  { headerName: "Id", field: "id", flex: 2 },
+  { headerName: "Id", field: "id", flex: 2, minWidth: 80 },
   {
     headerName: "Дата загрузки",
     field: "date",
     flex: 5,
+    minWidth: 180,
     valueFormatter: dateFormatter,
   },
-  { headerName: "Размер", field: "size", flex: 6 },
-  { headerName: "Обработано", field: "ready", flex: 7 },
+  { headerName: "Размер", field: "size", flex: 5, minWidth: 180 },
+  { headerName: "Обработано", field: "ready", flex: 3, minWidth: 200 },
   {
     ...getActionsColDef([
       {
