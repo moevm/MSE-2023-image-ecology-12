@@ -7,7 +7,7 @@
       v-bs-tooltip.top="action.tooltip"
       class="btn col-auto rounded-circle"
       :class="action.button"
-      @click="action.onClicked(action, params.data)"
+      @click="action.onClicked?.(action, params.data)"
     >
       <i :class="action.icon"></i>
     </button>
