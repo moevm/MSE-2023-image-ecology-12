@@ -19,7 +19,7 @@ import { getAnomaliesInfo } from "@/components/routes/anomalies/api";
 import { dateFormatter } from "@/ag-grid/formatters";
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
-  { headerName: "Id", field: "id", flex: 2, rowDrag: true },
+  { headerName: "Id", field: "id", flex: 2 },
   { headerName: "Название", field: "name", flex: 4 },
   { headerName: "Площадь", field: "area", flex: 4 },
   {

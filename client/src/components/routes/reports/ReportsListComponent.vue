@@ -19,7 +19,7 @@ import { ReportInfo } from "@/types/reports";
 import { dateFormatter } from "@/ag-grid/formatters";
 
 const columnDefs: ColDef<ReportInfo>[] = [
-  { headerName: "Id", field: "id", flex: 2, rowDrag: true },
+  { headerName: "Id", field: "id", flex: 2 },
   {
     headerName: "Дата загрузки",
     field: "date",
