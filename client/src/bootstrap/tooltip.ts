@@ -1,7 +1,10 @@
 import { Directive } from "vue";
 import { Tooltip } from "bootstrap";
 
-export const vBsTooltip: Directive<HTMLElement, string> = {
+export const vBsTooltip: Directive<
+  HTMLElement & { tooltip?: Tooltip },
+  string
+> = {
   mounted: (el, binding) => {
     el.setAttribute("data-bs-toggle", "tooltip");
     el.setAttribute("title", binding.value);
@@ -10,8 +13,10 @@ export const vBsTooltip: Directive<HTMLElement, string> = {
       if (binding.modifiers[modifier])
         el.setAttribute("data-bs-placement", modifier);
     });
-    new Tooltip(el, {
-      boundary: document.body,
-    });
+    el.tooltip = new Tooltip(el);
+  },
+
+  beforeUnmount: (el) => {
+    el.tooltip?.dispose();
   },
 };
