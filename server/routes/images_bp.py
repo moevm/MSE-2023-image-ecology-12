@@ -19,16 +19,6 @@ def index():
     """
 
 
-# search_images замена???
-@images_bp.route('/', methods=['GET'])
-def get_images():
-    """
-        Returns a list of all images that have been uploaded to the system.
-    """
-    images = [x for x in db.images.find()]
-    return jsonify(images)
-
-
 @images_bp.route('/upload_image', methods=['POST'])
 def add_image():
     """

@@ -1,10 +1,13 @@
-import configparser
 import os
 import pymongo
 from flask import g
 from gridfs import GridFS
-config = configparser.ConfigParser()
-config.read(os.path.abspath(os.path.join(".ini")))
+
+
+def init_db():
+    print("Init db")
+    db = get_db()
+
 
 def get_db():
     """
@@ -13,10 +16,19 @@ def get_db():
     db = getattr(g, "_database", None)
 
     if db is None:
-        client = pymongo.MongoClient(config['PROD']['DB_URI'])
+        DB_URI = os.environ['DB_URI'] if ('DB_URI' in os.environ) else "mongodb://localhost:27017/db"
+        client = pymongo.MongoClient(DB_URI)  # config['PROD']['DB_URI']
+        # Если есть база данных ecologyDB
         db = g._database = client.get_database('ecologyDB')
 
     return db
+
+
+def close_db(error=None):
+    db = g.pop('db', None)
+
+    if db is not None:
+        db.close()
 
 
 def get_grid_fs():
