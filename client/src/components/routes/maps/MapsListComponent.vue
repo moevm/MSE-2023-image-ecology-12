@@ -6,6 +6,7 @@
       :column-defs="columnDefs"
       :row-data="data"
       :grid-options="options"
+      @grid-ready="fitActionsColumn"
     />
   </div>
 </template>
@@ -13,7 +14,11 @@
 <script setup lang="ts">
 import { AgGridVue } from "ag-grid-vue3";
 import { ColDef, GridOptions } from "ag-grid-community";
-import { getActionsColDef, getDefaultGridOptions } from "@/ag-grid/factory";
+import {
+  fitActionsColumn,
+  getActionsColDef,
+  getDefaultGridOptions,
+} from "@/ag-grid/factory";
 import { getMapsInfo } from "@/components/routes/maps/api";
 import { MapInfo } from "@/types/maps";
 import { dateFormatter } from "@/ag-grid/formatters";
