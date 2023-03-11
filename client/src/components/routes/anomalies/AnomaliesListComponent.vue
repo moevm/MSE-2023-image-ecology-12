@@ -6,6 +6,7 @@
       :column-defs="columnDefs"
       :row-data="data"
       :grid-options="options"
+      @grid-ready="fitActionsColumn"
     />
   </div>
 </template>
@@ -13,7 +14,11 @@
 <script setup lang="ts">
 import { AgGridVue } from "ag-grid-vue3";
 import { ColDef, GridOptions } from "ag-grid-community";
-import { getDefaultGridOptions } from "@/ag-grid/factory";
+import {
+  fitActionsColumn,
+  getActionsColDef,
+  getDefaultGridOptions,
+} from "@/ag-grid/factory";
 import { AnomalyInfo } from "@/types/anomalies";
 import { getAnomaliesInfo } from "@/components/routes/anomalies/api";
 import { dateFormatter } from "@/ag-grid/formatters";
@@ -33,6 +38,15 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
     field: "detectDate",
     flex: 5,
     valueFormatter: dateFormatter,
+  },
+  {
+    ...getActionsColDef([
+      {
+        tooltip: "Открыть аномалию",
+        icon: "bi bi-radioactive",
+        button: "btn-danger",
+      },
+    ]),
   },
 ];
 
