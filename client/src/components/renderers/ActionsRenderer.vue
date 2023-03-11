@@ -1,5 +1,5 @@
 <template>
-  <div class="row m-auto gap-1">
+  <div class="row ps-3 gap-1">
     <button
       v-for="action of params.actions"
       v-show="show(action)"
