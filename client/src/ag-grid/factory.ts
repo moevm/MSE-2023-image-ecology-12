@@ -39,5 +39,5 @@ export function getActionsColDef<T>(actions: Action<T>[]): ColDef<T> {
 }
 
 export function fitActionsColumn({ columnApi }: { columnApi: ColumnApi }) {
-  columnApi.autoSizeColumn("actions");
+  columnApi.autoSizeColumn("actions", true);
 }
