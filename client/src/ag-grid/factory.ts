@@ -1,4 +1,4 @@
-import { ColDef, GridOptions } from "ag-grid-community";
+import { ColDef, ColumnApi, GridOptions } from "ag-grid-community";
 import { agGridLocalization } from "@/ag-grid/localization";
 import { Action } from "@/types/ag-grid/actions";
 import ActionsRenderer from "@/components/renderers/ActionsRenderer.vue";
@@ -24,6 +24,7 @@ export function getDefaultGridOptions(): GridOptions {
 
 export function getActionsColDef<T>(actions: Action<T>[]): ColDef<T> {
   return {
+    colId: "actions",
     headerName: "Действия",
     cellRenderer: ActionsRenderer,
     cellRendererParams: {
@@ -35,4 +36,8 @@ export function getActionsColDef<T>(actions: Action<T>[]): ColDef<T> {
     pinned: "right",
     suppressMovable: true,
   };
+}
+
+export function fitActionsColumn({ columnApi }: { columnApi: ColumnApi }) {
+  columnApi.autoSizeColumn("actions");
 }
