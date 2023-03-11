@@ -53,6 +53,8 @@ const columnDefs: ColDef<MapInfo>[] = [
           onClicked: (action, data) =>
             router.push({
               /* name: reports */
+              name: routeNames.Map,
+              params: { id: data.id },
             }),
           hide: (data) => !data.ready,
         },
