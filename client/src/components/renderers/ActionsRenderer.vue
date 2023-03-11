@@ -28,7 +28,7 @@ function show(action: Action) {
     case "boolean":
       return !action.hide;
     case "function":
-      return !action.hide(props.params.data, props.params.value);
+      return !action.hide(props.params.data);
   }
   return true;
 }
