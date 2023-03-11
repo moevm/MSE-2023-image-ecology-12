@@ -5,7 +5,8 @@
       v-show="show(action)"
       :key="action.icon + action.tooltip"
       v-bs-tooltip.top="action.tooltip"
-      class="btn btn-primary col-auto rounded-circle"
+      class="btn col-auto rounded-circle"
+      :class="action.button"
       @click="action.onClicked(action, params.data)"
     >
       <i :class="action.icon"></i>
