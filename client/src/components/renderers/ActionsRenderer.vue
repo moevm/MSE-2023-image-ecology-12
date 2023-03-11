@@ -4,7 +4,7 @@
       v-for="action of params.actions"
       v-show="show(action)"
       :key="action.icon + action.tooltip"
-      v-bs-tooltip.top.html="action.tooltip"
+      v-bs-tooltip.top="action.tooltip"
       class="btn btn-primary col-auto rounded-circle"
       @click="action.onClicked(action, params.data)"
     >
