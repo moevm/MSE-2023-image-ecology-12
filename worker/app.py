@@ -4,26 +4,45 @@ from flask_cors import CORS
 from sdd_segmentation.sdd import sdd_threshold_selection
 from flask import Flask, jsonify, request, send_file
 from werkzeug.local import LocalProxy
+from bson.objectid import ObjectId
 import numpy as np
 import os
 
-from worker.db import get_grid_fs
+from db import get_db, get_grid_fs
+from image_processing.geotiff_slicer.slice2tiles import sliceToTiles
 
-
+db = LocalProxy(get_db)
 fs = LocalProxy(get_grid_fs)
 # Init the app
 app = Flask(__name__)
 
 
+@app.route("/slice/<string:id>", methods=["PUT"])
+def slice(id):
+    """
+    Нарезать geotiff в базе данных с индексом id на кусочки и положить их в gridfs с именем 
+    <image_name>_<z>_<x>_<y>.png
+    """
+    # Получаем запись из бд с информацией по изображению.
+    image_info = db.images.find_one({"fs_id": ObjectId(id)})
+    # Получаем саму картинку из GridFS.
+    image_bytes = fs.get(ObjectId(id)).read()
+
+    sliceToTiles(image_info["filename"], image_bytes, './tested')
+
+    return "Done"
+
+
+
 @app.route("/thresholding_otsu", methods=["GET"])  # POST !!!
 def thresholding_otsu():
-    """Метод Оцу включает в себя преобразование изображения в двоичный формат,
-    где пиксели классифицируются как («полезные» и «фоновые»),
-     рассчитывая такой порог, чтобы внутриклассовая дисперсия была минимальной.
-     """
+    """
+    Метод Оцу включает в себя преобразование изображения в двоичный формат,
+    где пиксели классифицируются как («полезные» и «фоновые»), 
+    рассчитывая такой порог, чтобы внутриклассовая дисперсия была минимальной.
+    """
     # data = request.get_json()
     image_id = "640c7feb44e959620e519270"  # data['image_id']
-    # worker не должен прямой доступ к базе данных ?!
     image_file = fs.get(ObjectId(image_id))
 
     # Load the GeoTiff image
