@@ -7,6 +7,8 @@ export const routeNames = {
   AnomaliesList: "Anomalies",
   Upload: "Upload",
   Map: "Map",
+  Report: "Report",
+  Anomaly: "Anomaly",
 };
 
 export const routePaths = {
@@ -16,6 +18,8 @@ export const routePaths = {
   [routeNames.AnomaliesList]: "/anomalies",
   [routeNames.Upload]: "/upload",
   [routeNames.Map]: "/map/:id",
+  [routeNames.Report]: "/report/:id",
+  [routeNames.Anomaly]: "/anomaly/:id",
 };
 
 export const routes: RouteRecordRaw[] = [
@@ -48,6 +52,16 @@ export const routes: RouteRecordRaw[] = [
     name: routeNames.Map,
     path: routePaths[routeNames.Map],
     component: () => import("@/views/MapView.vue"),
+  },
+  {
+    name: routeNames.Report,
+    path: routePaths[routeNames.Report],
+    component: () => import("@/views/ReportView.vue"),
+  },
+  {
+    name: routeNames.Anomaly,
+    path: routePaths[routeNames.Anomaly],
+    component: () => import("@/views/AnomalyView.vue"),
   },
 ];
 
