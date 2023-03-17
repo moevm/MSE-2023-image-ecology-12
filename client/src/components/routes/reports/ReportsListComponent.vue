@@ -55,7 +55,7 @@ const columnDefs: ColDef<ReportInfo>[] = [
         icon: "bi bi-file-text",
         button: "btn-primary",
         onClicked: (action, data) =>
-          router.push({ name: routeNames.Map, params: { id: data.id } }),
+          router.push({ name: routeNames.Report, params: { id: data.id } }),
       },
     ]),
   },

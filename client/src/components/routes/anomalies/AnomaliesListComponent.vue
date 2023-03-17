@@ -22,6 +22,10 @@ import {
 import { AnomalyInfo } from "@/types/anomalies";
 import { getAnomaliesInfo } from "@/components/routes/anomalies/api";
 import { dateFormatter } from "@/ag-grid/formatters";
+import { routeNames } from "@/router";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
   { headerName: "Id", field: "id", flex: 2 },
@@ -45,6 +49,8 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
         tooltip: "Открыть аномалию",
         icon: "bi bi-radioactive",
         button: "btn-danger",
+        onClicked: (action, data) =>
+          router.push({ name: routeNames.Anomaly, params: { id: data.id } }),
       },
     ]),
   },

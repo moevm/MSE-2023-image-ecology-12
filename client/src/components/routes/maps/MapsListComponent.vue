@@ -53,6 +53,8 @@ const columnDefs: ColDef<MapInfo>[] = [
         icon: "bi bi-file-text",
         button: "btn-primary",
         hide: (data) => !data.ready,
+        onClicked: (action, data) =>
+          router.push({ name: routeNames.Report, params: { id: data.id } }),
       },
     ]),
   },
