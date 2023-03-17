@@ -29,6 +29,7 @@ const router = useRouter();
 
 const columnDefs: ColDef<QueueItemInfo>[] = [
   { headerName: "Id", field: "id", flex: 2, rowDrag: true },
+  { headerName: "Название", field: "name", flex: 3 },
   {
     headerName: "Дата загрузки",
     field: "uploadDate",

@@ -6,6 +6,7 @@ export enum QueueStatus {
 
 export interface QueueItemInfo {
   id: number;
+  name: string;
   uploadDate: string;
   progress: number;
   status: QueueStatus;
