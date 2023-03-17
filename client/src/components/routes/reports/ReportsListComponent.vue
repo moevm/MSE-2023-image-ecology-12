@@ -36,6 +36,11 @@ const columnDefs: ColDef<ReportInfo>[] = [
     valueFormatter: dateFormatter,
   },
   {
+    headerName: "Количество аномалий",
+    field: "anomalies",
+    flex: 2,
+  },
+  {
     ...getActionsColDef([
       {
         tooltip: "Открыть карту",

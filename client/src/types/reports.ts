@@ -1,6 +1,7 @@
 export interface ReportInfo {
   id: number;
   date: string;
+  anomalies: number;
 }
 
 export interface MapObject {
