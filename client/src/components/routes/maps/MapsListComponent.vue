@@ -29,6 +29,7 @@ const router = useRouter();
 
 const columnDefs: ColDef<MapInfo>[] = [
   { headerName: "Id", field: "id", flex: 2, minWidth: 80 },
+  { headerName: "Имя", field: "name", flex: 3 },
   {
     headerName: "Дата загрузки",
     field: "date",
