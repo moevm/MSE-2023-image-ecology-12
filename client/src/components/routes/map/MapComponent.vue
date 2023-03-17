@@ -11,13 +11,11 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
 import { getReport } from "@/components/routes/map/api";
 import ObjectGroupsList from "@/components/common/ObjectGroupsList.vue";
 
-const route = useRoute();
-const id: number = parseInt(route.params.id as string);
-const report = await getReport(id);
+const props = defineProps<{ id: number }>();
+const report = await getReport(props.id);
 </script>
 
 <style scoped lang="scss"></style>
