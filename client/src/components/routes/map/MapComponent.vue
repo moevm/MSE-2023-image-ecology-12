@@ -1,7 +1,7 @@
 <template>
   <div class="container-lg">
     <h2 class="text-center mt-2 text-primary">Просмотр карты №{{ id }}</h2>
-    <h3>Аномалии</h3>
+    <h3 v-if="mapData">Аномалии</h3>
     <AgGridVue
       v-if="mapData"
       class="ag-theme-alpine mt-3"
