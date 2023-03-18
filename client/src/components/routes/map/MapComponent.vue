@@ -37,10 +37,25 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
     ...getActionsColDef([
       {
         tooltip: "Открыть аномалию",
-        icon: "bi bi-eye",
+        icon: "bi bi-radioactive",
         button: "btn-danger",
         onClicked: (action, data) =>
           router.push({ name: routeNames.Anomaly, params: { id: data.id } }),
+      },
+      {
+        tooltip: "Показать на карте",
+        icon: "bi bi-eye",
+        button: "btn-info",
+      },
+      {
+        tooltip: "Открыть отчёт",
+        icon: "bi bi-file-text",
+        button: "btn-secondary",
+        onClicked: (action, data) =>
+          router.push({
+            name: routeNames.Report,
+            params: { id: mapData?.reportId },
+          }),
       },
     ]),
   },
