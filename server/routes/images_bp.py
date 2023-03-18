@@ -9,14 +9,9 @@ fs = LocalProxy(get_grid_fs)
 images_bp = Blueprint('images_bp', __name__)
 
 
-@images_bp.route('/test')
-def index():
-    return """
-        <form method="POST" action="/api/images/upload_image" enctype="multipart/form-data">
-            <input type="file" name="image">
-            <input type="submit">
-        </form> 
-    """
+@images_bp.route('/tile_map_resource/<string:db_id>')
+def index(db_id):
+    return db.images.find_one(ObjectId(db_id))["tile_map_resource"]
 
 
 @images_bp.route('/upload_image', methods=['POST'])
@@ -26,17 +21,29 @@ def add_image():
     """
     image = request.files['image']
     file_id = fs.put(image, filename=image.filename, chunk_size=256*1024)
+    item = {"filename": image.filename, "tile_map_resource": None, "fs_id": file_id}
+    db.images.insert_one(item)
     return jsonify({'message': 'Image added successfully'})
 
+# Маршрут для leaflet-а, возвращает кусочки для отображения.
+@images_bp.route("/tile/<string:db_id>/<int:z>/<int:x>/<int:y>", methods=['GET'])
+def get_tile(db_id, z, x, y):
+    image_name = db.images.find_one(ObjectId(db_id))["filename"]
+    tile_info = fs.find_one({"filename": f"{image_name[:image_name.rfind('.')]}_{z}_{x}_{y}.png"})
+    tile = fs.get(tile_info._id).read()
+    print(f"z - {z}, x - {x}, y - {y}")
+    return send_file(tile, mimetype='image/png')
 
-@images_bp.route('/<image_id>', methods=['GET'])
-def get_image(image_id):
-    image_file = fs.get(ObjectId(image_id))
+
+@images_bp.route('/<string:db_id>', methods=['GET'])
+def get_image(fs_id):
+    image_info = db.images.find_one(fs_id)
+    image_file = fs.get(image_info["fs_id"])
     return send_file(image_file, mimetype='image/tiff')
 
 
-@images_bp.route('/<image_id>/analysis', methods=['GET'])
-def get_image_analysis(image_id):
+@images_bp.route('/<string:db_id>/analysis', methods=['GET'])
+def get_image_analysis(db_id):
     """
         Returns the results of the analysis for a specific image, including the detected deviations and their locations.
     """
