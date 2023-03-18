@@ -21,7 +21,7 @@
       :column-defs="columnDefs"
       :grid-options="options"
       :row-data="[anomalyData]"
-      style="height: 6rem"
+      style="height: 93px"
       @grid-ready="fitActionsColumn"
     />
 
