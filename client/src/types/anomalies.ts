@@ -5,3 +5,11 @@ export interface AnomalyInfo {
   uploadDate: string;
   detectDate: string;
 }
+
+export interface AnomalyData {
+  reportId: number;
+  mapId: number;
+  name: string;
+  area: number;
+  coordinates: [number, number];
+}
