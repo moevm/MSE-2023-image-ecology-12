@@ -5,3 +5,10 @@ export interface MapInfo {
   size: number;
   ready: boolean;
 }
+
+export interface MapAnomaly {
+  id: number;
+  name: string;
+  area: number;
+  coordinates: [number, number];
+}
