@@ -26,6 +26,7 @@ import { routeNames } from "@/router";
 import { useRouter } from "vue-router";
 import { QueueStatus } from "@/config/queue";
 import StatusRenderer from "@/components/routes/queue/components/StatusRenderer.vue";
+import ProgressRenderer from "@/components/routes/queue/components/ProgressRenderer.vue";
 
 const router = useRouter();
 
@@ -38,7 +39,13 @@ const columnDefs: ColDef<QueueItemInfo>[] = [
     flex: 5,
     valueFormatter: dateFormatter,
   },
-  { headerName: "Прогресс", field: "progress", flex: 6 },
+  {
+    headerName: "Прогресс",
+    field: "progress",
+    flex: 6,
+    cellRenderer: ProgressRenderer,
+    cellClass: "row d-flex align-items-center",
+  },
   {
     headerName: "Статус",
     field: "status",
