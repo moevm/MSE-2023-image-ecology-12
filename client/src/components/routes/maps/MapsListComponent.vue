@@ -24,6 +24,7 @@ import { MapInfo } from "@/types/maps";
 import { dateFormatter } from "@/ag-grid/formatters";
 import { useRouter } from "vue-router";
 import { routeNames } from "@/router";
+import FlagRenderer from "@/components/renderers/FlagRenderer.vue";
 
 const router = useRouter();
 
@@ -38,7 +39,13 @@ const columnDefs: ColDef<MapInfo>[] = [
     valueFormatter: dateFormatter,
   },
   { headerName: "Размер", field: "size", flex: 5, minWidth: 180 },
-  { headerName: "Обработано", field: "ready", flex: 3, minWidth: 200 },
+  {
+    headerName: "Обработано",
+    field: "ready",
+    flex: 3,
+    minWidth: 200,
+    cellRenderer: FlagRenderer,
+  },
   {
     ...getActionsColDef([
       {
