@@ -12,3 +12,8 @@ export interface MapAnomaly {
   area: number;
   coordinates: [number, number];
 }
+
+export interface MapData {
+  reportId?: number;
+  anomalies?: MapAnomaly[];
+}
