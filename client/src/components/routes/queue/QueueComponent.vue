@@ -25,6 +25,7 @@ import { dateFormatter } from "@/ag-grid/formatters";
 import { routeNames } from "@/router";
 import { useRouter } from "vue-router";
 import { QueueStatus } from "@/config/queue";
+import StatusRenderer from "@/components/routes/queue/components/StatusRenderer.vue";
 
 const router = useRouter();
 
@@ -38,7 +39,12 @@ const columnDefs: ColDef<QueueItemInfo>[] = [
     valueFormatter: dateFormatter,
   },
   { headerName: "Прогресс", field: "progress", flex: 6 },
-  { headerName: "Статус", field: "status", flex: 7 },
+  {
+    headerName: "Статус",
+    field: "status",
+    flex: 7,
+    cellRenderer: StatusRenderer,
+  },
   {
     ...getActionsColDef([
       {
