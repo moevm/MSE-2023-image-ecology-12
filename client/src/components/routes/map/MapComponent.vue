@@ -1,15 +1,20 @@
 <template>
   <div class="container-lg">
     <h2 class="text-center mt-2 text-primary">Просмотр карты №{{ id }}</h2>
+    <h3>Аномалии</h3>
     <AgGridVue
+      v-if="mapData"
       class="ag-theme-alpine mt-3"
-      :row-data="mapData"
+      :row-data="mapData.anomalies"
       :column-defs="columnDefs"
       :grid-options="options"
       @grid-ready="fitActionsColumn"
     />
     <div class="d-flex justify-content-center mt-3">
-      <img src="/src/assets/img.png" />
+      <img
+        v-bs-tooltip.right="'Тестовая демонстрация карты'"
+        src="/src/assets/img.png"
+      />
     </div>
   </div>
 </template>
