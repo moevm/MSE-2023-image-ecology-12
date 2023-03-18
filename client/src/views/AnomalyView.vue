@@ -1,5 +1,5 @@
 <template>
-  <AnomalyComponent />
+  <AnomalyComponent :id="id" />
 </template>
 
 <script setup lang="ts">
