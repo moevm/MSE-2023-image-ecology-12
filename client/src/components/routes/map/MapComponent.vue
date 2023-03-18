@@ -1,7 +1,15 @@
 <template>
   <div class="container-lg">
     <h2 class="text-center mt-2 text-primary">Просмотр карты №{{ id }}</h2>
-    <h3 v-if="mapData">Аномалии</h3>
+    <div v-if="mapData" class="row justify-content-between">
+      <h3 class="col">Аномалии</h3>
+      <router-link
+        class="col-auto"
+        :to="{ name: routeNames.Report, params: { id: mapData?.reportId } }"
+      >
+        <button class="btn btn-primary">Открыть отчёт</button>
+      </router-link>
+    </div>
     <AgGridVue
       v-if="mapData"
       class="ag-theme-alpine mt-3"
@@ -51,16 +59,6 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
         tooltip: "Показать на карте",
         icon: "bi bi-eye",
         button: "btn-info",
-      },
-      {
-        tooltip: "Открыть отчёт",
-        icon: "bi bi-file-text",
-        button: "btn-secondary",
-        onClicked: (action, data) =>
-          router.push({
-            name: routeNames.Report,
-            params: { id: mapData?.reportId },
-          }),
       },
     ]),
   },
