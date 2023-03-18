@@ -1,4 +1,5 @@
-import { QueueItemInfo, QueueStatus } from "@/types/queue";
+import { QueueItemInfo } from "@/types/queue";
+import { QueueStatus } from "@/config/queue";
 
 export function getQueueInfo(): Promise<QueueItemInfo[]> {
   return Promise.resolve([

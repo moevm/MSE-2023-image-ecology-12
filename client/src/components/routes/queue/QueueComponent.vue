@@ -20,10 +20,11 @@ import {
   getDefaultGridOptions,
 } from "@/ag-grid/factory";
 import { getQueueInfo } from "@/components/routes/queue/api";
-import { QueueItemInfo, QueueStatus } from "@/types/queue";
+import { QueueItemInfo } from "@/types/queue";
 import { dateFormatter } from "@/ag-grid/formatters";
 import { routeNames } from "@/router";
 import { useRouter } from "vue-router";
+import { QueueStatus } from "@/config/queue";
 
 const router = useRouter();
 

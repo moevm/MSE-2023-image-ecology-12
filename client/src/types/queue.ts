@@ -1,8 +1,4 @@
-export enum QueueStatus {
-  processing = "processing",
-  stopped = "paused",
-  enqueued = "enqueued",
-}
+import { QueueStatus } from "@/config/queue";
 
 export interface QueueItemInfo {
   id: number;
