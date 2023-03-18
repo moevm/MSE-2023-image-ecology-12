@@ -1,4 +1,4 @@
-import { MapAnomaly, MapData } from "@/types/maps";
+import { MapData } from "@/types/maps";
 
 export function getMapData(id: number): Promise<MapData | null> {
   // Тестовые данные: чётный id - есть аномалии, нечётный -нет
