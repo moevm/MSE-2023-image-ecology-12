@@ -6,8 +6,11 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { vBsTooltip } from "@/bootstrap/tooltip";
+import { plugin, defaultConfig } from "@formkit/vue";
+import "@formkit/themes/genesis";
 
 const app = createApp(App);
 app.use(router);
+app.use(plugin, defaultConfig());
 app.directive("bs-tooltip", vBsTooltip);
 app.mount("#app");
