@@ -11,5 +11,7 @@ export interface AnomalyData {
   mapId: number;
   name: string;
   area: number;
+  uploadDate: string;
+  detectDate: string;
   coordinates: [number, number];
 }
