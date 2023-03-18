@@ -17,6 +17,9 @@ export const vBsTooltip: Directive<
   },
 
   beforeUnmount: (el) => {
-    el.tooltip?.dispose();
+    el.addEventListener("hidden.bs.tooltip", () => {
+      el.tooltip?.dispose();
+    });
+    el.tooltip?.hide();
   },
 };
