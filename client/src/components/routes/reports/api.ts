@@ -1,9 +1,17 @@
 import { Report } from "@/types/reports";
+import axios from "axios";
+import { baseURL } from "@/api";
 
-export function getReportsList(): Promise<Report[]> {
+
+export async function getReportsList(): Promise<Report[]> {
+  let db_ids: string[] = [];
+  await axios.get<string[]>(baseURL + "/images/").then((response: any) => {
+    db_ids = response.data;
+  });
+
   return Promise.resolve(
-    [1, 2, 3, 4, 5, 6].map((i) => ({
-      id: "64175d4f530dc2f65cf7c3cc",
+      db_ids.map((i) => ({
+      id: i,
       groups: [
         {
           name: "Найденные объекты",
