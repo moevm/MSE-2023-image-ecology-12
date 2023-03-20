@@ -9,6 +9,6 @@ export interface MapObjectsGroup {
 }
 
 export interface Report {
-  id: number;
+  id: string;
   groups: MapObjectsGroup[];
 }
