@@ -2,14 +2,22 @@ from flask import Blueprint, jsonify, request, g, current_app, Response, send_fi
 from db import get_db, get_grid_fs
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
+import io
 
 
 db = LocalProxy(get_db)
 fs = LocalProxy(get_grid_fs)
-images_bp = Blueprint('images_bp', __name__)
+images_bp = Blueprint('images_bp', __name__, url_prefix="/images")
 
 
-@images_bp.route('/tile_map_resource/<string:db_id>')
+@images_bp.route('/', methods=['GET'])
+def get_images_indexes():
+    db_ids = []
+    for img in db.images.find({}):
+        db_ids.append(str(img["_id"]))
+    return db_ids
+
+@images_bp.route('/tile_map_resource/<string:db_id>', methods=['GET'])
 def index(db_id):
     return db.images.find_one(ObjectId(db_id))["tile_map_resource"]
 
@@ -32,14 +40,14 @@ def get_tile(db_id, z, x, y):
     tile_info = fs.find_one({"filename": f"{image_name[:image_name.rfind('.')]}_{z}_{x}_{y}.png"})
     tile = fs.get(tile_info._id).read()
     print(f"z - {z}, x - {x}, y - {y}")
-    return send_file(tile, mimetype='image/png')
+    return send_file(io.BytesIO(tile), mimetype='image/png')
 
 
 @images_bp.route('/<string:db_id>', methods=['GET'])
-def get_image(fs_id):
-    image_info = db.images.find_one(fs_id)
+def get_image(db_id):
+    image_info = db.images.find_one(ObjectId(db_id))
     image_file = fs.get(image_info["fs_id"])
-    return send_file(image_file, mimetype='image/tiff')
+    return send_file(io.BytesIO(image_file), mimetype='image/tiff')
 
 
 @images_bp.route('/<string:db_id>/analysis', methods=['GET'])

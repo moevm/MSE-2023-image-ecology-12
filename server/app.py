@@ -17,7 +17,7 @@ def create_app():
         init_db()
     return app
 
-def add_test_data_db(app: Flask, workerUri):
+def add_test_data_db(app: Flask, worker_uri):
     with app.app_context():
         db = get_db()
         fs = get_grid_fs()
@@ -33,37 +33,27 @@ def add_test_data_db(app: Flask, workerUri):
         item = {"filename": imageName, "tile_map_resource": None, "fs_id": fs_image_id}
         imagesCollection.insert_one(item)
 
-    # Тестово добавим все фрагменты.
-    for root, dirs, files in os.walk("sample"):
-        path = root.split(os.sep)
-        for file in files:
-            print("_".join(path) + "_" + file)
+        # Отдаем запрос worker-у (тестовый) на нарезку сохраненного в бд файла.
+        worker_res = requests.put(worker_uri + "slice/" + str(fs_image_id))
 
-    # Тест
+    # # Тест
     print("-"*100)
     print("<-> Images collection:")
     cursor = imagesCollection.find({})
-    imagesCollection
     for document in cursor: 
         pprint(document)
 
-    print("-"*100)
-    print("<-> GridFS files collection:")
-    cursor = fs.find({})
-    for document in cursor: 
-        pprint(document.filename)
-
-    fs_image_id = imagesCollection.find_one({"filename": imageName})["fs_id"]
-
-    # Отдаем запрос worker-у (тестовый) на нарезку сохраненного в бд файла.
-    print(workerUri + "/slice/" + str(fs_image_id))
-    workerRes = requests.put(workerUri + "/slice/" + str(fs_image_id))
+    # print("-"*100)
+    # print("<-> GridFS files collection:")
+    # cursor = fs.find({})
+    # for document in cursor: 
+    #     pprint(document.filename)
 
 
 if __name__ == "__main__":
-    workerUri = os.environ['WORKER_URI'] if ('WORKER_URI' in os.environ) else "http://localhost:5001/"
+    worker_uri = os.environ['WORKER_URI'] if ('WORKER_URI' in os.environ) else "http://localhost:5001/"
     application = create_app()
-    add_test_data_db(application, workerUri)
+    add_test_data_db(application, worker_uri)
     application.config['DEBUG'] = True
     port = os.environ['FLASK_PORT'] if ('FLASK_PORT' in os.environ) else 5000
     application.run(host='0.0.0.0', port=port)
