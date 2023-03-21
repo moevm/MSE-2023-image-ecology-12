@@ -28,18 +28,20 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const columnDefs: ColDef<ReportInfo>[] = [
-  { headerName: "Id", field: "id", flex: 2 },
-  { headerName: "Имя", field: "name", flex: 3 },
+  { headerName: "Id", field: "id", flex: 2, minWidth: 120 },
+  { headerName: "Имя", field: "name", flex: 3, minWidth: 180 },
   {
     headerName: "Дата загрузки",
     field: "date",
     flex: 5,
     valueFormatter: dateFormatter,
+    minWidth: 200,
   },
   {
     headerName: "Количество аномалий",
     field: "anomalies",
     flex: 2,
+    minWidth: 120,
   },
   {
     ...getActionsColDef([

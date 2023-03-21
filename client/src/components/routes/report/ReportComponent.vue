@@ -38,9 +38,9 @@ const router = useRouter();
 const props = defineProps<{ id: number }>();
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
-  { headerName: "Id", field: "id", flex: 2 },
-  { headerName: "Название", field: "name", flex: 4 },
-  { headerName: "Площадь", field: "area", flex: 4 },
+  { headerName: "Id", field: "id", flex: 2, minWidth: 120 },
+  { headerName: "Название", field: "name", flex: 4, minWidth: 180 },
+  { headerName: "Площадь", field: "area", flex: 4, minWidth: 180 },
   {
     ...getActionsColDef([
       {

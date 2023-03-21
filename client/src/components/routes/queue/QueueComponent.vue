@@ -31,13 +31,14 @@ import ProgressRenderer from "@/components/routes/queue/components/ProgressRende
 const router = useRouter();
 
 const columnDefs: ColDef<QueueItemInfo>[] = [
-  { headerName: "Id", field: "id", flex: 2, rowDrag: true },
-  { headerName: "Название", field: "name", flex: 3 },
+  { headerName: "Id", field: "id", flex: 2, rowDrag: true, minWidth: 120 },
+  { headerName: "Название", field: "name", flex: 3, minWidth: 180 },
   {
     headerName: "Дата загрузки",
     field: "uploadDate",
     flex: 5,
     valueFormatter: dateFormatter,
+    minWidth: 200,
   },
   {
     headerName: "Прогресс",
@@ -45,12 +46,14 @@ const columnDefs: ColDef<QueueItemInfo>[] = [
     flex: 6,
     cellRenderer: ProgressRenderer,
     cellClass: "row d-flex align-items-center",
+    minWidth: 180,
   },
   {
     headerName: "Статус",
     field: "status",
     flex: 7,
     cellRenderer: StatusRenderer,
+    minWidth: 180,
   },
   {
     ...getActionsColDef([

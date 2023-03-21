@@ -53,13 +53,14 @@ const router = useRouter();
 const props = defineProps<{ id: number }>();
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
-  { headerName: "Название", field: "name", flex: 4 },
-  { headerName: "Площадь", field: "area", flex: 4 },
+  { headerName: "Название", field: "name", flex: 4, minWidth: 180 },
+  { headerName: "Площадь", field: "area", flex: 4, minWidth: 180 },
   {
     headerName: "Дата загрузки",
     field: "uploadDate",
     flex: 5,
     valueFormatter: dateFormatter,
+    minWidth: 200,
   },
   {
     headerName: "Дата обнаружения",
