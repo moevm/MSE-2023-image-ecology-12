@@ -59,13 +59,14 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
     headerName: "Дата загрузки",
     field: "uploadDate",
     flex: 5,
-    valueFormatter: dateFormatter,
     minWidth: 200,
+    valueFormatter: dateFormatter,
   },
   {
     headerName: "Дата обнаружения",
     field: "detectDate",
     flex: 5,
+    minWidth: 200,
     valueFormatter: dateFormatter,
   },
   {
