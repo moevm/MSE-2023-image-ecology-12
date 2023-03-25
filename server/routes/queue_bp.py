@@ -15,7 +15,8 @@ def add_to_queue():
     """
         This route would be used to add images to the analysis queue for batch processing.
     """
-
+    max_queue = db.images.find().sort({"queue": -1}).limit(1)
+    db.images.updateOne({'_id': db_id}, {"$set": { 'queue' : max_queue + 1}})
     return jsonify({'status': 'success'})
 
 @images_bp.route('/<string:db_id>', methods=['GET'])
