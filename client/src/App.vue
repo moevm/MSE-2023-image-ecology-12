@@ -1,7 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid px-3">
-      <a class="navbar-brand" href="#"><i class="bi bi-map fs-2" /></a>
+      <router-link :to="{ name: routeNames.MapsList }" class="navbar-brand">
+        <i class="bi bi-map fs-2" />
+      </router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -10,9 +12,9 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse fs-5 fw-semibold" id="navbar">
+      <div id="navbar" class="collapse navbar-collapse fs-5">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li v-for="route of routes" :key="route" class="nav-item">
+          <li v-for="route of routes" :key="route" class="nav-item ps-4">
             <router-link
               :to="{ name: route }"
               class="nav-link"
@@ -33,10 +35,19 @@
 <script setup lang="ts">
 import { routeNames } from "@/router";
 
-const routes = [routeNames.Reports, routeNames.Queue];
+const routes = [
+  routeNames.MapsList,
+  routeNames.Queue,
+  routeNames.ReportsList,
+  routeNames.AnomaliesList,
+  routeNames.Upload,
+];
 const routesTranslation = {
-  [routeNames.Reports]: "Отчёты",
+  [routeNames.MapsList]: "Карты",
   [routeNames.Queue]: "Очередь",
+  [routeNames.ReportsList]: "Отчёты",
+  [routeNames.AnomaliesList]: "Аномалии",
+  [routeNames.Upload]: "Загрузить",
 };
 </script>
 
