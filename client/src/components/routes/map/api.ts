@@ -1,5 +1,4 @@
 import { MapData } from "@/types/maps";
-import { Report } from "@/types/reports";
 import axios from "axios";
 import { baseURL } from "@/api";
 
