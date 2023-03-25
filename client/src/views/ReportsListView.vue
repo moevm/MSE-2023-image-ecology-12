@@ -1,6 +1,6 @@
 <template>
   <Suspense>
-    <ReportsComponent />
+    <ReportsListComponent />
     <template #fallback>
       <LoadingSpinner />
     </template>
@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import ReportsComponent from "@/components/routes/reports/ReportsComponent.vue";
+import ReportsListComponent from "@/components/routes/reports/ReportsListComponent.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 </script>
 

@@ -1,35 +1,28 @@
 <template>
   <div class="container-lg">
-    <h2 class="text-center mt-2 text-primary">Просмотр карты №{{ id }}</h2>
-    <div v-if="mapData" class="row justify-content-between">
+    <h2 class="text-center mt-2 text-primary">Просмотр отчёта №{{ id }}</h2>
+    <div class="row justify-content-between">
       <h3 class="col">Аномалии</h3>
       <router-link
         class="col-auto"
-        :to="{ name: routeNames.Report, params: { id: mapData?.reportId } }"
+        :to="{ name: routeNames.Map, params: { id: reportData.mapId } }"
       >
-        <button class="btn btn-primary">Открыть отчёт</button>
+        <button class="btn btn-secondary">Открыть карту</button>
       </router-link>
     </div>
     <AgGridVue
-      v-if="mapData"
       class="ag-theme-alpine mt-3"
-      :row-data="mapData.anomalies"
+      :row-data="reportData.anomalies"
       :column-defs="columnDefs"
       :grid-options="options"
       @grid-ready="fitActionsColumn"
     />
-    <div class="d-flex justify-content-center mt-3">
-      <img
-        v-bs-tooltip.right="'Тестовая демонстрация карты'"
-        src="/src/assets/img.png"
-      />
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { getMapData } from "@/components/routes/map/api";
 import { AgGridVue } from "ag-grid-vue3";
+import { getReportData } from "@/components/routes/report/api";
 import { ColDef, GridOptions } from "ag-grid-community";
 import { AnomalyInfo } from "@/types/anomalies";
 import {
@@ -67,12 +60,10 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
 
 const options: GridOptions<AnomalyInfo> = {
   ...getDefaultGridOptions(),
-  pagination: true,
-  paginationPageSize: 4,
   domLayout: "autoHeight",
 };
 
-const mapData = await getMapData(props.id);
+const reportData = await getReportData(props.id);
 </script>
 
 <style scoped lang="scss"></style>

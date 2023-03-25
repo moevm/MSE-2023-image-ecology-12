@@ -39,6 +39,9 @@ services:
       - "3000:80"
     depends_on:
       - server
+    environment:
+      CLIENT_SERVER_URL: 'localhost'
+      CLIENT_SERVER_PORT: '5000'
 
   reverse-proxy:
     container_name: reverse-proxy

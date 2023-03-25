@@ -1,6 +1,6 @@
 <template>
   <Suspense>
-    <MapComponent :id="id" />
+    <ReportComponent :id="id" />
     <template #fallback>
       <LoadingSpinner />
     </template>
@@ -8,9 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import MapComponent from "@/components/routes/map/MapComponent.vue";
+import ReportComponent from "@/components/routes/report/ReportComponent.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
-
 defineProps<{ id: string }>();
 </script>
 
