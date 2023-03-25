@@ -5,7 +5,7 @@
         <FormKit
           name="files"
           type="file"
-          accept=".tiff,.jpg,.png"
+          accept=".tiff"
           label="Файл с картой"
           validation="required"
         />
