@@ -34,6 +34,7 @@ function submit(data: FormKitGroupValue) {
   const files = data.files as { name: string; file: File }[],
     name = data.name as string;
   uploadMap(files[0].file, name);
+
 }
 </script>
 

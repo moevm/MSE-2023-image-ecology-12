@@ -9,4 +9,3 @@ export const api: AxiosInstance = axios.create({
   baseURL,
   withCredentials: true,
 });
-
