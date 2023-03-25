@@ -19,6 +19,10 @@ def add_to_queue():
     db.images.updateOne({'_id': db_id}, {"$set": { 'queue' : max_queue + 1}})
     return jsonify({'status': 'success'})
 
+
+processing = "processing",
+  stopped = "paused",
+  enqueued = "enqueued",
 @images_bp.route('/<string:db_id>', methods=['GET'])
 def get_image(image_id):
     image_file = fs.get(ObjectId(image_id))
