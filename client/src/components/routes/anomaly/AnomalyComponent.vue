@@ -26,7 +26,10 @@
     />
 
     <div class="d-flex justify-content-center mt-3">
-      <MapDisplay :id="id"/>
+      <img
+        v-bs-tooltip.right="'Тестовая демонстрация карты'"
+        src="/src/assets/img.png"
+      />
     </div>
   </div>
 </template>
@@ -43,8 +46,6 @@ import {
 import { routeNames } from "@/router";
 import { getAnomalyData } from "@/components/routes/anomaly/api";
 import { AgGridVue } from "ag-grid-vue3";
-
-import MapDisplay from "@/components/common/map/MapDisplay.vue"
 
 const props = defineProps<{ id: string }>();
 

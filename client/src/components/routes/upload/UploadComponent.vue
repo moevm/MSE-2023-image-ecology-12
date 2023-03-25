@@ -5,7 +5,7 @@
         <FormKit
           name="files"
           type="file"
-          accept=".tiff"
+          accept=".tiff,.jpg,.png"
           label="Файл с картой"
           validation="required"
         />
@@ -28,13 +28,9 @@
 
 <script setup lang="ts">
 import { uploadMap } from "@/components/routes/upload/api";
-import { FormKitGroupValue } from "@formkit/core";
 
-function submit(data: FormKitGroupValue) {
-  const files = data.files as { name: string; file: File }[],
-    name = data.name as string;
-  uploadMap(files[0].file, name);
-
+function submit(data: { files: { name: string; file: File }[]; name: string }) {
+  uploadMap(data.files[0].file, data.name);
 }
 </script>
 
