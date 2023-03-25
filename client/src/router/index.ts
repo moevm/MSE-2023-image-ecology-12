@@ -52,19 +52,19 @@ export const routes: RouteRecordRaw[] = [
     name: routeNames.Map,
     path: routePaths[routeNames.Map],
     component: () => import("@/views/MapView.vue"),
-    props: (route) => ({ id: parseInt(route.params.id as string) }),
+    props: (route) => ({ id: route.params.id }),
   },
   {
     name: routeNames.Report,
     path: routePaths[routeNames.Report],
     component: () => import("@/views/ReportView.vue"),
-    props: (route) => ({ id: parseInt(route.params.id as string) }),
+    props: (route) => ({ id: route.params.id }),
   },
   {
     name: routeNames.Anomaly,
     path: routePaths[routeNames.Anomaly],
     component: () => import("@/views/AnomalyView.vue"),
-    props: (route) => ({ id: parseInt(route.params.id as string) }),
+    props: (route) => ({ id: route.params.id }),
   },
 ];
 
