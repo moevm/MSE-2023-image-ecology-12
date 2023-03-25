@@ -1,14 +1,13 @@
-export interface MapObject {
-  name: string;
-  coordinates: [number, number];
-}
+import { MapAnomaly } from "@/types/maps";
 
-export interface MapObjectsGroup {
-  name: string;
-  objects: MapObject[];
-}
-
-export interface Report {
+export interface ReportInfo {
   id: string;
-  groups: MapObjectsGroup[];
+  name: string;
+  date: string;
+  anomalies: number;
+}
+
+export interface ReportData {
+  mapId: string;
+  anomalies: MapAnomaly[];
 }
