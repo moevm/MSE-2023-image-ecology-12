@@ -1,23 +1,30 @@
 <template>
   <div class="container-lg">
-    <h2 class="text-center mt-2 text-primary">Просмотр карты №{{ id }}</h2>
-    <div v-if="mapData" class="row justify-content-between">
-      <h3 class="col">Аномалии</h3>
+    <h2 class="text-center mt-2 text-primary">Просмотр аномалии №{{ id }}</h2>
+    <div class="row justify-content-end">
       <router-link
         class="col-auto"
-        :to="{ name: routeNames.Report, params: { id: mapData?.reportId } }"
+        :to="{ name: routeNames.Map, params: { id: anomalyData?.mapId } }"
+      >
+        <button class="btn btn-secondary">Открыть карту</button>
+      </router-link>
+      <router-link
+        class="col-auto"
+        :to="{ name: routeNames.Report, params: { id: anomalyData?.reportId } }"
       >
         <button class="btn btn-primary">Открыть отчёт</button>
       </router-link>
     </div>
+
     <AgGridVue
-      v-if="mapData"
       class="ag-theme-alpine mt-3"
-      :row-data="mapData.anomalies"
       :column-defs="columnDefs"
       :grid-options="options"
+      :row-data="[anomalyData]"
+      style="height: 93px"
       @grid-ready="fitActionsColumn"
     />
+
     <div class="d-flex justify-content-center mt-3">
       <img
         v-bs-tooltip.right="'Тестовая демонстрация карты'"
@@ -28,34 +35,39 @@
 </template>
 
 <script setup lang="ts">
-import { getMapData } from "@/components/routes/map/api";
-import { AgGridVue } from "ag-grid-vue3";
 import { ColDef, GridOptions } from "ag-grid-community";
 import { AnomalyInfo } from "@/types/anomalies";
+import { dateFormatter } from "@/ag-grid/formatters";
 import {
   fitActionsColumn,
   getActionsColDef,
   getDefaultGridOptions,
 } from "@/ag-grid/factory";
 import { routeNames } from "@/router";
-import { useRouter } from "vue-router";
+import { getAnomalyData } from "@/components/routes/anomaly/api";
+import { AgGridVue } from "ag-grid-vue3";
 
-const router = useRouter();
 const props = defineProps<{ id: string }>();
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
-  { headerName: "Id", field: "id", flex: 2, minWidth: 120 },
   { headerName: "Название", field: "name", flex: 4, minWidth: 180 },
   { headerName: "Площадь", field: "area", flex: 4, minWidth: 180 },
   {
+    headerName: "Дата загрузки",
+    field: "uploadDate",
+    flex: 5,
+    minWidth: 200,
+    valueFormatter: dateFormatter,
+  },
+  {
+    headerName: "Дата обнаружения",
+    field: "detectDate",
+    flex: 5,
+    minWidth: 200,
+    valueFormatter: dateFormatter,
+  },
+  {
     ...getActionsColDef([
-      {
-        tooltip: "Открыть аномалию",
-        icon: "bi bi-radioactive",
-        button: "btn-danger",
-        onClicked: (action, data) =>
-          router.push({ name: routeNames.Anomaly, params: { id: data.id } }),
-      },
       {
         tooltip: "Показать на карте",
         icon: "bi bi-eye",
@@ -67,12 +79,9 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
 
 const options: GridOptions<AnomalyInfo> = {
   ...getDefaultGridOptions(),
-  pagination: true,
-  paginationPageSize: 4,
-  domLayout: "autoHeight",
 };
 
-const mapData = await getMapData(props.id);
+const anomalyData = await getAnomalyData(props.id);
 </script>
 
 <style scoped lang="scss"></style>

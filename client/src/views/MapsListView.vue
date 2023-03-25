@@ -1,6 +1,6 @@
 <template>
   <Suspense>
-    <MapComponent :id="id" />
+    <MapsListComponent />
     <template #fallback>
       <LoadingSpinner />
     </template>
@@ -8,10 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import MapComponent from "@/components/routes/map/MapComponent.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
-
-defineProps<{ id: string }>();
+import MapsListComponent from "@/components/routes/maps/MapsListComponent.vue";
 </script>
 
 <style scoped lang="scss"></style>
