@@ -1,14 +1,15 @@
-from flask import Blueprint, jsonify, request, g, current_app, Response, send_file
+from flask import Blueprint, jsonify, send_file
 from db import get_db, get_grid_fs
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
-import io
 from pymongo import updateOne
 
 queue_bp = Blueprint('queue', __name__, url_prefix='/queue')
 db = LocalProxy(get_db)
 fs = LocalProxy(get_grid_fs)
 images_bp = Blueprint('images_bp', __name__)
+
+#states: processing or paused or enqueued
 
 @queue_bp.route('/<string:db_id>', methods=['POST'])
 def add_to_queue():
@@ -61,6 +62,6 @@ def get_queue():
             including the number of images waiting to be processed and their estimated processing time.
     """
     # Return the current state of the analysis queue
-    numbers = db.users.find({"state": "enqueued"}).count() #processing, paused, enqueued
+    numbers = db.users.find({"state": "enqueued"}).count()
     all_time = numbers * 100 #TODO
     return jsonify({'queue': [numbers, all_time]})
