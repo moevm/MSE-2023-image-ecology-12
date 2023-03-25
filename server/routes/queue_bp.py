@@ -42,8 +42,7 @@ def down_in_queue():
     """
         This route would be used to add images to the analysis queue for batch processing.
     """
-    max_queue = db.images.find().sort({"queue": -1}).limit(1)
-    db.images.updateOne({'_id': db_id}, {"$set": { 'queue' : max_queue + 1}})
+    
     return jsonify({'status': 'success'})
 
 @queue_bp.route('/<list<string>:db_ids>', methods=['POST'])
@@ -67,6 +66,6 @@ def get_queue():
             including the number of images waiting to be processed and their estimated processing time.
     """
     # Return the current state of the analysis queue
-    numbers = len(db.users.find({"state": "enqueued"})) #processing, paused, enqueued
+    numbers = db.users.find({"state": "enqueued"}).count() #processing, paused, enqueued
     all_time = numbers * 100 #TODO
     return jsonify({'queue': [numbers, all_time]})
