@@ -1,6 +1,6 @@
 import { AnomalyData } from "@/types/anomalies";
 
-export function getAnomalyData(id: number): Promise<AnomalyData> {
+export function getAnomalyData(id: string): Promise<AnomalyData> {
   return Promise.resolve({
     reportId: id,
     mapId: id,
