@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "vite": "vite -- host --port 3000",
+    "vite": "vite --host --port 3000",
     "watch-tsc": "tsc --watch --noEmit",
     "dev": "npm-run-all --parallel watch-tsc vite",
     "build": "vue-tsc && vite build",
