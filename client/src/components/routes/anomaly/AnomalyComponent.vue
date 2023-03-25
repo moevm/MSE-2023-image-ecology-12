@@ -35,7 +35,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import { ColDef, GridOptions } from "ag-grid-community";
 import { AnomalyInfo } from "@/types/anomalies";
 import { dateFormatter } from "@/ag-grid/formatters";
@@ -48,9 +47,7 @@ import { routeNames } from "@/router";
 import { getAnomalyData } from "@/components/routes/anomaly/api";
 import { AgGridVue } from "ag-grid-vue3";
 
-const router = useRouter();
-
-const props = defineProps<{ id: number }>();
+const props = defineProps<{ id: string }>();
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
   { headerName: "Название", field: "name", flex: 4, minWidth: 180 },

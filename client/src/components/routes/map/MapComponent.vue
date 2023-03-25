@@ -41,6 +41,7 @@ import { routeNames } from "@/router";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+const props = defineProps<{ id: string }>();
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
   { headerName: "Id", field: "id", flex: 2, minWidth: 120 },
@@ -71,7 +72,6 @@ const options: GridOptions<AnomalyInfo> = {
   domLayout: "autoHeight",
 };
 
-const props = defineProps<{ id: number }>();
 const mapData = await getMapData(props.id);
 </script>
 

@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import ReportComponent from "@/components/routes/report/ReportComponent.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
-defineProps<{ id: number }>();
+defineProps<{ id: string }>();
 </script>
 
 <style scoped lang="scss"></style>

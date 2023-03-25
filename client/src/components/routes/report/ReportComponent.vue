@@ -34,8 +34,7 @@ import { routeNames } from "@/router";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-
-const props = defineProps<{ id: number }>();
+const props = defineProps<{ id: string }>();
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
   { headerName: "Id", field: "id", flex: 2, minWidth: 120 },

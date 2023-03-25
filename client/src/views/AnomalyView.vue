@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import AnomalyComponent from "@/components/routes/anomaly/AnomalyComponent.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
-defineProps<{ id: number }>();
+defineProps<{ id: string }>();
 </script>
 
 <style scoped lang="scss"></style>

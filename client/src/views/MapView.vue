@@ -11,7 +11,7 @@
 import MapComponent from "@/components/routes/map/MapComponent.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 
-defineProps<{ id: number }>();
+defineProps<{ id: string }>();
 </script>
 
 <style scoped lang="scss"></style>
