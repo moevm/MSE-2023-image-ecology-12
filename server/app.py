@@ -33,6 +33,8 @@ def add_test_data_db(app: Flask, worker_uri):
         item = {"filename": imageName, "tile_map_resource": None, "fs_id": fs_image_id}
         imagesCollection.insert_one(item)
 
+    if (db.images.find_one({"filename": imageName})["tile_map_resource"] == None):
+        fs_image_id = db.images.find_one({"filename": imageName})["fs_id"]
         # Отдаем запрос worker-у (тестовый) на нарезку сохраненного в бд файла.
         worker_res = requests.put(worker_uri + "slice/" + str(fs_image_id))
 
