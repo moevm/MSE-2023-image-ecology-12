@@ -1,7 +1,7 @@
 import { QueueStatus } from "@/config/queue";
 
 export interface QueueItemInfo {
-  id: number;
+  id: string;
   name: string;
   uploadDate: string;
   progress: number;

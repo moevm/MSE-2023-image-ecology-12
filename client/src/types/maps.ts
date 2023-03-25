@@ -1,5 +1,5 @@
 export interface MapInfo {
-  id: number;
+  id: string;
   name: string;
   date: string;
   size: number;
@@ -7,13 +7,13 @@ export interface MapInfo {
 }
 
 export interface MapAnomaly {
-  id: number;
+  id: string;
   name: string;
   area: number;
   coordinates: [number, number];
 }
 
 export interface MapData {
-  reportId?: number;
+  reportId?: string;
   anomalies?: MapAnomaly[];
 }

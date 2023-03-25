@@ -1,5 +1,5 @@
 export interface AnomalyInfo {
-  id: number;
+  id: string;
   name: string;
   area: number;
   uploadDate: string;
@@ -7,8 +7,8 @@ export interface AnomalyInfo {
 }
 
 export interface AnomalyData {
-  reportId: number;
-  mapId: number;
+  reportId: string;
+  mapId: string;
   name: string;
   area: number;
   uploadDate: string;
