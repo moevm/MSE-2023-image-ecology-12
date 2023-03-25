@@ -31,5 +31,6 @@ def get_queue():
             including the number of images waiting to be processed and their estimated processing time.
     """
     # Return the current state of the analysis queue
-
-    return jsonify({'queue': []})
+    numbers = len(db.users.find({"state": 1}))
+    all_time = numbers * 100 #TODO
+    return jsonify({'queue': [numbers, all_time]})
