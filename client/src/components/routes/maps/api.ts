@@ -1,9 +1,16 @@
 import { MapInfo } from "@/types/maps";
+import axios from "axios";
+import { baseURL } from "@/api";
 
-export function getMapsInfo(): Promise<MapInfo[]> {
-  return Promise.resolve([
+export async function getMapsInfo(): Promise<MapInfo[]> {
+  let db_ids: string[] = [];
+  await axios.get<string[]>(baseURL + "/images/").then((response: any) => {
+    db_ids = response.data;
+  });
+
+  return [
     {
-      id: "1",
+      id: db_ids[0],
       date: "2023-03-01T12:10:09",
       size: 100,
       ready: false,
@@ -58,5 +65,5 @@ export function getMapsInfo(): Promise<MapInfo[]> {
       ready: false,
       name: "Лес 8",
     },
-  ]);
+  ];
 }
