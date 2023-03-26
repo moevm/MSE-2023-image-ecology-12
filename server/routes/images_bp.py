@@ -38,9 +38,10 @@ def add_image():
 def get_tile(db_id, z, x, y):
     image_name = db.images.find_one(ObjectId(db_id))["filename"]
     tile_info = fs.find_one({"filename": f"{image_name[:image_name.rfind('.')]}_{z}_{x}_{y}.png"})
-    tile = fs.get(tile_info._id).read()
-    print(f"z - {z}, x - {x}, y - {y}")
-    return send_file(io.BytesIO(tile), mimetype='image/png')
+    if (tile_info):
+        tile = fs.get(tile_info._id).read()
+        print(f"z - {z}, x - {x}, y - {y}")
+        return send_file(io.BytesIO(tile), mimetype='image/png')
 
 
 @images_bp.route('/<string:db_id>', methods=['GET'])
