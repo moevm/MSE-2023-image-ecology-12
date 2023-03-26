@@ -37,7 +37,7 @@ def slice(fs_id):
         fs.delete(document["_id"])
 
     # Добавляем все фрагменты в GridFS.
-    for root, _, files in os.walk("sample"):
+    for root, _, files in os.walk(image_name[:image_name.rfind(".")]):
         path = root.split(os.sep)
         for file in files:
             if (len(path) >= 2):
@@ -47,17 +47,17 @@ def slice(fs_id):
                 fs.put(file_content, filename="_".join(path) + "_" + file)
 
     # Добавляем данные для отображения изображения.
-    with open("./" + image_name[:image_name.rfind(".")] + "/" + "tilemapresource.xml", "r") as f:
+    with open(image_name[:image_name.rfind(".")] + "/" + "tilemapresource.xml", "r") as f:
         xml_content = f.read()
     db.images.update_one({"_id": image_info["_id"]}, {"$set": {"tile_map_resource": xml_content}})
     
     # Удаляем временную папку с слайсами.
-    for root, dirs, files in os.walk("./" + image_name[:image_name.rfind(".")], topdown=False):
+    for root, dirs, files in os.walk(image_name[:image_name.rfind(".")], topdown=False):
         for name in files:
             os.remove(os.path.join(root, name))
         for name in dirs:
             os.rmdir(os.path.join(root, name))
-    os.rmdir("./" + image_name[:image_name.rfind(".")])
+    os.rmdir(image_name[:image_name.rfind(".")])
 
 
     return "Done"
