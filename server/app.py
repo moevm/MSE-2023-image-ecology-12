@@ -66,7 +66,13 @@ def add_test_data_db(app: Flask, worker_uri):
 if __name__ == "__main__":
     worker_uri = os.environ['WORKER_URI'] if ('WORKER_URI' in os.environ) else "http://localhost:5001/"
     application = create_app()
-    delete_all_data_in_db_and_fs(application)
+    ######################################################################################
+    # Внимание! Важно! Все данные из базы данных в ходе перезапусков пока что удаляются! #
+    # После надо будет закоменить убрать эту строчку.                                    #
+    ######################################################################################
+    delete_all_data_in_db_and_fs(application)                                            #
+    ######################################################################################
+    ######################################################################################
     add_test_data_db(application, worker_uri)
     application.config['DEBUG'] = True
     port = os.environ['FLASK_PORT'] if ('FLASK_PORT' in os.environ) else 5000
