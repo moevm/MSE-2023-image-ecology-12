@@ -40,6 +40,8 @@ def slice(fs_id):
     for root, _, files in os.walk(image_name[:image_name.rfind(".")]):
         path = root.split(os.sep)
         for file in files:
+            # Сами фрагменты лежат по пути /{z}/{x}.png, но нужно отсечь доп. файлы
+            # с информацией о геолокации в корне папки.
             if (len(path) >= 2):
                 with open(root + "/" + file, "rb") as f:
                     file_content = f.read()

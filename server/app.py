@@ -42,13 +42,14 @@ def add_test_data_db(app: Flask, worker_uri):
             item = {"filename": imageName, "tile_map_resource": None, "fs_id": fs_image_id}
             imagesCollection.insert_one(item)
 
+        # Если картинка есть в бд, а её tile_map_resource нет (это означает, что нарезка еще не производилась).
         if (not db.images.find_one({"filename": imageName}) == None and 
             db.images.find_one({"filename": imageName})["tile_map_resource"] == None):
             fs_image_id = db.images.find_one({"filename": imageName})["fs_id"]
             # Отдаем запрос worker-у (тестовый) на нарезку сохраненного в бд файла.
             worker_res = requests.put(worker_uri + "slice/" + str(fs_image_id))
 
-    # # Тест
+    # Тест
     print("-"*100)
     print("<-> Images collection:")
     cursor = imagesCollection.find({})
