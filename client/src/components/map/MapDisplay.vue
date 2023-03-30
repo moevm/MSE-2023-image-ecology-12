@@ -3,7 +3,7 @@
 </template>
   
 <script setup lang="ts">
-import { getXMLinfo } from "@/components/routes/map/api";
+import { getXMLinfo } from "@/components/map/api";
 import { onMounted } from 'vue'
 import { baseURL } from "@/api";
 
