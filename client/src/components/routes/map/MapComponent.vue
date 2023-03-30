@@ -19,10 +19,7 @@
       @grid-ready="fitActionsColumn"
     />
     <div class="d-flex justify-content-center mt-3">
-      <img
-        v-bs-tooltip.right="'Тестовая демонстрация карты'"
-        src="/src/assets/img.png"
-      />
+      <MapDisplay :id="id"/>
     </div>
   </div>
 </template>
@@ -39,6 +36,8 @@ import {
 } from "@/ag-grid/factory";
 import { routeNames } from "@/router";
 import { useRouter } from "vue-router";
+
+import MapDisplay from "@/components/common/map/MapDisplay.vue"
 
 const router = useRouter();
 const props = defineProps<{ id: string }>();
