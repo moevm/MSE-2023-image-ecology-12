@@ -16,15 +16,15 @@ const xmlImageInfoDoc: Document = await getXMLinfo(props.id);
 onMounted(() => {
     // Base layers
     //  .. OpenStreetMap
-    var osm = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {attribution: "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"});
+    let osm: L.Layer = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {attribution: "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"});
 
     // Overlay layers (TMS)
     ////////
-    var lyr = L.tileLayer(baseURL + "/images/tile/" + props.id + "/{z}/{x}/{y}", {tms: true, opacity: 1, attribution: ""});
+    let lyr: L.Layer = L.tileLayer(baseURL + "/images/tile/" + props.id + "/{z}/{x}/{y}", {tms: true, opacity: 1, attribution: ""});
     ////////
 
     // Map
-    var map = L.map('map', {
+    let map: L.Map = L.map('map', {
         center: [
             parseFloat(xmlImageInfoDoc.getElementsByTagName("Origin")[0].attributes[0].nodeValue as string),  // x
             parseFloat(xmlImageInfoDoc.getElementsByTagName("Origin")[0].attributes[1].nodeValue as string)  // y
@@ -35,8 +35,8 @@ onMounted(() => {
         layers: [osm]
     });
 
-    var basemaps = {"OpenStreetMap": osm}
-    var overlaymaps = {"Layer": lyr}
+    let basemaps = {"OpenStreetMap": osm}
+    let overlaymaps = {"Layer": lyr}
 
 
     // Add base layers
