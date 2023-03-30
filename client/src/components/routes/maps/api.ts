@@ -3,10 +3,7 @@ import axios from "axios";
 import { baseURL } from "@/api";
 
 export async function getMapsInfo(): Promise<MapInfo[]> {
-  let db_ids: string[] = [];
-  await axios.get<string[]>(baseURL + "/images/").then((response: any) => {
-    db_ids = response.data;
-  });
+  let db_ids: string[] = (await axios.get<string[]>(baseURL + "/images/")).data;
 
   return [
     {
