@@ -1,9 +1,11 @@
+import os
+
+import requests
 from flask import Blueprint, jsonify, request, g, current_app, Response, send_file
 from db import get_db, get_grid_fs
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 import io
-
 
 db = LocalProxy(get_db)
 fs = LocalProxy(get_grid_fs)
@@ -12,14 +14,19 @@ images_bp = Blueprint('images_bp', __name__, url_prefix="/images")
 
 @images_bp.route('/', methods=['GET'])
 def get_images_indexes():
-    db_ids = []
+    images = []
     for img in db.images.find({}):
-        db_ids.append(str(img["_id"]))
-    return db_ids
+        images.append({"id": str(img["_id"]), "name": img["name"]})
+
+    return images
+
 
 @images_bp.route('/tile_map_resource/<string:db_id>', methods=['GET'])
 def index(db_id):
     return db.images.find_one(ObjectId(db_id))["tile_map_resource"]
+
+
+worker_uri = os.environ['WORKER_URI'] if ('WORKER_URI' in os.environ) else "http://localhost:5001/"
 
 
 @images_bp.route('/upload_image', methods=['POST'])
@@ -28,10 +35,12 @@ def add_image():
         Adds a new image to the system for analysis.
     """
     image = request.files['image']
-    file_id = fs.put(image, filename=image.filename, chunk_size=256*1024)
-    item = {"filename": image.filename, "tile_map_resource": None, "fs_id": file_id}
+    file_id = fs.put(image, chunk_size=256 * 1024, filename=image.filename)
+    item = {"filename": image.filename, "tile_map_resource": None, "fs_id": file_id, "name": request.form.get('name'), }
     db.images.insert_one(item)
+    worker_res = requests.put(worker_uri + "slice/" + str(file_id))
     return jsonify({'message': 'Image added successfully'})
+
 
 # Маршрут для leaflet-а, возвращает кусочки для отображения.
 @images_bp.route("/tile/<string:db_id>/<int:z>/<int:x>/<int:y>", methods=['GET'])
