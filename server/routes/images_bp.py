@@ -3,11 +3,21 @@ from db import get_db, get_grid_fs
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 import io
-
+import datetime
 
 db = LocalProxy(get_db)
 fs = LocalProxy(get_grid_fs)
 images_bp = Blueprint('images_bp', __name__, url_prefix="/images")
+
+
+@images_bp.route('/test')
+def index():
+    return """
+        <form method="POST" action="/api/images/upload_image" enctype="multipart/form-data">
+            <input type="file" name="image">
+            <input type="submit">
+        </form> 
+    """
 
 
 @images_bp.route('/', methods=['GET'])
@@ -17,9 +27,10 @@ def get_images_indexes():
         db_ids.append(str(img["_id"]))
     return db_ids
 
-@images_bp.route('/tile_map_resource/<string:db_id>', methods=['GET'])
-def index(db_id):
-    return db.images.find_one(ObjectId(db_id))["tile_map_resource"]
+
+# @images_bp.route('/tile_map_resource/<string:db_id>', methods=['GET'])
+# def index(db_id):
+#     return db.images.find_one(ObjectId(db_id))["tile_map_resource"]
 
 
 @images_bp.route('/upload_image', methods=['POST'])
@@ -29,7 +40,10 @@ def add_image():
     """
     image = request.files['image']
     file_id = fs.put(image, filename=image.filename, chunk_size=256*1024)
-    item = {"filename": image.filename, "tile_map_resource": None, "fs_id": file_id}
+    fs_files = db['fs.files']
+    document_find = fs_files.find_one({'_id': ObjectId(file_id)})
+    item = {"filename": image.filename, "tile_map_resource": None,
+            "fs_id": file_id, 'uploadDate': document_find['uploadDate']}
     db.images.insert_one(item)
     return jsonify({'message': 'Image added successfully'})
 
@@ -38,10 +52,9 @@ def add_image():
 def get_tile(db_id, z, x, y):
     image_name = db.images.find_one(ObjectId(db_id))["filename"]
     tile_info = fs.find_one({"filename": f"{image_name[:image_name.rfind('.')]}_{z}_{x}_{y}.png"})
-    if (tile_info):
-        tile = fs.get(tile_info._id).read()
-        print(f"z - {z}, x - {x}, y - {y}")
-        return send_file(io.BytesIO(tile), mimetype='image/png')
+    tile = fs.get(tile_info._id).read()
+    print(f"z - {z}, x - {x}, y - {y}")
+    return send_file(io.BytesIO(tile), mimetype='image/png')
 
 
 @images_bp.route('/<string:db_id>', methods=['GET'])
