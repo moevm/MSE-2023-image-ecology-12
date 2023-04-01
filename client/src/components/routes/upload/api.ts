@@ -1,6 +1,8 @@
+import { api } from "@/api";
+
 export function uploadMap(file: File, name: string) {
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("image", file);
   formData.append("name", name);
-  return Promise.resolve(undefined);
+  return api.post("/images/upload_image", formData);
 }
