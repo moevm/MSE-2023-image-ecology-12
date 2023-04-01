@@ -5,7 +5,7 @@ from bson import json_util
 from datetime import datetime, timedelta
 import json
 
-
+ 
 db = LocalProxy(get_db)
 search_bp = Blueprint('search', __name__, url_prefix='/search')
 
