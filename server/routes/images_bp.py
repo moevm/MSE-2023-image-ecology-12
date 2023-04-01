@@ -26,9 +26,9 @@ def add_image():
     """
         Adds a new image to the system for analysis.
     """
-    image = request.files['image']
-    file_id = fs.put(image, filename=image.filename, chunk_size=256*1024)
-    item = {"filename": image.filename,
+    image = request.files["file"]
+    file_id = fs.put(image, filename=request.files["file"].name, chunk_size=256*1024)
+    item = {"filename": request.files["file"].name,
             "tile_map_resource": None,
             "fs_id": file_id,
             "queue": None,
