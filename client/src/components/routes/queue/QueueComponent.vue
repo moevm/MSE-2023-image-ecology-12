@@ -99,5 +99,12 @@ const options: GridOptions<QueueItemInfo> = {
 
 const data = await getQueueInfo();
 </script>
+import { updateQueueApi } from "@/components/routes/queue/api";
+import { FormKitGroupValue } from "@formkit/core";
+
+function updateQueue(data: FormKitGroupValue) {
+  const files = data.files as { id: string;}[];
+  updateQueueApi(files);
+}
 
 <style scoped lang="scss"></style>

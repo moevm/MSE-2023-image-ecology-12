@@ -1,6 +1,15 @@
 import { QueueItemInfo } from "@/types/queue";
 import { QueueStatus } from "@/config/queue";
+import axios from "axios";
+import { baseURL } from "@/api";
 
+
+export function updateQueueApi(files: string[]){
+  axios.post(baseURL + "/queue/update_queue", files, { headers: { 'Content-Type': 'multipart/form-data' } })
+    .then(resp => {
+      console.log('Queue updated successfully.');
+    });
+}
 export function getQueueInfo(): Promise<QueueItemInfo[]> {
   return Promise.resolve([
     {
@@ -40,3 +49,4 @@ export function getQueueInfo(): Promise<QueueItemInfo[]> {
     },
   ]);
 }
+

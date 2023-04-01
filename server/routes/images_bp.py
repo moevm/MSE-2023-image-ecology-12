@@ -26,6 +26,8 @@ def add_image():
     """
         Adds a new image to the system for analysis.
     """
+    '''if request.files["file"].name.split(".")[-1] != "tif" or request.files["file"].name.split(".")[-1] != "tiff" :
+        return jsonify({'message': 'Image is trash: not right format'})'''
     image = request.files["file"]
     file_id = fs.put(image, filename=request.files["file"].name, chunk_size=256*1024)
     item = {"filename": request.files["file"].name,
@@ -44,7 +46,7 @@ def get_tile(db_id, z, x, y):
     tile_info = fs.find_one({"filename": f"{image_name[:image_name.rfind('.')]}_{z}_{x}_{y}.png"})
     if (tile_info):
         tile = fs.get(tile_info._id).read()
-        print(f"z - {z}, x - {x}, y - {y}")
+        #print(f"z - {z}, x - {x}, y - {y}")
         return send_file(io.BytesIO(tile), mimetype='image/png')
 
 @images_bp.route('/<string:db_id>', methods=['GET'])
