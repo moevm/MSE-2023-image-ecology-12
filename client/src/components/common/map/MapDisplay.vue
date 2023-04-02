@@ -3,27 +3,33 @@
 </template>
   
 <script setup lang="ts">
-import { getXMLinfo } from "@/components/common/map/api";
+import { getXMLinfo, getForestPolygon } from "@/components/common/map/api";
 import { onMounted } from 'vue'
 import { baseURL } from "@/api";
 
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import L, { LatLngExpression, Polygon } from "leaflet";
 
 const props = defineProps<{ id: string }>();
 const xmlImageInfoDoc: Document = await getXMLinfo(props.id);
+let forestPolygonArr: number[][][][] = await getForestPolygon(props.id);
+
+let polygonTestBounds: number[];
 
 onMounted(() => {
-    // Base layers
-    //  .. OpenStreetMap
+    //  OpenStreetMap.
     let osm: L.Layer = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {attribution: "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"});
 
-    // Overlay layers (TMS)
-    ////////
+    // Overlay layers (TMS).
     let lyr: L.Layer = L.tileLayer(baseURL + "/images/tile/" + props.id + "/{z}/{x}/{y}", {tms: true, opacity: 1, attribution: ""});
-    ////////
 
-    // Map
+    // Forest Polygon Layer.
+    let forestPolygon: Polygon = L.polygon(forestPolygonArr as LatLngExpression[][][], 
+        {color: 'green', fillOpacity: 0.4}
+    );
+    let forestPolygonLayer: L.LayerGroup = L.layerGroup([forestPolygon]);
+
+    // Map.
     let map: L.Map = L.map('map', {
         center: [
             parseFloat(xmlImageInfoDoc.getElementsByTagName("Origin")[0].attributes[0].nodeValue as string),  // x
@@ -36,7 +42,10 @@ onMounted(() => {
     });
 
     let basemaps = {"OpenStreetMap": osm}
-    let overlaymaps = {"Layer": lyr}
+    let overlaymaps = {
+        "Image": lyr,
+        "<span style='color: green'>Forest </span>":  forestPolygonLayer
+    }
 
 
     // Add base layers
@@ -53,6 +62,9 @@ onMounted(() => {
             parseFloat(xmlImageInfoDoc.getElementsByTagName("BoundingBox")[0].attributes[0].nodeValue as string)  // minx
         ] 
     ]);
+
+    map.fitBounds(forestPolygon.getBounds());
+    polygonTestBounds = [forestPolygon.getBounds().getEast(), forestPolygon.getBounds().getNorth()];
 })
 
 </script>
