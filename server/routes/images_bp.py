@@ -29,7 +29,7 @@ def add_image():
     """
     image = request.files['image']
     file_id = fs.put(image, filename=image.filename, chunk_size=256*1024)
-    item = {"filename": image.filename, "tile_map_resource": None, "fs_id": file_id}
+    item = {"filename": image.filename, "tile_map_resource": None, "fs_id": file_id, "forest_polygon": None}
     db.images.insert_one(item)
     return jsonify({'message': 'Image added successfully'})
 
