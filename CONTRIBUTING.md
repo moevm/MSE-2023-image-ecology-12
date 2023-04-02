@@ -1,8 +1,4 @@
-# MSE-2023-image-ecology-12
-
-## Полезные ссылки по проекту 
-
-  - [База знаний по проекту](https://miro.com/app/board/uXjVPmWfHN0=/?share_link_id=127919305492)
+# How to Contribute
 
 ## Git-Flow:
   - У нас есть 3 ветки: main, dev, test
