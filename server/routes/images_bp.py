@@ -51,6 +51,15 @@ def get_image(db_id):
     return send_file(io.BytesIO(image_file), mimetype='image/tiff')
 
 
+@images_bp.route('/forest/<string:db_id>', methods=['GET'])
+def get_image_forest(db_id):
+    """
+        Returns polygon of find forest in image.
+    """
+    image_info = db.images.find_one(ObjectId(db_id))
+    return image_info["forest_polygon"]
+
+
 @images_bp.route('/<string:db_id>/analysis', methods=['GET'])
 def get_image_analysis(db_id):
     """
