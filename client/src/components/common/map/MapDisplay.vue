@@ -14,8 +14,6 @@ const props = defineProps<{ id: string }>();
 const xmlImageInfoDoc: Document = await getXMLinfo(props.id);
 let forestPolygonArr: number[][][][] = await getForestPolygon(props.id);
 
-let polygonTestBounds: number[];
-
 onMounted(() => {
     //  OpenStreetMap.
     let osm: L.Layer = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {attribution: "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"});
@@ -62,9 +60,6 @@ onMounted(() => {
             parseFloat(xmlImageInfoDoc.getElementsByTagName("BoundingBox")[0].attributes[0].nodeValue as string)  // minx
         ] 
     ]);
-
-    map.fitBounds(forestPolygon.getBounds());
-    polygonTestBounds = [forestPolygon.getBounds().getEast(), forestPolygon.getBounds().getNorth()];
 })
 
 </script>
