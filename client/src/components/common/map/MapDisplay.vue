@@ -62,9 +62,6 @@ onMounted(() => {
             parseFloat(xmlImageInfoDoc.getElementsByTagName("BoundingBox")[0].attributes[0].nodeValue as string)  // minx
         ] 
     ]);
-
-    map.fitBounds(forestPolygon.getBounds());
-    polygonTestBounds = [forestPolygon.getBounds().getEast(), forestPolygon.getBounds().getNorth()];
 })
 
 </script>
