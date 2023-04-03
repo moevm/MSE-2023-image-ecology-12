@@ -12,7 +12,7 @@ import L, { LatLngExpression, Polygon } from "leaflet";
 
 const props = defineProps<{ id: string }>();
 const xmlImageInfoDoc: Document = await getXMLinfo(props.id);
-let forestPolygonArr: number[][][][] = await getForestPolygon(props.id);
+let forestPolygonArr: number[][][] = await getForestPolygon(props.id);
 
 onMounted(() => {
     //  OpenStreetMap.
@@ -22,7 +22,7 @@ onMounted(() => {
     let lyr: L.Layer = L.tileLayer(baseURL + "/images/tile/" + props.id + "/{z}/{x}/{y}", {tms: true, opacity: 1, attribution: ""});
 
     // Forest Polygon Layer.
-    let forestPolygon: Polygon = L.polygon(forestPolygonArr as LatLngExpression[][][], 
+    let forestPolygon: Polygon = L.polygon(forestPolygonArr as LatLngExpression[][], 
         {color: 'green', fillOpacity: 0.4}
     );
     let forestPolygonLayer: L.LayerGroup = L.layerGroup([forestPolygon]);

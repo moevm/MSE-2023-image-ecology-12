@@ -8,7 +8,7 @@ export async function getXMLinfo(id: string): Promise<Document> {
   return xmlDoc;
 }
 
-export async function getForestPolygon(id: string): Promise<number[][][][]> {
-  let forestPolygon: number[][][][] = (await axios.get<number[][][][]>(baseURL + "/images/forest/" + id)).data;
+export async function getForestPolygon(id: string): Promise<number[][][]> {
+  let forestPolygon: number[][][] = (await axios.get<number[][][]>(baseURL + "/images/forest/" + id)).data;
   return forestPolygon;
 }
