@@ -8,8 +8,6 @@ from bson.objectid import ObjectId
 import numpy as np
 import os
 
-from pprint import pprint
-
 from db import get_db, get_grid_fs
 from image_processing.geotiff_slicer.slice2tiles import sliceToTiles
 from image_processing.find_forest.otsu_method import get_image_RGB, otsu_method
