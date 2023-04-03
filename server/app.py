@@ -56,21 +56,6 @@ def add_test_data_db(app: Flask, worker_uri):
             # Отдаем запрос worker-у (тестовый) на нахождение леса на снимке.
             worker_res = requests.put(worker_uri + "thresholding_otsu/" + str(fs_image_id))
 
-    # Тест
-    # print("-"*100)
-    # print("<-> Images collection:")
-    # cursor = imagesCollection.find({})
-    # for document in cursor: 
-    #     print(f'+ File name: {document["filename"]}, id: {document["_id"]}, fs_id: {document["fs_id"]}')
-    #     print(f'+ Has tile_map_resource? {document["tile_map_resource"] != None}. Has forest_polygon? {document["forest_polygon"] != None}.')
-    #     print("-"*50)
-
-    # print("-"*100)
-    # print("<-> GridFS files collection:")
-    # cursor = fs.find({})
-    # for document in cursor: 
-    #     pprint(document.filename)
-
 
 if __name__ == "__main__":
     worker_uri = os.environ['WORKER_URI'] if ('WORKER_URI' in os.environ) else "http://localhost:5001/"
