@@ -9,7 +9,7 @@ def sliceToTiles(
         geotiffBytes,
         slicesOutputPath,
         optionsTranslate = ['-if GTiff', '-ot Byte', '-b 1', '-b 2', '-b 3', '-of vrt', '-scale'],
-        optionsSliceToTiles = {}
+        optionsSliceToTiles = {"nb_processes": 96}
     ):
     """
     Function that prepares and cuts a geotiff file into fragments that are available for display in leaflet.js.
