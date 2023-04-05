@@ -1,6 +1,6 @@
 import requests
 from flask import Blueprint, jsonify, request, g, current_app, Response, send_file
-from server.db import get_db, get_grid_fs,get_worker_url
+from db import get_db, get_grid_fs,get_worker_url
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 import io
