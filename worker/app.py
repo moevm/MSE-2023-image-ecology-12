@@ -10,6 +10,8 @@ import os
 
 from db import get_db, get_grid_fs
 from image_processing.geotiff_slicer.slice2tiles import sliceToTiles
+from image_processing.find_forest.otsu_method import get_image_RGB, otsu_method
+from image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
 
 db = LocalProxy(get_db)
 fs = LocalProxy(get_grid_fs)
@@ -40,7 +42,7 @@ def slice(fs_id):
     for root, _, files in os.walk(image_name[:image_name.rfind(".")]):
         path = root.split(os.sep)
         for file in files:
-            # Сами фрагменты лежат по пути /{z}/{x}.png, но нужно отсечь доп. файлы
+            # Сами фрагменты лежат по пути /{z}/{x}/{y}.png, но нужно отсечь доп. файлы
             # с информацией о геолокации в корне папки.
             if (len(path) >= 2):
                 with open(root + "/" + file, "rb") as f:
@@ -61,62 +63,42 @@ def slice(fs_id):
             os.rmdir(os.path.join(root, name))
     os.rmdir(image_name[:image_name.rfind(".")])
 
-
     return "Done"
 
 
-
-@app.route("/thresholding_otsu", methods=["GET"])  # POST !!!
-def thresholding_otsu():
+@app.route("/thresholding_otsu/<string:fs_id>", methods=["PUT"])
+def thresholding_otsu(fs_id):
     """
     Метод Оцу включает в себя преобразование изображения в двоичный формат,
     где пиксели классифицируются как («полезные» и «фоновые»), 
     рассчитывая такой порог, чтобы внутриклассовая дисперсия была минимальной.
     """
-    # data = request.get_json()
-    image_id = "640c7feb44e959620e519270"  # data['image_id']
-    image_file = fs.get(ObjectId(image_id))
+    # Получаем запись из бд с информацией по изображению.
+    image_info = db.images.find_one({"fs_id": ObjectId(fs_id)})
+    # Получаем саму картинку из GridFS.
+    image_bytes = fs.get(ObjectId(fs_id)).read()
+    # Нарезаем на фрагменты.
+    image_name = image_info["filename"]
 
-    # Load the GeoTiff image
-    # input_image = cv2.imread(image_file, cv2.IMREAD_UNCHANGED)
-    # Read the image data from the file
-    image_data = image_file.read()
+    image_RGB = get_image_RGB(image_name, image_bytes)
 
-    # Decode the image data to a NumPy array
-    input_image = cv2.imdecode(np.frombuffer(image_data, np.uint16), cv2.IMREAD_UNCHANGED)
+    coord_transformer = CoordintesTransformer(image_bytes)
 
-    # Normalize input image to range [0, 255]
-    normalized_image = cv2.normalize(input_image, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
+    polygon_lat_long = []
+    for line in otsu_method(image_RGB):
+        # Преобразовываем координаты каждой точки из пикселей в широту и долготу.
+        line_arr = []
+        for point in line:
+            x_pix, y_pix = point[0]
+            line_arr.append(coord_transformer.pixel_xy_to_lat_long(x_pix, y_pix))
+        polygon_lat_long.append(line_arr)
 
-    # Convert normalized image to 8-bit image
-    image = cv2.convertScaleAbs(normalized_image)
+    coord_transformer.close()
 
-    # Applying Otsu's method setting the flag value into cv.THRESH_OTSU.
-    # Use a bimodal image as an input.
-    # Optimal threshold value is determined automatically.
-    otsu_threshold, image_result = cv2.threshold(
-        image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU,
-    )
+    # Добавим полученные контуры в базу данных.
+    db.images.update_one({"_id": image_info["_id"]}, {"$set": {"forest_polygon": polygon_lat_long}})
 
-    # Remove noise and fill holes in the binary image using morphological operations
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (20, 20))
-    closed = cv2.morphologyEx(image_result, cv2.MORPH_OPEN, kernel)
-
-    # Find the contours in the input image
-    contours, hierarchy = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-
-    # Draw the contours on an image
-    contour_img = cv2.drawContours(image, contours, -1, (255, 255, 255), 2)
-
-    # AttributeError: 'numpy.ndarray' object has no attribute 'read'
-    # Преобразовать nummpy arrray в байтовой последовательность
-    # file_id = fs.put(contour_img, filename=image_file.filename + "_otsu", chunk_size=256 * 1024)
-    # print(file_id)
-    # return send_file(image_file, mimetype='image/tif')
-    # Display the image
-    cv2.imshow("Contours", contour_img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    return "Done"
 
 
 if __name__ == "__main__":
