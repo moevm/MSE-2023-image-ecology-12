@@ -12,10 +12,15 @@ images_bp = Blueprint('images_bp', __name__, url_prefix="/images")
 
 @images_bp.route('/', methods=['GET'])
 def get_images_indexes():
-    db_ids = []
+    images = []
     for img in db.images.find({}):
-        db_ids.append(str(img["_id"]))
-    return db_ids
+        images.append({
+            "id": str(img["_id"]),
+            "name": img["name"],
+        })
+
+    return images
+
 
 @images_bp.route('/tile_map_resource/<string:db_id>', methods=['GET'])
 def index(db_id):
