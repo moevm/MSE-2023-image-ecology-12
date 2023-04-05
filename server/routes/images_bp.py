@@ -1,12 +1,13 @@
+import requests
 from flask import Blueprint, jsonify, request, g, current_app, Response, send_file
-from db import get_db, get_grid_fs
+from server.db import get_db, get_grid_fs,get_worker_url
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 import io
 
-
 db = LocalProxy(get_db)
 fs = LocalProxy(get_grid_fs)
+worker_url = LocalProxy(get_worker_url)
 images_bp = Blueprint('images_bp', __name__, url_prefix="/images")
 
 
@@ -33,10 +34,19 @@ def add_image():
         Adds a new image to the system for analysis.
     """
     image = request.files['image']
-    file_id = fs.put(image, filename=image.filename, chunk_size=256*1024)
-    item = {"filename": image.filename, "tile_map_resource": None, "fs_id": file_id, "forest_polygon": None}
+    file_id = fs.put(image, filename=image.filename, chunk_size=256 * 1024)
+    item = {
+        "filename": image.filename,
+        "tile_map_resource": None,
+        "fs_id": file_id,
+        "forest_polygon": None,
+        "name": request.form.get('name')
+    }
     db.images.insert_one(item)
+    worker_res = requests.put(worker_url + "slice/" + str(file_id))
+    worker_res = requests.put(worker_url + "thresholding_otsu/" + str(file_id))
     return jsonify({'message': 'Image added successfully'})
+
 
 # Маршрут для leaflet-а, возвращает кусочки для отображения.
 @images_bp.route("/tile/<string:db_id>/<int:z>/<int:x>/<int:y>", methods=['GET'])
