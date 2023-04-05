@@ -15,6 +15,7 @@ def create_app():
         init_db()
     return app
 
+
 def delete_all_data_in_db_and_fs(app: Flask):
     with app.app_context():
         db = get_db()
@@ -22,6 +23,7 @@ def delete_all_data_in_db_and_fs(app: Flask):
     db.images.drop()
     db.fs.files.drop()
     db.fs.chunks.drop()
+
 
 def add_test_data_db(app: Flask, worker_uri):
     with app.app_context():
@@ -41,16 +43,16 @@ def add_test_data_db(app: Flask, worker_uri):
             imagesCollection.insert_one(item)
 
         # Если картинка есть в бд, а её tile_map_resource нет (это означает, что нарезка еще не производилась).
-        if (not db.images.find_one({"filename": imageName}) == None and 
-            db.images.find_one({"filename": imageName})["tile_map_resource"] == None):
+        if (not db.images.find_one({"filename": imageName}) == None and
+                db.images.find_one({"filename": imageName})["tile_map_resource"] == None):
             fs_image_id = db.images.find_one({"filename": imageName})["fs_id"]
 
             # Отдаем запрос worker-у (тестовый) на нарезку сохраненного в бд файла.
             worker_res = requests.put(worker_uri + "slice/" + str(fs_image_id))
 
         # Если картинка есть в бд, а её forest_polygon нет (это означает, что обработка еще не производилась).
-        if (not db.images.find_one({"filename": imageName}) == None and 
-            db.images.find_one({"filename": imageName})["forest_polygon"] == None):
+        if (not db.images.find_one({"filename": imageName}) == None and
+                db.images.find_one({"filename": imageName})["forest_polygon"] == None):
             fs_image_id = db.images.find_one({"filename": imageName})["fs_id"]
 
             # Отдаем запрос worker-у (тестовый) на нахождение леса на снимке.
@@ -58,7 +60,6 @@ def add_test_data_db(app: Flask, worker_uri):
 
 
 if __name__ == "__main__":
-    worker_uri = os.environ['WORKER_URI'] if ('WORKER_URI' in os.environ) else "http://localhost:5001/"
     application = create_app()
     # Раскоментируй эту строчку, если хочешь очистить базу данных при запуске сервера (тестовый режим).                                 
     # delete_all_data_in_db_and_fs(application)
