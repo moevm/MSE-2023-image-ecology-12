@@ -6,7 +6,7 @@ from gridfs import GridFS
 
 def init_db():
     print("Init db")
-    db = get_db()
+    return get_db()
 
 
 def get_db():
