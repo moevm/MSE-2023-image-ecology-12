@@ -44,6 +44,7 @@ def add_test_data_db(app: Flask, db, fs, worker_url):
                 "forest_polygon": None, 
                 "name": imageName[:imageName.rfind(".")]
             }
+
             imagesCollection.insert_one(item)
 
         # Если картинка есть в бд, а её tile_map_resource нет (это означает, что нарезка еще не производилась).

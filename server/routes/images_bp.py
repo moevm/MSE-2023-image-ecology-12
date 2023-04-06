@@ -42,6 +42,7 @@ def add_image():
         "forest_polygon": None,
         "name": request.form.get('name')
     }
+
     db.images.insert_one(item)
     worker_res = requests.put(worker_url + "slice/" + str(file_id))
     worker_res = requests.put(worker_url + "thresholding_otsu/" + str(file_id))
