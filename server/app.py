@@ -4,7 +4,7 @@ from flask_cors import CORS
 import requests
 import os
 
-from db import init_db, get_db, get_grid_fs
+from db import init_db, get_grid_fs, get_worker_url
 
 
 def create_app():
@@ -12,34 +12,38 @@ def create_app():
     app.register_blueprint(api_bp, url_prefix="/api")
     CORS(app)
     with app.app_context():
-        init_db()
-    return app
+        db = init_db()
+        fs = get_grid_fs()
+        worker_url = get_worker_url()
+    return app, db, fs, worker_url
 
 
-def delete_all_data_in_db_and_fs(app: Flask):
-    with app.app_context():
-        db = get_db()
-
+def delete_all_data_in_db_and_fs(app: Flask, db):
     db.images.drop()
     db.fs.files.drop()
     db.fs.chunks.drop()
 
+    print('All database data deleted.')
 
-def add_test_data_db(app: Flask, worker_uri):
-    with app.app_context():
-        db = get_db()
-        fs = get_grid_fs()
+
+def add_test_data_db(app: Flask, db, fs, worker_url):
     imagesCollection = db.images
 
-    files = [f for f in os.listdir('.') if os.path.isfile(f)]
+    files = ["1.tif", "2.tif"]
     for imageName in files:
-        if (imageName[(imageName.rfind(".") + 1):] in ["tif", "tiff"] and not fs.exists({"filename": imageName})):
+        if (not fs.exists({"filename": imageName})):
             with open(imageName, 'rb') as f:
                 contents = f.read()
             fs_image_id = fs.put(contents, filename=imageName)
 
             # tile_map_resource - XML информация дополнительная, для правильных координат отображения тайлов.
-            item = {"filename": imageName, "tile_map_resource": None, "fs_id": fs_image_id, "forest_polygon": None}
+            item = {
+                "filename": imageName, 
+                "tile_map_resource": None, 
+                "fs_id": fs_image_id, 
+                "forest_polygon": None, 
+                "name": imageName[:imageName.rfind(".")]
+            }
             imagesCollection.insert_one(item)
 
         # Если картинка есть в бд, а её tile_map_resource нет (это означает, что нарезка еще не производилась).
@@ -48,7 +52,7 @@ def add_test_data_db(app: Flask, worker_uri):
             fs_image_id = db.images.find_one({"filename": imageName})["fs_id"]
 
             # Отдаем запрос worker-у (тестовый) на нарезку сохраненного в бд файла.
-            worker_res = requests.put(worker_uri + "slice/" + str(fs_image_id))
+            worker_res = requests.put(worker_url + "slice/" + str(fs_image_id))
 
         # Если картинка есть в бд, а её forest_polygon нет (это означает, что обработка еще не производилась).
         if (not db.images.find_one({"filename": imageName}) == None and
@@ -56,14 +60,14 @@ def add_test_data_db(app: Flask, worker_uri):
             fs_image_id = db.images.find_one({"filename": imageName})["fs_id"]
 
             # Отдаем запрос worker-у (тестовый) на нахождение леса на снимке.
-            worker_res = requests.put(worker_uri + "thresholding_otsu/" + str(fs_image_id))
+            worker_res = requests.put(worker_url + "thresholding_otsu/" + str(fs_image_id))
 
 
 if __name__ == "__main__":
-    application = create_app()
+    application, db, fs, worker_url = create_app()
     # Раскоментируй эту строчку, если хочешь очистить базу данных при запуске сервера (тестовый режим).                                 
-    # delete_all_data_in_db_and_fs(application)
-    # add_test_data_db(application, worker_uri)
+    # delete_all_data_in_db_and_fs(application, db)
+    add_test_data_db(application, db, fs, worker_url)
     application.config['DEBUG'] = True
     port = os.environ['FLASK_PORT'] if ('FLASK_PORT' in os.environ) else 5000
     application.run(host='0.0.0.0', port=port)
