@@ -30,10 +30,12 @@
   <main>
     <router-view />
   </main>
+  <ToasterComponent />
 </template>
 
 <script setup lang="ts">
 import { routeNames } from "@/router";
+import ToasterComponent from "@/components/common/ToasterComponent.vue";
 
 const routes = [
   routeNames.MapsList,
