@@ -1,7 +1,14 @@
 <template>
   <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div v-for="toast of toasts" :key="toast.id" class="toast" role="alert">
-      <div class="toast-header">
+    <BToast
+      v-for="toast of toaster.toasts"
+      :key="toast.id"
+      class="toast"
+      role="alert"
+      @hidden="toastHidden(toast)"
+      @mounted="toastMounted"
+    >
+      <template #title>
         <span class="me-auto">{{ toast.title }}</span>
         <button
           type="button"
@@ -9,24 +16,29 @@
           data-bs-dismiss="toast"
           aria-label="Close"
         />
-      </div>
-      <div class="toast-body">
+      </template>
+
+      <template #body>
         {{ toast.body }}
-      </div>
-    </div>
+      </template>
+    </BToast>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
 import { Toast } from "bootstrap";
 import { useToaster } from "@/store/toaster";
 import { ToastData } from "@/types/toast";
+import BToast from "@/bootstrap/BToast.vue";
 
-const { toasts, deleteToast } = useToaster();
+const toaster = useToaster();
+
+function toastMounted(toast: Toast) {
+  toast.show();
+}
 
 function toastHidden(toast: ToastData) {
-  console.log("hidden");
+  toaster.deleteToast(toast.id);
 }
 </script>
 
