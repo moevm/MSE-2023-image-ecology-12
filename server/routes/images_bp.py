@@ -57,7 +57,8 @@ def get_tile(db_id, z, x, y):
     if (tile_info):
         tile = fs.get(tile_info._id).read()
         return send_file(io.BytesIO(tile), mimetype='image/png')
-
+    else:
+        return 'OK'
 
 @images_bp.route('/<string:db_id>', methods=['GET'])
 def get_image(db_id):
