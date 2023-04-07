@@ -3,6 +3,8 @@
     <BToast
       v-for="toast of toaster.toasts"
       :key="toast.id"
+      :delay="toast.time"
+      :class="`text-bg-${toast.type ?? 'light'}`"
       class="toast"
       role="alert"
       @hidden="toastHidden(toast)"
