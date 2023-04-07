@@ -27,9 +27,9 @@ const toast = ref<Toast | null>(null);
 
 const props = withDefaults(
   defineProps<{
-    animation: boolean;
-    autohide: boolean;
-    delay: number;
+    animation?: boolean;
+    autohide?: boolean;
+    delay?: number;
   }>(),
   { animation: true, autohide: true, delay: 5000 }
 );
