@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 
 queue_bp = Blueprint('queue', __name__, url_prefix='/queue')
 
