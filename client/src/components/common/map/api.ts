@@ -6,13 +6,9 @@ export async function getXMLinfo(id: string): Promise<Document> {
     await axios.get<string>(baseURL + "/images/tile_map_resource/" + id)
   ).data;
   const parser: DOMParser = new DOMParser();
-  const xmlDoc: Document = parser.parseFromString(xmlImageInfo, "text/xml");
-  return xmlDoc;
+  return parser.parseFromString(xmlImageInfo, "text/xml");
 }
 
 export async function getForestPolygon(id: string): Promise<number[][][]> {
-  const forestPolygon: number[][][] = (
-    await axios.get<number[][][]>(baseURL + "/images/forest/" + id)
-  ).data;
-  return forestPolygon;
+  return (await axios.get<number[][][]>(baseURL + "/images/forest/" + id)).data;
 }
