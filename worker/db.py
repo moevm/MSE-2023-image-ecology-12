@@ -1,10 +1,7 @@
-# import configparser
 import os
 import pymongo
 from flask import g
 from gridfs import GridFS
-# config = configparser.ConfigParser()
-# config.read(os.path.abspath(os.path.join(".ini")))
 
 
 def get_db():

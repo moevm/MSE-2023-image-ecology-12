@@ -6,7 +6,7 @@ from gridfs import GridFS
 
 def init_db():
     print("Init db")
-    db = get_db()
+    return get_db()
 
 
 def get_db():
@@ -40,3 +40,9 @@ def get_grid_fs():
         fs = g._fs = GridFS(db)
 
     return fs
+
+
+def get_worker_url():
+    if 'worker_url' not in g:
+        g.worker_uri = os.environ['WORKER_URI'] if ('WORKER_URI' in os.environ) else "http://localhost:5001/"
+    return g.worker_uri

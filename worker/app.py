@@ -1,11 +1,8 @@
-import cv2
 from bson import ObjectId
 from flask_cors import CORS
-from sdd_segmentation.sdd import sdd_threshold_selection
-from flask import Flask, jsonify, request, send_file
+from flask import Flask
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
-import numpy as np
 import os
 
 from db import get_db, get_grid_fs

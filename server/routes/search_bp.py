@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 
 search_bp = Blueprint('search', __name__, url_prefix='/search')
 
