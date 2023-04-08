@@ -29,11 +29,28 @@
 <script setup lang="ts">
 import { uploadMap } from "@/components/routes/upload/api";
 import { FormKitGroupValue } from "@formkit/core";
+import { useToaster } from "@/store/toaster";
+import { ToastTypes } from "@/config/toast";
 
-function submit(data: FormKitGroupValue) {
+const toaster = useToaster();
+
+async function submit(data: FormKitGroupValue) {
   const files = data.files as { name: string; file: File }[],
     name = data.name as string;
-  uploadMap(files[0].file, name);
+  try {
+    await uploadMap(files[0].file, name);
+    toaster.addToast({
+      title: "Информация",
+      body: "Карта загружена успешно",
+      type: ToastTypes.success,
+    });
+  } catch (e) {
+    toaster.addToast({
+      title: "Информация",
+      body: "Не удалось загрузить файл",
+      type: ToastTypes.danger,
+    });
+  }
 }
 </script>
 
