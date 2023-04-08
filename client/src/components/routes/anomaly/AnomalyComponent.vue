@@ -40,8 +40,6 @@ import { routeNames } from "@/router";
 import { getAnomalyData } from "@/components/routes/anomaly/api";
 import { AgGridVue } from "ag-grid-vue3";
 
-import MapDisplay from "@/components/common/map/MapDisplay.vue";
-
 const props = defineProps<{ id: string }>();
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
