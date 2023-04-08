@@ -19,6 +19,9 @@ sudo docker compose up --build
 Клиентское приложение доступно на порту 80, зайти на него можно из браузера по адресу
 `http://localhost` или 'http://127.0.0.1'
 
+## Скринкаст для презентации первой итерации
+https://drive.google.com/file/d/1v7AndMWR2ltUdBlKSv7MFNOtTrWpj7yX/view?usp=share_link
+
 ## Правила работы с репозиторием
 Справка по git-flow: [CONTRIBUTING.md](https://github.com/moevm/MSE-2023-image-ecology-12/blob/readme/CONTRIBUTING.md)  
 
