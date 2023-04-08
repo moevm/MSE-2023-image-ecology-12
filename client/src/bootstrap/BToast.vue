@@ -10,15 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  onMounted,
-  defineExpose,
-  readonly,
-  defineEmits,
-  defineProps,
-  withDefaults,
-} from "vue";
+import { ref, onMounted, readonly, withDefaults } from "vue";
 import { useEventListener } from "@vueuse/core";
 import { Toast } from "bootstrap";
 
