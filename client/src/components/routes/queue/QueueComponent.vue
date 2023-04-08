@@ -65,14 +65,16 @@ const columnDefs: ColDef<QueueItemInfo>[] = [
           router.push({ name: routeNames.Map, params: { id: data.id } }),
       },
       {
-        tooltip: "Переместить наверх очереди",
+        tooltip: "Переместить выше по очереди",
         icon: "bi bi-arrow-up",
         button: "btn-success",
+        onClicked: higherQueue(data.id)
       },
       {
-        tooltip: "Переместить вниз очереди",
+        tooltip: "Переместить ниже по очереди",
         icon: "bi bi-arrow-down",
         button: "btn-warning",
+        onClicked: lowerQueue(data.id)    
       },
       {
         tooltip: "Пауза",
@@ -97,14 +99,34 @@ const options: GridOptions<QueueItemInfo> = {
   animateRows: true,
 };
 
-const data = await getQueueInfo();
-</script>
+
+
+data = await getQueueInfo();
+
 import { updateQueueApi } from "@/components/routes/queue/api";
 import { FormKitGroupValue } from "@formkit/core";
 
-function updateQueue(data: FormKitGroupValue) {
-  const files = data.files as { id: string;}[];
-  updateQueueApi(files);
+function lowerQueue(id: string) {
+  lowerQueueApi(id);
+  data = await getQueueInfo();
 }
+
+function higherQueue(id: string) {
+  higherQueueApi(id);
+  data = await getQueueInfo();
+}
+
+function upQueue(id: string) {
+  upQueueApi(id);
+  data = await getQueueInfo();
+}
+
+function downQueue(id: string) {
+  downQueueApi(id);
+  data = await getQueueInfo();
+}
+
+</script>
+
 
 <style scoped lang="scss"></style>

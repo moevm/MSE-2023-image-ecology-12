@@ -3,6 +3,7 @@ from db import get_db, get_grid_fs
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 import io
+import  arrow
 
 db = LocalProxy(get_db)
 fs = LocalProxy(get_grid_fs)
@@ -26,16 +27,20 @@ def add_image():
     """
         Adds a new image to the system for analysis.
     """
-    '''if request.files["file"].name.split(".")[-1] != "tif" or request.files["file"].name.split(".")[-1] != "tiff" :
-        return jsonify({'message': 'Image is trash: not right format'})'''
-    image = request.files["file"]
-    file_id = fs.put(image, filename=request.files["file"].name, chunk_size=256*1024)
-    item = {"filename": request.files["file"].name,
-            "tile_map_resource": None,
-            "fs_id": file_id,
-            "queue": None,
-            "state": "paused",
-            "progress": 0}
+    image = request.files['image']
+    file_id = fs.put(image, filename=image.filename, chunk_size=256 * 1024)
+    item = {
+        "filename": image.filename,
+        "tile_map_resource": None,
+        "fs_id": file_id,
+        "forest_polygon": None,
+        "name": request.form.get('name'),
+        "queue": db.images.find().sort({"queue": +-1}).limit(1) + 1, #max value + 1
+        "state": "paused",
+        "progress": 0,
+        "date_upload": arrow.now().to('UTC')
+    }
+
     db.images.insert_one(item)
     return jsonify({'message': 'Image added successfully'})
 

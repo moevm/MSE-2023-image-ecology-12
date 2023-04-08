@@ -1,13 +1,8 @@
-import axios from "axios";
-import { baseURL } from "@/api";
+import { api } from "@/api";
 
 export function uploadMap(file: File, name: string) {
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("image", file);
   formData.append("name", name);
-  axios
-    .post(baseURL + "/images/upload_image", formData, { headers: { 'Content-Type': 'multipart/form-data' } })
-    .then(resp => {
-      console.log('File uploaded successfully.');
-    });
+  return api.post("/images/upload_image", formData);
 }

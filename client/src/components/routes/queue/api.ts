@@ -1,16 +1,37 @@
 import { QueueItemInfo } from "@/types/queue";
 import { QueueStatus } from "@/config/queue";
-import axios from "axios";
+//import axios from "axios";
 import { baseURL } from "@/api";
 
-
-export function updateQueueApi(files: string[]){
-  axios.post(baseURL + "/queue/update_queue", files, { headers: { 'Content-Type': 'multipart/form-data' } })
-    .then(resp => {
-      console.log('Queue updated successfully.');
-    });
+export function higherQueueApi(id: string){
+  const formData = new FormData();
+  formData.append("id", id);
+  return api.post("/queue/higher", formData);
 }
+
+export function lowerQueueApi(id: string){
+  const formData = new FormData();
+  formData.append("id", id);
+  return api.post("/queue/lower", formData);
+}
+
+export function upQueueApi(id: string){
+  const formData = new FormData();
+  formData.append("id", id);
+  return api.post("/queue/up", formData);
+}
+
+export function downQueueApi(id: string){
+  const formData = new FormData();
+  formData.append("id", id);
+  return api.post("/queue/down", formData);
+}
+
 export function getQueueInfo(): Promise<QueueItemInfo[]> {
+  return api.get("/queue")
+}
+
+/*export function getQueueInfo(): Promise<QueueItemInfo[]> {
   return Promise.resolve([
     {
       id: "1",
@@ -48,5 +69,5 @@ export function getQueueInfo(): Promise<QueueItemInfo[]> {
       name: "Лес 9",
     },
   ]);
-}
+}*/
 

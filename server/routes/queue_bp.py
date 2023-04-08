@@ -10,6 +10,57 @@ images_bp = Blueprint('images_bp', __name__)
 
 #states: processing or paused or enqueued
 
+
+@queue_bp.route('/lower', methods=['POST'])
+def lower_queue():
+    """
+        Drops down in queue
+    """
+    db_id = request.files['id']
+    queue_num = db.images.find_one({"_id": db_id})["queue"]
+    max_value = db.images.find().sort({"queue": -1}).limit(1)["queue"]
+    if b.images.find_one({"_id": db_id})["queue"] == max_value:
+        return jsonify({'status': 'success'})
+
+    next_id = None
+    for i in db.images.find():
+        if queue_num < i["queue"]:
+            if next_id is None:
+                next_id = i["_id"]
+            else:
+                if ObjectId(i["_id"])["queue"] < ObjectId(next_id["_id"])["queue"]:
+                    next_id = i["_id"]
+
+    buf = ObjectId(next_id["_id"])["queue"]
+    db.images.update_one({"_id": next_id}, {"$set": {'queue': ObjectId(db_id["_id"])["queue"]}})
+    db.images.update_one({"_id": db_id}, {"$set": {'queue': buf}})
+    return jsonify({'status': 'success'})
+
+@queue_bp.route('/higher', methods=['POST'])
+def lower_queue():
+    """
+        Drops down in queue
+    """
+    db_id = request.files['id']
+    queue_num = db.images.find_one({"_id": db_id})["queue"]
+    max_value = db.images.find().sort({"queue": 1}).limit(1)["queue"]
+    if b.images.find_one({"_id": db_id})["queue"] == max_value:
+        return jsonify({'status': 'success'})
+
+    next_id = None
+    for i in db.images.find():
+        if queue_num > i["queue"]:
+            if next_id is None:
+                next_id = i["_id"]
+            else:
+                if ObjectId(i["_id"])["queue"] < ObjectId(next_id["_id"])["queue"]:
+                    next_id = i["_id"]
+
+    buf = ObjectId(next_id["_id"])["queue"]
+    db.images.update_one({"_id": next_id}, {"$set": {'queue': ObjectId(db_id["_id"])["queue"]}})
+    db.images.update_one({"_id": db_id}, {"$set": {'queue': buf}})
+    return jsonify({'status': 'success'})
+
 @queue_bp.route('/add_to_queue/<string:db_id>', methods=['POST'])
 def add_to_queue():
     """
@@ -55,7 +106,8 @@ def get_queue():
             This route would return the current state of the image analysis queue,
             including the number of images waiting to be processed and their estimated processing time.
     """
-    # Return the current state of the analysis queue
-    numbers = db.users.find({"state": "enqueued"}).count()
-    all_time = numbers * 100 #TODO
-    return jsonify({'queue': [numbers, all_time]})
+    return jsonify({id: db.images.id,
+                    uploadDate: db.images.date_upload,
+                    progress: db.images.progress,
+                    status: db.images.state,
+                    name: db.images.name})
