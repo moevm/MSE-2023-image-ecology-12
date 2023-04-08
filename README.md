@@ -1,21 +1,20 @@
 # MSE-2023-image-ecology-12
 
-## Useful links:
+## Полезные ссылки:
 
-- [Knowledge base](https://miro.com/app/board/uXjVPmWfHN0=/?share_link_id=127919305492)
+- [База знаний проекта](https://miro.com/app/board/uXjVPmWfHN0=/?share_link_id=127919305492)
 
-## Requirements
+## Требования
 
 - docker
 - docker compose v2
 
-## Build
+## Сборка
 
 ```bash
 docker compose up --build
 ```
 
-## Contributing
+## Правила работы с репозиторием
+Справка по git-flow: [CONTRIBUTING.md](https://github.com/moevm/MSE-2023-image-ecology-12/blob/readme/CONTRIBUTING.md)  
 
-To contribute, please read the contribution guidelines: [CONTRIBUTING.md](https://github.com/moevm/MSE-2023-image-ecology-12/blob/readme/CONTRIBUTING.md)  
-***TODO***: fix link.

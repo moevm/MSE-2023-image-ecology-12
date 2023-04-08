@@ -1,4 +1,4 @@
-# How to Contribute
+# Правила работы
 
 ## Git-Flow:
   - У нас есть 3 ветки: main, dev, test
