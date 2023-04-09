@@ -12,7 +12,7 @@ from pprint import pprint
 def create_app():
     app = Flask(__name__)
     app.register_blueprint(api_bp, url_prefix="/api")
-    CORS(app)
+    CORS(app, supports_credentials=True)
     with app.app_context():
         init_db()
     return app
@@ -68,7 +68,16 @@ if __name__ == "__main__":
     application = create_app()
     # Раскоментируй эту строчку, если хочешь очистить базу данных при запуске сервера (тестовый режим).                                 
     # delete_all_data_in_db_and_fs(application)                                      
-    add_test_data_db(application, worker_uri)
+    # add_test_data_db(application, worker_uri)
+    print("-"*100)
+    print("<-> Images collection:")
+    with application.app_context():
+        db = get_db()
+    cursor = db.images.find({})
+    for document in cursor: 
+        pprint(document)
+
+    print("-"*100)
     application.config['DEBUG'] = True
     port = os.environ['FLASK_PORT'] if ('FLASK_PORT' in os.environ) else 5000
     application.run(host='0.0.0.0', port=port)
