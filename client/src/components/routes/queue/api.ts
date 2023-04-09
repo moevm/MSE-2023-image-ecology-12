@@ -1,34 +1,41 @@
 import { QueueItemInfo } from "@/types/queue";
 import { QueueStatus } from "@/config/queue";
-//import axios from "axios";
-import { baseURL } from "@/api";
+import axios from "axios";
+import { api } from "@/api";
 
 export function higherQueueApi(id: string){
+  
   const formData = new FormData();
-  formData.append("id", id);
-  return api.post("/queue/higher", formData);
+  formData.append("name", id);
+  axios.post('/queue/higher', formData, { headers : { 'Content-Type': 'multipart/form-data' } 
+  })
+  .then(resp => {
+    console.log(resp);
+  })
 }
 
 export function lowerQueueApi(id: string){
   const formData = new FormData();
-  formData.append("id", id);
+  formData.append("db_id", id);
   return api.post("/queue/lower", formData);
 }
 
 export function upQueueApi(id: string){
   const formData = new FormData();
-  formData.append("id", id);
+  formData.append("db_id", id);
   return api.post("/queue/up", formData);
 }
 
 export function downQueueApi(id: string){
   const formData = new FormData();
-  formData.append("id", id);
+  formData.append("db_id", id);
   return api.post("/queue/down", formData);
 }
 
 export function getQueueInfo(): Promise<QueueItemInfo[]> {
-  return api.get("/queue")
+  return  api.get<QueueItemInfo[]>("/queue/get_queue").then(function (res) {
+            return res.data;
+        })
 }
 
 /*export function getQueueInfo(): Promise<QueueItemInfo[]> {
