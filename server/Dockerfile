@@ -1,4 +1,4 @@
 FROM python:3.9-slim
 WORKDIR /app
-RUN pip install flask flask_cors pymongo requests
+RUN pip install flask flask_cors pymongo requests arrow
 COPY . .
