@@ -28,6 +28,11 @@ import { QueueStatus } from "@/config/queue";
 import StatusRenderer from "@/components/routes/queue/components/StatusRenderer.vue";
 import ProgressRenderer from "@/components/routes/queue/components/ProgressRenderer.vue";
 
+import { lowerQueueApi } from "@/components/routes/queue/api";
+import { higherQueueApi } from "@/components/routes/queue/api";
+import { upQueueApi } from "@/components/routes/queue/api";
+import { downQueueApi } from "@/components/routes/queue/api";
+
 const router = useRouter();
 
 const columnDefs: ColDef<QueueItemInfo>[] = [
@@ -68,13 +73,13 @@ const columnDefs: ColDef<QueueItemInfo>[] = [
         tooltip: "Переместить выше по очереди",
         icon: "bi bi-arrow-up",
         button: "btn-success",
-        onClicked: higherQueue(data.id)
+        onClicked: (action, data) => higherQueue(data.id )
       },
       {
         tooltip: "Переместить ниже по очереди",
         icon: "bi bi-arrow-down",
         button: "btn-warning",
-        onClicked: lowerQueue(data.id)    
+        onClicked: (action, data) => lowerQueue(data.id)    
       },
       {
         tooltip: "Пауза",
@@ -101,29 +106,22 @@ const options: GridOptions<QueueItemInfo> = {
 
 
 
-data = await getQueueInfo();
-
-import { updateQueueApi } from "@/components/routes/queue/api";
-import { FormKitGroupValue } from "@formkit/core";
+const data = await getQueueInfo();
 
 function lowerQueue(id: string) {
   lowerQueueApi(id);
-  data = await getQueueInfo();
 }
 
 function higherQueue(id: string) {
   higherQueueApi(id);
-  data = await getQueueInfo();
 }
 
 function upQueue(id: string) {
   upQueueApi(id);
-  data = await getQueueInfo();
 }
 
 function downQueue(id: string) {
   downQueueApi(id);
-  data = await getQueueInfo();
 }
 
 </script>
