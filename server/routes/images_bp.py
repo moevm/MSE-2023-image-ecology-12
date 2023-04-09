@@ -3,7 +3,8 @@ from db import get_db, get_grid_fs
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 import io
-import  arrow
+import arrow
+import pymongo
 
 db = LocalProxy(get_db)
 fs = LocalProxy(get_grid_fs)
@@ -29,16 +30,22 @@ def add_image():
     """
     image = request.files['image']
     file_id = fs.put(image, filename=image.filename, chunk_size=256 * 1024)
+    queue = 0
+    try:
+        queue = db.images.find().sort({"queue": -1}).limit(1)["queue"] + 1
+    except TypeError:
+        pass
+
     item = {
         "filename": image.filename,
         "tile_map_resource": None,
         "fs_id": file_id,
         "forest_polygon": None,
         "name": request.form.get('name'),
-        "queue": db.images.find().sort({"queue": +-1}).limit(1) + 1, #max value + 1
+        "queue": queue, #max value + 1
         "state": "paused",
         "progress": 0,
-        "date_upload": arrow.now().to('UTC')
+        "date_upload": str(arrow.now().to('UTC'))
     }
 
     db.images.insert_one(item)
