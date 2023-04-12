@@ -4,14 +4,9 @@ import axios from "axios";
 import { api } from "@/api";
 
 export function higherQueueApi(id: string){
-  
   const formData = new FormData();
-  formData.append("name", id);
-  axios.post('/queue/higher', formData, { headers : { 'Content-Type': 'multipart/form-data' } 
-  })
-  .then(resp => {
-    console.log(resp);
-  })
+  formData.append("db_id", id);
+  return api.post("/queue/higher", formData);
 }
 
 export function lowerQueueApi(id: string){
