@@ -15,6 +15,7 @@ def lower_queue(db_id):
     """
         Drops down in queue
     """
+    db_id = ObjectId(db_id)
     queue_num = db.images.find_one({"_id": db_id})["queue"]
     max_value = db.images.find().sort({"queue": -1}).limit(1)["queue"]
     if db.images.find_one({"_id": db_id})["queue"] == max_value:
