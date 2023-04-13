@@ -10,15 +10,14 @@ fs = LocalProxy(get_grid_fs)
 #states: processing or paused or enqueued
 
 
-@queue_bp.route('/lower', methods=['POST'])
-def lower_queue():
+@queue_bp.route('/lower/<string:db_id>', methods=['PUT'])
+def lower_queue(db_id):
     """
         Drops down in queue
     """
-    db_id = request.files["db_id"]
     queue_num = db.images.find_one({"_id": db_id})["queue"]
     max_value = db.images.find().sort({"queue": -1}).limit(1)["queue"]
-    if b.images.find_one({"_id": db_id})["queue"] == max_value:
+    if db.images.find_one({"_id": db_id})["queue"] == max_value:
         return jsonify({'status': 'success'})
 
     next_id = None
@@ -35,12 +34,12 @@ def lower_queue():
     db.images.update_one({"_id": db_id}, {"$set": {'queue': buf}})
     return jsonify({'status': 'success'})
 
-@queue_bp.route('/higher', methods=['POST'])
-def higher_queue():
+@queue_bp.route('/higher/<string:db_id>', methods=['PUT'])
+def higher_queue(db_id):
     """
         Drops up in queue
     """
-    db_id = request.files['name']
+    db_id = ObjectId(db_id)
     queue_num = db.images.find_one({"_id": db_id})["queue"]
     min_value = db.images.find().sort({"queue": 1}).limit(1)["queue"]
     if b.images.find_one({"_id": db_id})["queue"] == min_value:
@@ -60,24 +59,24 @@ def higher_queue():
     db.images.update_one({"_id": db_id}, {"$set": {'queue': buf}})
     return jsonify({'status': 'success'})
 
-@queue_bp.route('/down', methods=['POST'])
-def add_to_end_queue():
+@queue_bp.route('/down/<string:db_id>', methods=['PUT'])
+def add_to_end_queue(db_id):
     """
         This route would be used to add images to the analysis queue for batch processing.
     """
-    db_id = request.files['db_id']
+    db_id = ObjectId(db_id)
     max_value = db.images.find().sort({"queue": -1}).limit(1)["queue"]
     if b.images.find_one({"_id": db_id})["queue"] == max_value:
         return jsonify({'status': 'success'})
     db.images.update_one({'_id': db_id}, {"$set": {'queue': max_value + 1}})
     return jsonify({'status': 'success'})
 
-@queue_bp.route('/up', methods=['POST'])
-def add_to_start_queue():
+@queue_bp.route('/up/<string:db_id>', methods=['PUT'])
+def add_to_start_queue(db_id):
     """
         This route would be used to add images to the analysis queue(in head) for batch processing.
     """
-    db_id = request.files['db_id']
+    db_id = ObjectId(db_id)
     min_value = db.images.find().sort({"queue": 1}).limit(1)["queue"]
     if b.images.find_one({"_id": db_id})["queue"] == min_value:
         return jsonify({'status': 'success'})
