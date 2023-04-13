@@ -73,13 +73,13 @@ const columnDefs: ColDef<QueueItemInfo>[] = [
         tooltip: "Переместить выше по очереди",
         icon: "bi bi-arrow-up",
         button: "btn-success",
-        onClicked: (action, data) => higherQueue(data.id )
+        onClicked: (action, data) => higherQueueApi(data.id )
       },
       {
         tooltip: "Переместить ниже по очереди",
         icon: "bi bi-arrow-down",
         button: "btn-warning",
-        onClicked: (action, data) => lowerQueue(data.id)    
+        onClicked: (action, data) => lowerQueueApi(data.id)    
       },
       {
         tooltip: "Пауза",
@@ -107,14 +107,6 @@ const options: GridOptions<QueueItemInfo> = {
 
 
 const data = await getQueueInfo();
-
-function lowerQueue(id: string) {
-  lowerQueueApi(id);
-}
-
-function higherQueue(id: string) {
-  higherQueueApi(id);
-}
 
 function upQueue(id: string) {
   upQueueApi(id);
