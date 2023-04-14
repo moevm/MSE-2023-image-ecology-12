@@ -31,10 +31,8 @@ def add_image():
     image = request.files['image']
     file_id = fs.put(image, filename=image.filename, chunk_size=256 * 1024)
     queue = 0
-    try:
-        queue = db.images.find().sort({"queue": -1}).limit(1)["queue"] + 1
-    except TypeError:
-        pass
+    if db.images.count_documents({}) > 0:
+        queue = db.images.find().sort("queue", -1).limit(1)[0]["queue"] + 1
 
     item = {
         "filename": image.filename,
