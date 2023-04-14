@@ -16,22 +16,22 @@ def lower_queue(db_id):
         Drops down in queue
     """
     db_id = ObjectId(db_id)
-    queue_num = db.images.find_one({"_id": db_id})["queue"]
-    max_value = db.images.find().sort({"queue": -1}).limit(1)["queue"]
+    obj_queue = db.images.find_one({"_id": db_id})["queue"]
+    max_value = db.images.find().sort("queue", -1).limit(1)[0]["queue"]
     if db.images.find_one({"_id": db_id})["queue"] == max_value:
         return jsonify({'status': 'success'})
 
-    next_id = None
+    next_obj = None
     for i in db.images.find():
-        if queue_num < i["queue"]:
-            if next_id is None:
-                next_id = i["_id"]
+        if obj_queue < i["queue"]:
+            if next_obj is None:
+                next_obj = i
             else:
-                if ObjectId(i["_id"])["queue"] > ObjectId(next_id["_id"])["queue"]:
-                    next_id = i["_id"]
+                if i["queue"] > next_obj["queue"]:
+                    next_obj = i
 
-    buf = ObjectId(next_id["_id"])["queue"]
-    db.images.update_one({"_id": next_id}, {"$set": {'queue': ObjectId(db_id["_id"])["queue"]}})
+    buf = next_obj["queue"]
+    db.images.update_one({"_id": next_obj["_id"]}, {"$set": {'queue': db.images.find_one({"_id": db_id})["queue"]}})
     db.images.update_one({"_id": db_id}, {"$set": {'queue': buf}})
     return jsonify({'status': 'success'})
 
@@ -41,22 +41,22 @@ def higher_queue(db_id):
         Drops up in queue
     """
     db_id = ObjectId(db_id)
-    queue_num = db.images.find_one({"_id": db_id})["queue"]
-    min_value = db.images.find().sort({"queue": 1}).limit(1)["queue"]
-    if b.images.find_one({"_id": db_id})["queue"] == min_value:
+    obj_queue = db.images.find_one({"_id": db_id})["queue"]
+    min_value = db.images.find().sort("queue", 1).limit(1)[0]["queue"]
+    if db.images.find_one({"_id": db_id})["queue"] == min_value:
         return jsonify({'status': 'success'})
 
-    prev_id = None
+    prev_obj = None
     for i in db.images.find():
-        if queue_num > i["queue"]:
-            if prev_id is None:
-                prev_id = i["_id"]
+        if obj_queue > i["queue"]:
+            if prev_obj is None:
+                prev_obj = i
             else:
-                if ObjectId(i["_id"])["queue"] < ObjectId(prev_id["_id"])["queue"]:
-                    prev_id = i["_id"]
+                if i["queue"] < prev_obj["queue"]:
+                    prev_obj = i
 
-    buf = ObjectId(prev_id["_id"])["queue"]
-    db.images.update_one({"_id": prev_id}, {"$set": {'queue': ObjectId(db_id["_id"])["queue"]}})
+    buf = prev_obj["queue"]
+    db.images.update_one({"_id": prev_obj["_id"]}, {"$set": {'queue':  db.images.find_one({"_id": db_id})["queue"]}})
     db.images.update_one({"_id": db_id}, {"$set": {'queue': buf}})
     return jsonify({'status': 'success'})
 
@@ -66,8 +66,8 @@ def add_to_end_queue(db_id):
         This route would be used to add images to the analysis queue for batch processing.
     """
     db_id = ObjectId(db_id)
-    max_value = db.images.find().sort({"queue": -1}).limit(1)["queue"]
-    if b.images.find_one({"_id": db_id})["queue"] == max_value:
+    max_value = db.images.find().sort("queue", -1).limit(1)[0]["queue"]
+    if db.images.find_one({"_id": db_id})["queue"] == max_value:
         return jsonify({'status': 'success'})
     db.images.update_one({'_id': db_id}, {"$set": {'queue': max_value + 1}})
     return jsonify({'status': 'success'})
@@ -78,15 +78,15 @@ def add_to_start_queue(db_id):
         This route would be used to add images to the analysis queue(in head) for batch processing.
     """
     db_id = ObjectId(db_id)
-    min_value = db.images.find().sort({"queue": 1}).limit(1)["queue"]
-    if b.images.find_one({"_id": db_id})["queue"] == min_value:
+    min_value = db.images.find().sort("queue", 1).limit(1)[0]["queue"]
+    if db.images.find_one({"_id": db_id})["queue"] == min_value:
         return jsonify({'status': 'success'})
 
-    for i in db.images.find({'status': 'enqueued'}):
+    for i in db.images.find():
         if db_id == i["_id"]:
             continue
-        obj = ObjectId(i["_id"])
-        db.images.update_one({"_id": obj}, {"$set": {'queue': i["queue"] + 1}})
+        obj = i
+        db.images.update_one({"_id": obj["_id"]}, {"$set": {'queue': i["queue"] + 1}})
 
     db.images.update_one({'_id': db_id}, {"$set": {'queue': min_value}})
     return jsonify({'status': 'success'})
@@ -98,7 +98,7 @@ def get_queue():
             including the number of images waiting to be processed and their estimated processing time.
     """
     d = []
-    for i in db.images.find():
+    for i in db.images.find().sort("queue", 1):
         d.append({"id": str(i["_id"]),
                   "uploadDate": i["date_upload"],
                   "progress": i["progress"],
