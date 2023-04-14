@@ -70,16 +70,16 @@ const columnDefs: ColDef<QueueItemInfo>[] = [
           router.push({ name: routeNames.Map, params: { id: data.id } }),
       },
       {
-        tooltip: "Переместить выше по очереди",
+        tooltip: "Переместить на вершину очереди",
         icon: "bi bi-arrow-up",
         button: "btn-success",
-        onClicked: (action, data) => higherQueueApi(data.id )
+        onClicked: (action, data) => upQueueApi(data.id )
       },
       {
-        tooltip: "Переместить ниже по очереди",
+        tooltip: "Переместить вниз очереди",
         icon: "bi bi-arrow-down",
         button: "btn-warning",
-        onClicked: (action, data) => lowerQueueApi(data.id)    
+        onClicked: (action, data) => downQueueApi(data.id)    
       },
       {
         tooltip: "Пауза",
@@ -108,15 +108,6 @@ const options: GridOptions<QueueItemInfo> = {
 
 const data = await getQueueInfo();
 
-function upQueue(id: string) {
-  upQueueApi(id);
-}
-
-function downQueue(id: string) {
-  downQueueApi(id);
-}
-
 </script>
-
 
 <style scoped lang="scss"></style>
