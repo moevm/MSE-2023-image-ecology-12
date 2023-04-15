@@ -7,5 +7,4 @@ export const baseURL = `http://${host}:${port}/api`;
 
 export const api: AxiosInstance = axios.create({
   baseURL,
-  withCredentials: true,
 });
