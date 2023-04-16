@@ -1,12 +1,13 @@
 import requests
 from flask import Blueprint, jsonify, request, send_file
-from db import get_db, get_grid_fs,get_worker_url
+from db import get_db, get_grid_fs, get_slicer_url, get_worker_url
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 import io
 
 db = LocalProxy(get_db)
 fs = LocalProxy(get_grid_fs)
+slicer_url = LocalProxy(get_slicer_url)
 worker_url = LocalProxy(get_worker_url)
 images_bp = Blueprint('images_bp', __name__, url_prefix="/images")
 
@@ -25,7 +26,11 @@ def get_images_indexes():
 
 @images_bp.route('/tile_map_resource/<string:db_id>', methods=['GET'])
 def index(db_id):
-    return db.images.find_one(ObjectId(db_id))["tile_map_resource"]
+    tile_map_resource = db.images.find_one(ObjectId(db_id))["tile_map_resource"]
+    if tile_map_resource is None:
+        return "NotFound"
+    else:
+        return db.images.find_one(ObjectId(db_id))["tile_map_resource"]
 
 
 @images_bp.route('/upload_image', methods=['POST'])
@@ -44,7 +49,7 @@ def add_image():
     }
 
     db.images.insert_one(item)
-    worker_res = requests.put(worker_url + "slice/" + str(file_id))
+    slicer_res = requests.put(slicer_url + "slice/" + str(file_id))
     worker_res = requests.put(worker_url + "thresholding_otsu/" + str(file_id))
     return jsonify({'message': 'Image added successfully'})
 
@@ -72,8 +77,11 @@ def get_image_forest(db_id):
     """
         Returns polygon of find forest in image.
     """
-    image_info = db.images.find_one(ObjectId(db_id))
-    return image_info["forest_polygon"]
+    image_info = db.images.find_one(ObjectId(db_id))["forest_polygon"]
+    if (image_info is None):
+        return "NotFound"
+    else:
+        return image_info
 
 
 @images_bp.route('/<string:db_id>/analysis', methods=['GET'])

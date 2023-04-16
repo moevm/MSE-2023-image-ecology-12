@@ -4,7 +4,9 @@ from flask_cors import CORS
 import requests
 import os
 
-from db import init_db, get_grid_fs, get_worker_url
+from db import init_db, get_grid_fs, get_worker_url, get_slicer_url
+
+import time
 
 
 def create_app():
@@ -15,7 +17,8 @@ def create_app():
         db = init_db()
         fs = get_grid_fs()
         worker_url = get_worker_url()
-    return app, db, fs, worker_url
+        slicer_url = get_slicer_url()
+    return app, db, fs, worker_url, slicer_url
 
 
 def delete_all_data_in_db_and_fs(app: Flask, db):
@@ -26,7 +29,8 @@ def delete_all_data_in_db_and_fs(app: Flask, db):
     print('All database data deleted.')
 
 
-def add_test_data_db(app: Flask, db, fs, worker_url):
+def add_test_data_db(app: Flask, db, fs, worker_url, slicer_url):
+    time.sleep(5)
     imagesCollection = db.images
 
     files = ["1.tif", "2.tif"]
@@ -53,7 +57,7 @@ def add_test_data_db(app: Flask, db, fs, worker_url):
             fs_image_id = db.images.find_one({"filename": imageName})["fs_id"]
 
             # Отдаем запрос worker-у (тестовый) на нарезку сохраненного в бд файла.
-            worker_res = requests.put(worker_url + "slice/" + str(fs_image_id))
+            slicer_res = requests.put(slicer_url + "slice/" + str(fs_image_id))
 
         # Если картинка есть в бд, а её forest_polygon нет (это означает, что обработка еще не производилась).
         if (not db.images.find_one({"filename": imageName}) == None and
@@ -65,10 +69,12 @@ def add_test_data_db(app: Flask, db, fs, worker_url):
 
 
 if __name__ == "__main__":
-    application, db, fs, worker_url = create_app()
+    application, db, fs, worker_url, slicer_url = create_app()
+
     # Раскоментируй эту строчку, если хочешь очистить базу данных при запуске сервера (тестовый режим).                                 
     # delete_all_data_in_db_and_fs(application, db)
-    add_test_data_db(application, db, fs, worker_url)
+    add_test_data_db(application, db, fs, worker_url, slicer_url)
+
     application.config['DEBUG'] = True
     port = os.environ['FLASK_PORT'] if ('FLASK_PORT' in os.environ) else 5000
     application.run(host='0.0.0.0', port=port)
