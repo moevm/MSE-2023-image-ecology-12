@@ -46,3 +46,9 @@ def get_worker_url():
     if 'worker_url' not in g:
         g.worker_uri = os.environ['WORKER_URI'] if ('WORKER_URI' in os.environ) else "http://localhost:5001/"
     return g.worker_uri
+
+
+def get_slicer_url():
+    if 'slicer_url' not in g:
+        g.slicer_url = os.environ['SLICER_URI'] if ('SLICER_URI' in os.environ) else "http://localhost:5002/"
+    return g.slicer_url
