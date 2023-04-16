@@ -25,6 +25,7 @@ def delete_all_data_in_db_and_fs(app: Flask, db):
 
     print('All database data deleted.')
 
+
 def add_test_data_db(app: Flask, db, fs, worker_url):
     imagesCollection = db.images
 
