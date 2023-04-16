@@ -49,7 +49,6 @@ def slice(fs_id):
     image_info = db.images.find_one({"fs_id": ObjectId(fs_id)})
     # Получаем саму картинку из GridFS.
     image_bytes = fs.get(ObjectId(fs_id)).read()
-    image_bytes = 3 / 0
     # Нарезаем на фрагменты.
     image_name = image_info["filename"]
     sliceToTiles(image_name, image_bytes, "./" + image_name[:image_name.rfind(".")])
