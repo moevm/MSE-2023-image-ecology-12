@@ -28,7 +28,11 @@ class SlicerRequest:
 def slicer_work():
     while True:
         request_slicer = q.get()
+        try:
             request_slicer.function(**request_slicer.arguments)
+        except:
+            # Чтобы не умирал поток в случае ошибки с одним запросом.
+            print(f"Can't end function {request_slicer.function.__name__} with arguments {str(request_slicer.arguments)}", file=sys.stderr)
 
 
 @app.route("/slice/<string:fs_id>", methods=["PUT"])
