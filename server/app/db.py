@@ -2,7 +2,7 @@ import pymongo
 import redis
 from flask import g
 from gridfs import GridFS
-from app import app
+from flask import current_app as app
 
 
 def get_db():
@@ -14,7 +14,6 @@ def get_db():
     return db
 
 
-@app.teardown_appcontext
 def close_db(error=None):
     db = g.pop('database', None)
     if db is not None:
@@ -24,14 +23,14 @@ def close_db(error=None):
 def get_map_fs():
     fs = getattr(g, "map_fs", None)
     if fs is None:
-        fs = g.map_fs = GridFS(get_db())
+        fs = g.map_fs = GridFS(get_db(), 'map_fs')
     return fs
 
 
 def get_tile_fs():
     fs = getattr(g, "tile_fs", None)
     if fs is None:
-        fs = g.tile_fs = GridFS(get_db())
+        fs = g.tile_fs = GridFS(get_db(), 'tile_fs')
     return fs
 
 
@@ -42,7 +41,6 @@ def get_redis():
     return r
 
 
-@app.teardown_appcontext
 def close_redis(error=None):
     r = g.pop('redis', None)
     if r is not None:
