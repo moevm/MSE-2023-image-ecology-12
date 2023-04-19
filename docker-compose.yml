@@ -21,6 +21,9 @@ services:
     depends_on:
       - redis
       - mongo
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/db"
+      REDIS_URI: "redis://redis:6379/0"
 
   server:
     container_name: server
