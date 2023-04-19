@@ -17,16 +17,17 @@ services:
     build:
       context: server
     entrypoint: celery
-    command: -A server.tasks.app worker --loglevel=INFO
+    command: -A app.tasks.app worker --loglevel=INFO
     depends_on:
       - redis
       - mongo
 
   server:
     container_name: server
-    build: server/
+    build:
+      context: server
     restart: unless-stopped
-    command: python ./app.py
+    command: python /server/app.py
     ports:
       - "5000:80"
     environment:
