@@ -20,9 +20,6 @@ def slice(fs_id):
     tileFs = local.tileFs
 
     # Получаем запись из бд с информацией по изображению.
-    logger.info(fs_id)
-    print(db, mapFs, tileFs)
-    logger.info(str(db))
     image_info = db.images.find_one({"fs_id": ObjectId(fs_id)})
     # Получаем саму картинку из GridFS.
     image_bytes = mapFs.get(ObjectId(fs_id)).read()
