@@ -9,3 +9,4 @@ ADD ./requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY app /server/app
+COPY run.py /server
