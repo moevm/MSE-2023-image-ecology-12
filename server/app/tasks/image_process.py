@@ -1,14 +1,10 @@
 from bson import ObjectId
-from werkzeug.local import LocalProxy
 
-from app import app
-from server.db import get_db, get_tile_fs, get_map_fs
-from server.image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
-from server.image_processing.find_forest.otsu_method import get_image_RGB, otsu_method
+from .celery_app import app
+from app.image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
+from app.image_processing.find_forest.otsu_method import get_image_RGB, otsu_method
 
-db = LocalProxy(get_db)
-tileFs = LocalProxy(get_tile_fs())
-mapFs = LocalProxy(get_map_fs())
+from .db import local
 
 
 @app.task
@@ -18,6 +14,10 @@ def thresholding_otsu(fs_id):
     где пиксели классифицируются как («полезные» и «фоновые»),
     рассчитывая такой порог, чтобы внутриклассовая дисперсия была минимальной.
     """
+    db = local.db
+    mapFs = local.mapFs
+    tileFs = local.tileFs
+
     # Получаем запись из бд с информацией по изображению.
     image_info = db.images.find_one({"fs_id": ObjectId(fs_id)})
     # Получаем саму картинку из GridFS.
