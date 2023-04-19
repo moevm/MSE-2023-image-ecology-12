@@ -35,7 +35,15 @@ def get_tile_fs():
     return fs
 
 
-def get_worker_url():
-    if 'worker_url' not in g:
-        g.worker_uri = os.environ['WORKER_URI'] if ('WORKER_URI' in os.environ) else "http://localhost:5001/"
-    return g.worker_uri
+def get_redis():
+    r = getattr(g, "redis", None)
+    if r is None:
+        r = g.redis = redis.StrictRedis.from_url(app.config.get('REDIS_URI'))
+    return r
+
+
+@app.teardown_appcontext
+def close_redis(error=None):
+    r = g.pop('redis', None)
+    if r is not None:
+        r.close()
