@@ -3,10 +3,9 @@ from bson.objectid import ObjectId
 from app import app
 from app.image_processing.geotiff_slicer.slice2tiles import sliceToTiles
 from celery.utils.log import get_task_logger
+from app.db import local
 
 logger = get_task_logger(__name__)
-
-from app.db import local
 
 
 @app.task(name='slice')

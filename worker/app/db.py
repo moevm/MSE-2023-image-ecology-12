@@ -7,6 +7,7 @@ from gridfs import GridFS
 
 from app import config
 
+
 @dataclass
 class Local:
     db: pymongo.database.Database
@@ -34,4 +35,4 @@ def shutdown_worker(**kwargs):
     local.db.client.close()
     local.redis.close()
 
-    print('Closing database connectionn for worker.')
+    print('Closing database connection for worker.')

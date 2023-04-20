@@ -1,9 +1,7 @@
 from bson import ObjectId
-
 from app import app
 from app.image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
 from app.image_processing.find_forest.otsu_method import get_image_RGB, otsu_method
-
 from app.db import local
 
 
