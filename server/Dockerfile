@@ -4,9 +4,9 @@ WORKDIR /server
 
 RUN apt-get update && apt install -y python3-pip && python -m pip install pip==22.0.2
 
-ADD ./requirements.txt requirements.txt
+ADD requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY app /server/app
-COPY run.py /server
+COPY app app
+COPY run.py .
