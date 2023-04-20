@@ -1,6 +1,6 @@
 import waitress
-
 from app import app
+
 port = app.config.get('FLASK_PORT')
 
 if app.config.get('DEBUG'):
