@@ -1,5 +1,4 @@
 from celery import Celery
-
 from app import config
 
 app = Celery(include=['app.tasks.slice', 'app.tasks.image_process', 'app.tasks.dev'])
