@@ -5,8 +5,8 @@ from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 import io
 
-from app.tasks.slice import slice
-from app.tasks.image_process import thresholding_otsu
+from app.tasks import slice
+from app.tasks import thresholding_otsu
 
 db = LocalProxy(get_db)
 tileFs = LocalProxy(get_tile_fs)
