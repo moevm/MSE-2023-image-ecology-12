@@ -17,7 +17,7 @@ services:
     build:
       context: worker
     entrypoint: celery
-    command: -A app.tasks.celery_app worker --loglevel=INFO
+    command: -A app worker --loglevel=INFO
     depends_on:
       - redis
       - mongo
