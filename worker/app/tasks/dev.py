@@ -1,18 +1,18 @@
-from .celery_app import app
+from app import app
 from app.tasks.slice import slice
 from app.tasks.image_process import thresholding_otsu
 
-from .db import local
+from app.db import local
 
 
-@app.task
+@app.task(name='delete_all_data_in_db_and_fs')
 def delete_all_data_in_db_and_fs():
     local.db.client.drop_database('ecologyDB')
 
     print('All database data deleted.')
 
 
-@app.task
+@app.task(name='add_test_data_db')
 def add_test_data_db():
     db = local.db
     mapFs = local.mapFs

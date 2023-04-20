@@ -1,15 +1,15 @@
 import os
 from bson.objectid import ObjectId
-from .celery_app import app
+from app import app
 from app.image_processing.geotiff_slicer.slice2tiles import sliceToTiles
 from celery.utils.log import get_task_logger
 
 logger = get_task_logger(__name__)
 
-from .db import local
+from app.db import local
 
 
-@app.task
+@app.task(name='slice')
 def slice(fs_id):
     """
     Нарезать geotiff в базе данных с индексом id на кусочки и положить их в gridfs с именем

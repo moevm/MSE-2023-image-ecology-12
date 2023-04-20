@@ -1,13 +1,13 @@
 from bson import ObjectId
 
-from .celery_app import app
+from app import app
 from app.image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
 from app.image_processing.find_forest.otsu_method import get_image_RGB, otsu_method
 
-from .db import local
+from app.db import local
 
 
-@app.task
+@app.task(name='thresholding_otsu')
 def thresholding_otsu(fs_id):
     """
     Метод Оцу включает в себя преобразование изображения в двоичный формат,
