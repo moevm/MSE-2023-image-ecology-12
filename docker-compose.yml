@@ -15,7 +15,7 @@ services:
 
   celery:
     build:
-      context: server
+      context: worker
     entrypoint: celery
     command: -A app.tasks.celery_app worker --loglevel=INFO
     depends_on:
