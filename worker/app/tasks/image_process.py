@@ -14,17 +14,24 @@ def thresholding_otsu(fs_id):
     """
     db = local.db
     map_fs = local.map_fs
+    redis = local.redis
 
     # Получаем запись из бд с информацией по изображению.
     image_info = db.images.find_one({"fs_id": ObjectId(fs_id)})
+    queue_item = f'queue:{image_info["_id"]}'
+
     # Получаем саму картинку из GridFS.
     image_bytes = map_fs.get(ObjectId(fs_id)).read()
+    redis.hset(queue_item, 'progress', 5)
+
     # Нарезаем на фрагменты.
     image_name = image_info["filename"]
 
     image_RGB = get_image_RGB(image_name, image_bytes)
+    redis.hset(queue_item, 'progress', 30)
 
     coord_transformer = CoordintesTransformer(image_bytes)
+    redis.hset(queue_item, 'progress', 50)
 
     polygon_lat_long = []
     for line in otsu_method(image_RGB):
@@ -37,7 +44,11 @@ def thresholding_otsu(fs_id):
 
     coord_transformer.close()
 
+    redis.hset(queue_item, 'progress', 90)
+
     # Добавим полученные контуры в базу данных.
     db.images.update_one({"_id": image_info["_id"]}, {"$set": {"forest_polygon": polygon_lat_long}})
+
+    redis.hset(queue_item, 'progress', 100)
 
     return "Done"
