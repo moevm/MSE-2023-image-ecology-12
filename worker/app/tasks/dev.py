@@ -13,17 +13,16 @@ def delete_all_data_in_db_and_fs():
 @app.task(name='add_test_data_db')
 def add_test_data_db():
     db = local.db
-    mapFs = local.mapFs
-    tileFs = local.tileFs
+    map_fs = local.map_fs
 
     imagesCollection = db.images
 
     files = ["map_samples/1.tif", "map_samples/2.tif"]
     for imageName in files:
-        if (not mapFs.exists({"filename": imageName})):
+        if (not map_fs.exists({"filename": imageName})):
             with open(imageName, 'rb') as f:
                 contents = f.read()
-            fs_image_id = mapFs.put(contents, filename=imageName)
+            fs_image_id = map_fs.put(contents, filename=imageName)
 
             # tile_map_resource - XML информация дополнительная, для правильных координат отображения тайлов.
             item = {

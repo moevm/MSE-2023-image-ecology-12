@@ -15,13 +15,13 @@ def slice(fs_id):
     <image_name>_<z>_<x>_<y>.png
     """
     db = local.db
-    mapFs = local.mapFs
-    tileFs = local.tileFs
+    map_fs = local.map_fs
+    tile_fs = local.tile_fs
 
     # Получаем запись из бд с информацией по изображению.
     image_info = db.images.find_one({"fs_id": ObjectId(fs_id)})
     # Получаем саму картинку из GridFS.
-    image_bytes = mapFs.get(ObjectId(fs_id)).read()
+    image_bytes = map_fs.get(ObjectId(fs_id)).read()
     # Нарезаем на фрагменты.
     image_name = image_info["filename"]
     sliceToTiles(image_name, image_bytes, "./" + image_name[:image_name.rfind(".")])
@@ -29,7 +29,7 @@ def slice(fs_id):
     # Удаляем фрагменты, если они уже были в GridFS.
     cursor = db.fs.files.find({"filename": {"$regex": image_name[:image_name.rfind(".")] + "_\d*_\d*_\d*.png"}})
     for document in cursor:
-        tileFs.delete(document["_id"])
+        tile_fs.delete(document["_id"])
 
     # Добавляем все фрагменты в GridFS.
     for root, _, files in os.walk(image_name[:image_name.rfind(".")]):
@@ -41,7 +41,7 @@ def slice(fs_id):
                 with open(root + "/" + file, "rb") as f:
                     file_content = f.read()
 
-                tileFs.put(file_content, filename="_".join(path) + "_" + file)
+                tile_fs.put(file_content, filename="_".join(path) + "_" + file)
 
     # Добавляем данные для отображения изображения.
     with open(image_name[:image_name.rfind(".")] + "/" + "tilemapresource.xml", "r") as f:

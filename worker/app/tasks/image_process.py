@@ -13,13 +13,12 @@ def thresholding_otsu(fs_id):
     рассчитывая такой порог, чтобы внутриклассовая дисперсия была минимальной.
     """
     db = local.db
-    mapFs = local.mapFs
-    tileFs = local.tileFs
+    map_fs = local.map_fs
 
     # Получаем запись из бд с информацией по изображению.
     image_info = db.images.find_one({"fs_id": ObjectId(fs_id)})
     # Получаем саму картинку из GridFS.
-    image_bytes = mapFs.get(ObjectId(fs_id)).read()
+    image_bytes = map_fs.get(ObjectId(fs_id)).read()
     # Нарезаем на фрагменты.
     image_name = image_info["filename"]
 
