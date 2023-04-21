@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request, send_file
-from app.db import get_db, get_tile_fs, get_map_fs
+from redis.client import StrictRedis
+
+from app.db import get_db, get_tile_fs, get_map_fs, get_redis
 
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
@@ -11,6 +13,7 @@ from app.tasks import thresholding_otsu
 db = LocalProxy(get_db)
 tile_fs = LocalProxy(get_tile_fs)
 map_fs = LocalProxy(get_map_fs)
+redis: StrictRedis = LocalProxy(get_redis)
 
 images_bp = Blueprint('images_bp', __name__, url_prefix="/images")
 
@@ -44,7 +47,9 @@ def add_image():
         "name": request.form.get('name')
     }
 
-    db.images.insert_one(item)
+    result = db.images.insert_one(item)
+    redis.hset(f'queue:{result.inserted_id}', 'progress', 0)
+
     slice.delay(str(file_id))
     thresholding_otsu.delay(str(file_id))
     return jsonify({'message': 'Image added successfully'})
