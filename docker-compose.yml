@@ -14,6 +14,7 @@ services:
       - "6379:6379"
 
   celery:
+    container_name: celery
     build:
       context: worker
     entrypoint: celery
