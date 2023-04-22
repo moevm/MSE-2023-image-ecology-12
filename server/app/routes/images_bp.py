@@ -40,7 +40,6 @@ def add_image():
     image = request.files['image']
     file_id = map_fs.put(image, filename=image.filename, chunk_size=256 * 1024)
     item = {
-        "filename": image.filename,
         "tile_map_resource": None,
         "fs_id": file_id,
         "forest_polygon": None,
@@ -48,10 +47,13 @@ def add_image():
     }
 
     result = db.images.insert_one(item)
-    redis.hset(f'queue:{result.inserted_id}', 'progress', 0)
+    img_id = result.inserted_id
 
-    slice.delay(str(file_id))
-    thresholding_otsu.delay(str(file_id))
+    redis.hset(f'queue:{img_id}', 'progress', 0)
+
+    slice.delay(str(img_id))
+    thresholding_otsu.delay(str(img_id))
+
     return jsonify({'message': 'Image added successfully'})
 
 
