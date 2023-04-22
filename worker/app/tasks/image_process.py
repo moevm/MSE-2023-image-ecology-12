@@ -1,37 +1,37 @@
 from bson import ObjectId
-from flask_cors import CORS
-from flask import Flask
-from werkzeug.local import LocalProxy
-from bson.objectid import ObjectId
-import os
-
-from db import get_db, get_grid_fs
-from image_processing.find_forest.otsu_method import get_image_RGB, otsu_method
-from image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
-
-db = None
-fs = None
-# Init the app
-app = Flask(__name__)
+from app import app
+from app.image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
+from app.image_processing.find_forest.otsu_method import get_image_RGB, otsu_method
+from app.db import local
 
 
-@app.route("/thresholding_otsu/<string:fs_id>", methods=["PUT"])
+@app.task(name='thresholding_otsu')
 def thresholding_otsu(fs_id):
     """
     Метод Оцу включает в себя преобразование изображения в двоичный формат,
-    где пиксели классифицируются как («полезные» и «фоновые»), 
+    где пиксели классифицируются как («полезные» и «фоновые»),
     рассчитывая такой порог, чтобы внутриклассовая дисперсия была минимальной.
     """
+    db = local.db
+    map_fs = local.map_fs
+    redis = local.redis
+
     # Получаем запись из бд с информацией по изображению.
     image_info = db.images.find_one({"fs_id": ObjectId(fs_id)})
+    queue_item = f'queue:{image_info["_id"]}'
+
     # Получаем саму картинку из GridFS.
-    image_bytes = fs.get(ObjectId(fs_id)).read()
+    image_bytes = map_fs.get(ObjectId(fs_id)).read()
+    redis.hset(queue_item, 'progress', 5)
+
     # Нарезаем на фрагменты.
     image_name = image_info["filename"]
 
     image_RGB = get_image_RGB(image_name, image_bytes)
+    redis.hset(queue_item, 'progress', 30)
 
     coord_transformer = CoordintesTransformer(image_bytes)
+    redis.hset(queue_item, 'progress', 50)
 
     polygon_lat_long = []
     for line in otsu_method(image_RGB):
@@ -44,17 +44,11 @@ def thresholding_otsu(fs_id):
 
     coord_transformer.close()
 
+    redis.hset(queue_item, 'progress', 90)
+
     # Добавим полученные контуры в базу данных.
     db.images.update_one({"_id": image_info["_id"]}, {"$set": {"forest_polygon": polygon_lat_long}})
 
+    redis.hset(queue_item, 'progress', 100)
+
     return "Done"
-
-
-if __name__ == "__main__":
-    # Run the app on local host and port 8989
-    CORS(app)
-    port = os.environ['FLASK_PORT'] if ('FLASK_PORT' in os.environ) else 5001
-    with app.app_context():
-        db = get_db()
-        fs = get_grid_fs()
-    app.run(debug=True, host="0.0.0.0", port=port)

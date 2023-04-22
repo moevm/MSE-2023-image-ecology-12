@@ -1,1 +1,0 @@
-import slice2tiles
