@@ -9,7 +9,7 @@ logger = get_task_logger(__name__)
 
 
 @app.task(name='slice')
-def slice(fs_id):
+def slice(img_id: str):
     """
     Нарезать geotiff в базе данных с индексом id на кусочки и положить их в gridfs с именем
     <image_name>_<z>_<x>_<y>.png
@@ -19,41 +19,47 @@ def slice(fs_id):
     tile_fs = local.tile_fs
 
     # Получаем запись из бд с информацией по изображению.
-    image_info = db.images.find_one({"fs_id": ObjectId(fs_id)})
+    image_info = db.images.find_one(ObjectId(img_id))
+
     # Получаем саму картинку из GridFS.
-    image_bytes = map_fs.get(ObjectId(fs_id)).read()
+    image_bytes = map_fs.get(image_info['fs_id']).read()
+
     # Нарезаем на фрагменты.
-    image_name = image_info["filename"]
-    sliceToTiles(image_name, image_bytes, "./" + image_name[:image_name.rfind(".")])
+    sliceToTiles(img_id, image_bytes, f'./{img_id}')
 
     # Удаляем фрагменты, если они уже были в GridFS.
-    cursor = db.fs.files.find({"filename": {"$regex": image_name[:image_name.rfind(".")] + "_\d*_\d*_\d*.png"}})
+    cursor = tile_fs.find({"image_id": img_id})
     for document in cursor:
         tile_fs.delete(document["_id"])
 
     # Добавляем все фрагменты в GridFS.
-    for root, _, files in os.walk(image_name[:image_name.rfind(".")]):
+    for root, _, files in os.walk(img_id):
         path = root.split(os.sep)
         for file in files:
             # Сами фрагменты лежат по пути /{z}/{x}/{y}.png, но нужно отсечь доп. файлы
             # с информацией о геолокации в корне папки.
-            if (len(path) >= 2):
+            if len(path) >= 2:
                 with open(root + "/" + file, "rb") as f:
                     file_content = f.read()
-
-                tile_fs.put(file_content, filename="_".join(path) + "_" + file)
+                    tile_fs.put(
+                        file_content,
+                        image_id=ObjectId(img_id),
+                        z=int(path[1]),
+                        x=int(path[2]),
+                        y=int(file.split('.')[0])
+                    )
 
     # Добавляем данные для отображения изображения.
-    with open(image_name[:image_name.rfind(".")] + "/" + "tilemapresource.xml", "r") as f:
+    with open(f'{img_id}/tilemapresource.xml', "r") as f:
         xml_content = f.read()
-    db.images.update_one({"_id": image_info["_id"]}, {"$set": {"tile_map_resource": xml_content}})
+        db.images.update_one({"_id": image_info["_id"]}, {"$set": {"tile_map_resource": xml_content}})
 
     # Удаляем временную папку с слайсами.
-    for root, dirs, files in os.walk(image_name[:image_name.rfind(".")], topdown=False):
+    for root, dirs, files in os.walk(img_id, topdown=False):
         for name in files:
             os.remove(os.path.join(root, name))
         for name in dirs:
             os.rmdir(os.path.join(root, name))
-    os.rmdir(image_name[:image_name.rfind(".")])
+    os.rmdir(img_id)
 
     return "Done"
