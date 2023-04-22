@@ -9,9 +9,9 @@ def sliceToTiles(
         geotiffName,
         geotiffBytes,
         slicesOutputPath,
-        optionsTranslate = ['-if GTiff', '-ot Byte', '-b 1', '-b 2', '-b 3', '-of vrt', '-scale'],
-        optionsSliceToTiles = {"nb_processes": multiprocessing.cpu_count()}
-    ):
+        optionsTranslate=['-if GTiff', '-ot Byte', '-b 1', '-b 2', '-b 3', '-of vrt', '-scale'],
+        optionsSliceToTiles={"nb_processes": multiprocessing.cpu_count()}
+):
     """
     Function that prepares and cuts a geotiff file into fragments that are available for display in leaflet.js.
     - geotiffName - name of geotiff file for preparing and slicing.
@@ -33,7 +33,7 @@ def _preprocessGeotiff(
         geotiffName,
         geotiffDataset,
         optionsTranslate
-    ):
+):
     """
     Function which converts geotiff files into a shape with the possibility of successful slicing (and save res to .vrt).
     - geotiffName - name of geotiff file for preparing.
@@ -41,17 +41,17 @@ def _preprocessGeotiff(
     - optionsTranslate - options for gdal.Translate (Translate options to convert 16 bit images to 8 bit).
     """
     # Translate and create new vrt file
-    gdal.Translate(geotiffName[:geotiffName.rfind('.')] + '.vrt', 
-                   geotiffDataset, 
+    gdal.Translate(geotiffName[:geotiffName.rfind('.')] + '.vrt',
+                   geotiffDataset,
                    options=" ".join(optionsTranslate)
-                  )
+                   )
 
 
 def _slicePreprocessedGeotiff(
         geotiffPath,
         slicesOutputPath,
         optionsSliceToTiles
-    ):
+):
     """
     Function that cuts a geotiff file into fragments that are available for display in leaflet.js.
     - geotiffPath - path to geotiff file for slicing.
