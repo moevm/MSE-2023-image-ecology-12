@@ -6,7 +6,7 @@ from app.db import local
 
 
 @app.task(name='thresholding_otsu')
-def thresholding_otsu(fs_id):
+def thresholding_otsu(img_id: str):
     """
     Метод Оцу включает в себя преобразование изображения в двоичный формат,
     где пиксели классифицируются как («полезные» и «фоновые»),
@@ -17,17 +17,14 @@ def thresholding_otsu(fs_id):
     redis = local.redis
 
     # Получаем запись из бд с информацией по изображению.
-    image_info = db.images.find_one({"fs_id": ObjectId(fs_id)})
-    queue_item = f'queue:{image_info["_id"]}'
+    image_info = db.images.find_one(ObjectId(img_id))
+    queue_item = f'queue:{img_id}'
 
     # Получаем саму картинку из GridFS.
-    image_bytes = map_fs.get(ObjectId(fs_id)).read()
+    image_bytes = map_fs.get(ObjectId(image_info['fs_id'])).read()
     redis.hset(queue_item, 'progress', 5)
 
-    # Нарезаем на фрагменты.
-    image_name = image_info["filename"]
-
-    image_RGB = get_image_RGB(image_name, image_bytes)
+    image_RGB = get_image_RGB(img_id, image_bytes)
     redis.hset(queue_item, 'progress', 30)
 
     coord_transformer = CoordintesTransformer(image_bytes)
