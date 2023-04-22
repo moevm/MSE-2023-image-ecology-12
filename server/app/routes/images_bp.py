@@ -58,13 +58,11 @@ def add_image():
 
 
 # Маршрут для leaflet-а, возвращает кусочки для отображения.
-@images_bp.route("/tile/<string:db_id>/<int:z>/<int:x>/<int:y>", methods=['GET'])
-def get_tile(db_id, z, x, y):
-    image_name = db.images.find_one(ObjectId(db_id))["filename"]
-    tile_info = tile_fs.find_one({"filename": f"{image_name[:image_name.rfind('.')]}_{z}_{x}_{y}.png"})
-    if (tile_info):
-        tile = tile_fs.get(tile_info._id).read()
-        return send_file(io.BytesIO(tile), mimetype='image/png')
+@images_bp.route("/tile/<string:img_id>/<int:z>/<int:x>/<int:y>", methods=['GET'])
+def get_tile(img_id, z, x, y):
+    tile = tile_fs.find_one({'image_id': ObjectId(img_id), 'z': z, 'x': x, 'y': y})
+    if tile:
+        return send_file(io.BytesIO(tile.read()), mimetype='image/png')
     else:
         return 'OK'
 
