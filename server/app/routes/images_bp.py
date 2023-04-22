@@ -30,9 +30,9 @@ def get_images_indexes():
     return images
 
 
-@images_bp.route('/tile_map_resource/<string:db_id>', methods=['GET'])
-def index(db_id):
-    return db.images.find_one(ObjectId(db_id))["tile_map_resource"]
+@images_bp.route('/tile_map_resource/<string:img_id>', methods=['GET'])
+def index(img_id):
+    return db.images.find_one(ObjectId(img_id))["tile_map_resource"]
 
 
 @images_bp.route('/upload_image', methods=['POST'])
@@ -67,20 +67,20 @@ def get_tile(db_id, z, x, y):
         return 'OK'
 
 
-@images_bp.route('/<string:db_id>', methods=['GET'])
-def get_image(db_id):
-    image_info = db.images.find_one(ObjectId(db_id))
+@images_bp.route('/<string:img_id>', methods=['GET'])
+def get_image(img_id):
+    image_info = db.images.find_one(ObjectId(img_id))
     image_file = tile_fs.get(image_info["fs_id"])
     return send_file(io.BytesIO(image_file), mimetype='image/tiff')
 
 
-@images_bp.route('/forest/<string:db_id>', methods=['GET'])
-def get_image_forest(db_id):
-    image_info = db.images.find_one(ObjectId(db_id))
+@images_bp.route('/forest/<string:img_id>', methods=['GET'])
+def get_image_forest(img_id):
+    image_info = db.images.find_one(ObjectId(img_id))
     return image_info["forest_polygon"]
 
 
-@images_bp.route('/<string:db_id>/analysis', methods=['GET'])
-def get_image_analysis(db_id):
+@images_bp.route('/<string:img_id>/analysis', methods=['GET'])
+def get_image_analysis(img_id):
     # analysis = ImageService.get_image_analysis(image_id)
     return jsonify({'analysis': []})  # jsonify(analysis)
