@@ -8,7 +8,7 @@ from app.db import local
 logger = get_task_logger(__name__)
 
 
-@app.task(name='slice')
+@app.task(name='slice', queue="slice")
 def slice(img_id: str):
     """
     Нарезать geotiff в базе данных с индексом id на кусочки и положить их в gridfs с именем
