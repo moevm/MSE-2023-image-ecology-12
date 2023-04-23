@@ -32,7 +32,11 @@ def get_images_indexes():
 
 @images_bp.route('/tile_map_resource/<string:img_id>', methods=['GET'])
 def index(img_id):
-    return db.images.find_one(ObjectId(img_id))["tile_map_resource"]
+    tile_map_resource = db.images.find_one(ObjectId(img_id))["tile_map_resource"]
+    if tile_map_resource is None:
+        return "NotFound"
+    else:
+        return db.images.find_one(ObjectId(img_id))["tile_map_resource"]
 
 
 @images_bp.route('/upload_image', methods=['POST'])
@@ -76,8 +80,11 @@ def get_image(img_id):
 
 @images_bp.route('/forest/<string:img_id>', methods=['GET'])
 def get_image_forest(img_id):
-    image_info = db.images.find_one(ObjectId(img_id))
-    return image_info["forest_polygon"]
+    image_info = db.images.find_one(ObjectId(img_id))["forest_polygon"]
+    if (image_info is None):
+        return "NotFound"
+    else:
+        return image_info
 
 
 @images_bp.route('/<string:img_id>/analysis', methods=['GET'])
