@@ -1,0 +1,7 @@
+Flask==2.2.3
+Flask-Cors==3.0.10
+pymongo==4.3.3
+arrow==1.2.3
+redis==4.5.4
+celery==5.2.7
+waitress==2.1.2
