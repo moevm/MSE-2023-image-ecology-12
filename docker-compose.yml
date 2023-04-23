@@ -14,25 +14,12 @@ services:
     ports:
       - "6379:6379"
 
-  worker:
-    container_name: worker
+  celery:
+    container_name: celery
     build:
       context: worker
     entrypoint: celery
-    command: -A app worker -Q image_process,dev --loglevel=INFO
-    depends_on:
-      - redis
-      - mongo
-    environment:
-      MONGO_URI: "mongodb://mongo:27017/db"
-      REDIS_URI: "redis://redis:6379/0"
-
-  slicer:
-    container_name: slicer
-    build:
-      context: slicer
-    entrypoint: celery
-    command: -A app worker -Q slice --loglevel=INFO
+    command: -A app worker -Q image_process,slice,dev --loglevel=INFO
     depends_on:
       - redis
       - mongo
@@ -54,8 +41,7 @@ services:
       REDIS_URI: "redis://redis:6379/0"
       DEBUG: False
     depends_on:
-      - worker
-      - slicer
+      - celery
       - redis
       - mongo
 
