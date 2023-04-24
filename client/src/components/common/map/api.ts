@@ -6,13 +6,11 @@ import { baseURL } from "@/api";
 
 
 export async function getXMLinfo(id: string): Promise<Document | undefined> {
-  const xmlImageInfo: string = (
-    await axios.get<string>(baseURL + "/images/tile_map_resource/" + id)
+  const xmlImageInfo = (
+    await axios.get<string | 404>(baseURL + "/images/tile_map_resource/" + id)
   ).data;
 
-  if (xmlImageInfo === "NotFound") {
-    return undefined;
-  } else {
+  if (xmlImageInfo !== 404) {
     const parser: DOMParser = new DOMParser();
     return parser.parseFromString(xmlImageInfo, "text/xml");
   }
@@ -20,11 +18,9 @@ export async function getXMLinfo(id: string): Promise<Document | undefined> {
 
 
 export async function getForestPolygon(id: string): Promise<number[][][] | undefined> {
-  let response: number[][][] | "NotFound" = (await axios.get<number[][][] | "NotFound">(baseURL + "/images/forest/" + id)).data;
+  let response = (await axios.get<number[][][] | 404>(baseURL + "/images/forest/" + id)).data;
   
-  if (response === "NotFound") {
-    return undefined;
-  } else {
+  if (response !== 404) {
     return response;
   }
 }
