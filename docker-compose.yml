@@ -4,6 +4,7 @@ services:
   mongo:
     container_name: mongo
     image: mongo
+    command: mongod --quiet
     ports:
       - "27017:27017"
 
@@ -18,14 +19,14 @@ services:
     build:
       context: worker
     entrypoint: celery
-    command: -A app worker --loglevel=INFO
+    command: -A app worker -Q image_process,slice,dev --loglevel=INFO
     depends_on:
       - redis
       - mongo
     environment:
       MONGO_URI: "mongodb://mongo:27017/db"
       REDIS_URI: "redis://redis:6379/0"
-
+      
   server:
     container_name: server
     build:
