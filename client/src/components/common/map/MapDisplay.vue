@@ -7,8 +7,8 @@ import { getXMLinfo, getForestPolygon, init_map, add_tile_layer_map, add_forest_
 import { onMounted } from "vue";
 
 const props = defineProps<{ id: string }>();
-const xmlImageInfoDoc: Document | undefined = await getXMLinfo(props.id);
-let forestPolygonArr: number[][][] | undefined = await getForestPolygon(props.id);
+const xmlImageInfoDoc = await getXMLinfo(props.id);
+let forestPolygonArr = await getForestPolygon(props.id);
 
 onMounted(() => {
   let mapAndControl = init_map();
