@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, send_file
+from flask import Blueprint, jsonify, request, send_file, abort
 from redis.client import StrictRedis
 
 from app.db import get_db, get_tile_fs, get_map_fs, get_redis
@@ -34,7 +34,7 @@ def get_images_indexes():
 def index(img_id):
     tile_map_resource = db.images.find_one(ObjectId(img_id))["tile_map_resource"]
     if tile_map_resource is None:
-        return 404
+        abort(404)
     else:
         return db.images.find_one(ObjectId(img_id))["tile_map_resource"]
 
@@ -82,7 +82,7 @@ def get_image(img_id):
 def get_image_forest(img_id):
     image_info = db.images.find_one(ObjectId(img_id))["forest_polygon"]
     if (image_info is None):
-        return 404
+        abort(404)
     else:
         return image_info
 

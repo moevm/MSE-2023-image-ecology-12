@@ -1,28 +1,30 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import "leaflet/dist/leaflet.css";
 import L, { LatLngExpression, Polygon } from "leaflet";
 
 import { baseURL } from "@/api";
 
 
-export async function getXMLinfo(id: string): Promise<Document | undefined> {
-  const xmlImageInfo = (
-    await axios.get<string | 404>(baseURL + "/images/tile_map_resource/" + id)
-  ).data;
-
-  if (xmlImageInfo !== 404) {
+export async function getXMLinfo(id: string): Promise<Document | void> {
+  return axios.get<string>(baseURL + "/images/tile_map_resource/" + id).then(response => {
     const parser: DOMParser = new DOMParser();
-    return parser.parseFromString(xmlImageInfo, "text/xml");
-  }
+    return parser.parseFromString(response.data, "text/xml");
+  }).catch((err: AxiosError) => {
+    if (!err.response || (err.response && err.response.status !== 404)) {
+      throw err;
+    }
+  });
 }
 
 
-export async function getForestPolygon(id: string): Promise<number[][][] | undefined> {
-  let response = (await axios.get<number[][][] | 404>(baseURL + "/images/forest/" + id)).data;
-  
-  if (response !== 404) {
-    return response;
-  }
+export async function getForestPolygon(id: string): Promise<number[][][] | void> {
+  return axios.get<number[][][]>(baseURL + "/images/forest/" + id).then(response => {
+    return response.data;
+  }).catch((err: AxiosError) => {
+    if (!err.response || (err.response && err.response.status !== 404)) {
+      throw err;
+    }
+  });
 }
 
 
