@@ -1,26 +1,21 @@
 from celery import Celery
 from app import config
 
-app = Celery(include=['app.tasks.slice', 'app.tasks.image_process', 'app.tasks.dev'])
+app = Celery()
 app.conf.broker_url = config.REDIS_URI
 app.conf.result_backend = config.REDIS_URI
 
 
-@app.task(name='delete_all_data_in_db_and_fs')
+@app.task(name='delete_all_data_in_db_and_fs', queue="dev")
 def delete_all_data_in_db_and_fs():
     pass
 
 
-@app.task(name='add_test_data_db')
-def add_test_data_db():
-    pass
-
-
-@app.task(name='thresholding_otsu')
+@app.task(name='thresholding_otsu', queue="image_process")
 def thresholding_otsu(fs_id):
     pass
 
 
-@app.task(name='slice')
+@app.task(name='slice', queue="slice")
 def slice(fs_id):
     pass

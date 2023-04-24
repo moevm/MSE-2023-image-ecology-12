@@ -5,7 +5,7 @@ from app.image_processing.find_forest.otsu_method import get_image_RGB, otsu_met
 from app.db import local
 
 
-@app.task(name='thresholding_otsu')
+@app.task(name='thresholding_otsu', queue="image_process")
 def thresholding_otsu(img_id: str):
     """
     Метод Оцу включает в себя преобразование изображения в двоичный формат,
