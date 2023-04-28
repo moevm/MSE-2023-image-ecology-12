@@ -41,11 +41,11 @@ def thresholding_otsu(img_id: str):
 
     coord_transformer.close()
 
-    redis.hset(queue_item, 'progress', 90)
+    redis.hset(queue_item, 'progress', 100)
 
     # Добавим полученные контуры в базу данных.
     db.images.update_one({"_id": image_info["_id"]}, {"$set": {"forest_polygon": polygon_lat_long}})
 
-    redis.hset(queue_item, 'progress', 100)
+    redis.delete(queue_item)
 
     return "Done"
