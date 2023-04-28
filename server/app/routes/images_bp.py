@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, jsonify, request, send_file, abort
 from redis.client import StrictRedis
 
@@ -43,17 +45,23 @@ def index(img_id):
 def add_image():
     image = request.files['image']
     file_id = map_fs.put(image, filename=image.filename, chunk_size=256 * 1024)
+    img_name = request.form.get('name')
     item = {
         "tile_map_resource": None,
         "fs_id": file_id,
         "forest_polygon": None,
-        "name": request.form.get('name')
+        "name": img_name
     }
 
     result = db.images.insert_one(item)
     img_id = result.inserted_id
 
-    redis.hset(f'queue:{img_id}', mapping={'id': str(img_id), 'progress': 0})
+    redis.hset(f'queue:{img_id}', mapping={
+        'id': str(img_id),
+        'progress': 0,
+        'name': img_name,
+        'uploadDate': datetime.now().isoformat()
+    })
 
     slice.delay(str(img_id))
     thresholding_otsu.delay(str(img_id))
