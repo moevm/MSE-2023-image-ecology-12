@@ -4,9 +4,11 @@
     <AgGridVue
       class="ag-theme-alpine"
       :column-defs="columnDefs"
-      :row-data="data"
+      :row-data="queue"
       :grid-options="options"
+      :get-row-id="getRowId"
       @grid-ready="fitActionsColumn"
+      @row-data-updated="onRowDataUpdated"
     />
   </div>
 </template>
@@ -19,19 +21,17 @@ import {
   getActionsColDef,
   getDefaultGridOptions,
 } from "@/ag-grid/factory";
-import { getQueueInfo } from "@/components/routes/queue/api";
 import { QueueItemInfo } from "@/types/queue";
 import { dateFormatter } from "@/ag-grid/formatters";
-import { routeNames } from "@/router";
 import { useRouter } from "vue-router";
-import { QueueStatus } from "@/config/queue";
-import StatusRenderer from "@/components/routes/queue/components/StatusRenderer.vue";
 import ProgressRenderer from "@/components/routes/queue/components/ProgressRenderer.vue";
+import { useQueue } from "@/api/websocket/queue";
+import { routeNames } from "@/router";
 
 const router = useRouter();
 
 const columnDefs: ColDef<QueueItemInfo>[] = [
-  { headerName: "Id", field: "id", flex: 2, rowDrag: true, minWidth: 120 },
+  { headerName: "Id", field: "id", flex: 3, minWidth: 240 },
   { headerName: "Название", field: "name", flex: 3, minWidth: 180 },
   {
     headerName: "Дата загрузки",
@@ -49,13 +49,6 @@ const columnDefs: ColDef<QueueItemInfo>[] = [
     minWidth: 180,
   },
   {
-    headerName: "Статус",
-    field: "status",
-    flex: 7,
-    cellRenderer: StatusRenderer,
-    minWidth: 180,
-  },
-  {
     ...getActionsColDef([
       {
         tooltip: "Открыть карту",
@@ -63,28 +56,6 @@ const columnDefs: ColDef<QueueItemInfo>[] = [
         button: "btn-secondary",
         onClicked: (action, data) =>
           router.push({ name: routeNames.Map, params: { id: data.id } }),
-      },
-      {
-        tooltip: "Переместить наверх очереди",
-        icon: "bi bi-arrow-up",
-        button: "btn-success",
-      },
-      {
-        tooltip: "Переместить вниз очереди",
-        icon: "bi bi-arrow-down",
-        button: "btn-warning",
-      },
-      {
-        tooltip: "Пауза",
-        icon: "bi bi-pause",
-        button: "btn-danger",
-        hide: (data) => data.status === QueueStatus.stopped,
-      },
-      {
-        hide: (data) => data.status !== QueueStatus.stopped,
-        tooltip: "Возобновить",
-        icon: "bi bi-play",
-        button: "btn-info",
       },
     ]),
   },
@@ -97,7 +68,15 @@ const options: GridOptions<QueueItemInfo> = {
   animateRows: true,
 };
 
-const data = await getQueueInfo();
+function onRowDataUpdated() {
+  options.columnApi?.autoSizeColumn?.("actions", true);
+}
+
+function getRowId({ data }: { data: QueueItemInfo }) {
+  return data.id;
+}
+
+const { queue } = useQueue();
 </script>
 
 <style scoped lang="scss"></style>
