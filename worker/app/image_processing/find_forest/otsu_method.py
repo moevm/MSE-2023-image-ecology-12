@@ -39,26 +39,26 @@ def otsu_method(image_RGB, update):
     image_RGB - 3-х канальное 8-битное изображение (преобразование изначального tif с помощью get_image_RGB).
     '''
     gray = cv2.cvtColor(image_RGB, cv2.COLOR_BGR2GRAY)
-    update(20)
+    update(12)
 
     # denoise the image with a Gaussian filter
     blurred_image = cv2.GaussianBlur(gray,(5,5),0)
-    update(25)
+    update(15)
 
     otsu_threshold, image_result = cv2.threshold(
         blurred_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU,
     )
-    update(30)
+    update(20)
 
     # Remove noise and fill holes in the binary image using morphological operations
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (20, 20))
-    update(35)
+    update(25)
 
     closed = cv2.morphologyEx(image_result, cv2.MORPH_OPEN, kernel)
-    update(40)
+    update(30)
 
     # Find the contours in the input image
     contours, hierarchy = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
-    update(55)
+    update(35)
 
     return contours

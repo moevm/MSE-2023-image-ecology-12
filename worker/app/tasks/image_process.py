@@ -24,17 +24,17 @@ def thresholding_otsu(img_id: str):
 
     # Получаем саму картинку из GridFS.
     image_bytes = map_fs.get(ObjectId(image_info['fs_id'])).read()
-    update(5)
+    update(3)
 
     image_RGB = get_image_RGB(img_id, image_bytes)
-    update(10)
+    update(5)
 
     coord_transformer = CoordintesTransformer(image_bytes)
-    update(15)
+    update(10)
 
     lines = otsu_method(image_RGB, update)
-    d = 40 / len(lines)
-    progress = 55
+    progress = 35
+    d = (95 - progress) / len(lines)
 
     polygon_lat_long = []
     for line in lines:
