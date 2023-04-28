@@ -32,25 +32,33 @@ def get_image_RGB(image_name, geotif_bytes):
     return np.dstack((normalized_b1, normalized_b2, normalized_b3))
 
 
-def otsu_method(image_RGB):
+def otsu_method(image_RGB, update):
     '''
     Метод Otsu выделения выделяющихся объектов на изображении. Возвращает контуры найденных объектов.
     
     image_RGB - 3-х канальное 8-битное изображение (преобразование изначального tif с помощью get_image_RGB).
     '''
     gray = cv2.cvtColor(image_RGB, cv2.COLOR_BGR2GRAY)
+    update(20)
 
     # denoise the image with a Gaussian filter
     blurred_image = cv2.GaussianBlur(gray,(5,5),0)
+    update(25)
 
     otsu_threshold, image_result = cv2.threshold(
         blurred_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU,
     )
+    update(30)
 
     # Remove noise and fill holes in the binary image using morphological operations
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (20, 20))
+    update(35)
+
     closed = cv2.morphologyEx(image_result, cv2.MORPH_OPEN, kernel)
+    update(40)
 
     # Find the contours in the input image
     contours, hierarchy = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
+    update(55)
+
     return contours
