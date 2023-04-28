@@ -63,6 +63,8 @@ def add_image():
         'uploadDate': datetime.now().isoformat()
     })
 
+    redis.hset(f'slice_queue:{img_id}', mapping={'id': str(img_id)})
+
     slice.delay(str(img_id))
     thresholding_otsu.delay(str(img_id))
 
