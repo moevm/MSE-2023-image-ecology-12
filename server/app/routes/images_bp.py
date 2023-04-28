@@ -21,7 +21,7 @@ images_bp = Blueprint('images_bp', __name__, url_prefix="/images")
 
 
 @images_bp.route('/', methods=['GET'])
-def get_images_indexes():
+def get_images_list():
     images = []
     for img in db.images.find({}):
         images.append({
