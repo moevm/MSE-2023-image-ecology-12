@@ -1,7 +1,5 @@
-import os
 import gdal2tiles
 from osgeo import gdal
-import multiprocessing
 
 
 # -b это слой, который берем, порядок слоев 1, 2, 3 так как sample.tif в формате rgb.
@@ -10,7 +8,7 @@ def sliceToTiles(
         geotiffBytes,
         slicesOutputPath,
         optionsTranslate=['-if GTiff', '-ot Byte', '-b 1', '-b 2', '-b 3', '-of vrt', '-scale'],
-        optionsSliceToTiles={"nb_processes": multiprocessing.cpu_count()}
+        optionsSliceToTiles={"nb_processes": 1}
 ):
     """
     Function that prepares and cuts a geotiff file into fragments that are available for display in leaflet.js.
