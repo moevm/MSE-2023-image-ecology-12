@@ -53,7 +53,7 @@ def add_image():
     result = db.images.insert_one(item)
     img_id = result.inserted_id
 
-    redis.hset(f'queue:{img_id}', 'progress', 0)
+    redis.hset(f'queue:{img_id}', mapping={'id': str(img_id), 'progress': 0})
 
     slice.delay(str(img_id))
     thresholding_otsu.delay(str(img_id))
