@@ -27,24 +27,33 @@ import { useRouter } from "vue-router";
 import ProgressRenderer from "@/components/routes/queue/components/ProgressRenderer.vue";
 import { useQueue } from "@/api/websocket/queue";
 import { routeNames } from "@/router";
+import StatusRenderer from "@/components/routes/queue/components/StatusRenderer.vue";
 
 const router = useRouter();
 
 const columnDefs: ColDef<QueueItemInfo>[] = [
   { headerName: "Id", field: "id", flex: 3, minWidth: 240 },
-  { headerName: "Название", field: "name", flex: 3, minWidth: 180 },
+  { headerName: "Название", field: "name", flex: 2, minWidth: 180 },
   {
     headerName: "Дата загрузки",
     field: "uploadDate",
-    flex: 5,
+    flex: 2,
     valueFormatter: dateFormatter,
     minWidth: 200,
   },
   {
     headerName: "Прогресс",
     field: "progress",
-    flex: 6,
+    flex: 2,
     cellRenderer: ProgressRenderer,
+    cellClass: "row d-flex align-items-center",
+    minWidth: 180,
+  },
+  {
+    headerName: "Статус",
+    field: "status",
+    flex: 2,
+    cellRenderer: StatusRenderer,
     cellClass: "row d-flex align-items-center",
     minWidth: 180,
   },
