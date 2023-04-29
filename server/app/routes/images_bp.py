@@ -27,6 +27,9 @@ def get_images_list():
         images.append({
             "id": str(img["_id"]),
             "name": img["name"],
+            'size': map_fs.find_one({'_id': img["fs_id"]}).length,
+            "ready": img["ready"],
+            "sliced": img["sliced"]
         })
 
     return images
