@@ -20,6 +20,8 @@ def thresholding_otsu(img_id: str):
     image_info = db.images.find_one(ObjectId(img_id))
     queue_item = f'queue:{img_id}'
 
+    redis.hset(queue_item, 'status', 'processing')
+
     update = lambda x: redis.hset(queue_item, 'progress', x)
 
     # Получаем саму картинку из GridFS.
