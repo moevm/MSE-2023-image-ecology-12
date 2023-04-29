@@ -4,6 +4,7 @@ export interface MapInfo {
   date: string;
   size: number;
   ready: boolean;
+  sliced: boolean;
 }
 
 export interface MapAnomaly {
