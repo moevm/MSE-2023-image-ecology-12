@@ -38,7 +38,14 @@ const columnDefs: ColDef<MapInfo>[] = [
     minWidth: 180,
     valueFormatter: dateFormatter,
   },
-  { headerName: "Размер", field: "size", flex: 5, minWidth: 180 },
+  {
+    headerName: "Размер",
+    field: "size",
+    flex: 5,
+    minWidth: 180,
+    valueFormatter: ({ value }: { value: number }) =>
+      `${Math.round(value / 1048576)} Мб`,
+  },
   {
     headerName: "Обработано",
     field: "ready",
