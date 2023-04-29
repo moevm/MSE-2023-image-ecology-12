@@ -47,6 +47,13 @@ const columnDefs: ColDef<MapInfo>[] = [
     cellRenderer: FlagRenderer,
   },
   {
+    headerName: "Нарезано",
+    field: "sliced",
+    flex: 3,
+    minWidth: 200,
+    cellRenderer: FlagRenderer,
+  },
+  {
     ...getActionsColDef([
       {
         tooltip: "Открыть карту",
