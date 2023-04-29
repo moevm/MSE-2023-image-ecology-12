@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, jsonify, request, send_file, abort
 from redis.client import StrictRedis
 
@@ -19,12 +21,15 @@ images_bp = Blueprint('images_bp', __name__, url_prefix="/images")
 
 
 @images_bp.route('/', methods=['GET'])
-def get_images_indexes():
+def get_images_list():
     images = []
     for img in db.images.find({}):
         images.append({
             "id": str(img["_id"]),
             "name": img["name"],
+            'size': map_fs.find_one({'_id': img["fs_id"]}).length,
+            "ready": img["ready"],
+            "sliced": img["sliced"]
         })
 
     return images
@@ -43,17 +48,28 @@ def index(img_id):
 def add_image():
     image = request.files['image']
     file_id = map_fs.put(image, filename=image.filename, chunk_size=256 * 1024)
+    img_name = request.form.get('name')
     item = {
         "tile_map_resource": None,
         "fs_id": file_id,
         "forest_polygon": None,
-        "name": request.form.get('name')
+        "name": img_name,
+        'ready': False,
+        'sliced': False
     }
 
     result = db.images.insert_one(item)
     img_id = result.inserted_id
 
-    redis.hset(f'queue:{img_id}', 'progress', 0)
+    redis.hset(f'queue:{img_id}', mapping={
+        'id': str(img_id),
+        'progress': 0,
+        'name': img_name,
+        'uploadDate': datetime.now().isoformat(),
+        'status': 'enqueued'
+    })
+
+    redis.hset(f'slice_queue:{img_id}', mapping={'id': str(img_id)})
 
     slice.delay(str(img_id))
     thresholding_otsu.delay(str(img_id))
