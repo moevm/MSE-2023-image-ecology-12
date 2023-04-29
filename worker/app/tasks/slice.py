@@ -70,4 +70,6 @@ def slice(img_id: str):
     os.rmdir(img_id)
 
     redis.delete(f'slice_queue:{img_id}')
+    db.images.update_one({"_id": image_info["_id"]}, {"$set": {"sliced": True}})
+
     return "Done"

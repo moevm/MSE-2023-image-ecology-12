@@ -50,7 +50,9 @@ def add_image():
         "tile_map_resource": None,
         "fs_id": file_id,
         "forest_polygon": None,
-        "name": img_name
+        "name": img_name,
+        'ready': False,
+        'sliced': False
     }
 
     result = db.images.insert_one(item)

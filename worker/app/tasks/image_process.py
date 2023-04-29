@@ -55,5 +55,6 @@ def thresholding_otsu(img_id: str):
     db.images.update_one({"_id": image_info["_id"]}, {"$set": {"forest_polygon": polygon_lat_long}})
 
     redis.delete(queue_item)
+    db.images.update_one({"_id": image_info["_id"]}, {"$set": {"ready": True}})
 
     return "Done"
