@@ -1,3 +1,4 @@
+import multiprocessing
 import os
 from bson.objectid import ObjectId
 from app import app
@@ -17,6 +18,7 @@ def slice(img_id: str):
     db = local.db
     map_fs = local.map_fs
     tile_fs = local.tile_fs
+    redis = local.redis
 
     # Получаем запись из бд с информацией по изображению.
     image_info = db.images.find_one(ObjectId(img_id))
@@ -24,8 +26,13 @@ def slice(img_id: str):
     # Получаем саму картинку из GridFS.
     image_bytes = map_fs.get(image_info['fs_id']).read()
 
+    slicers = len(redis.keys('slice_queue:*'))
+
     # Нарезаем на фрагменты.
-    sliceToTiles(img_id, image_bytes, f'./{img_id}')
+    sliceToTiles(
+        img_id, image_bytes, f'./{img_id}',
+        optionsSliceToTiles={"nb_processes": max(1, multiprocessing.cpu_count() // (1 + slicers))}
+    )
 
     # Удаляем фрагменты, если они уже были в GridFS.
     cursor = tile_fs.find({"image_id": img_id})
@@ -61,5 +68,8 @@ def slice(img_id: str):
         for name in dirs:
             os.rmdir(os.path.join(root, name))
     os.rmdir(img_id)
+
+    redis.delete(f'slice_queue:{img_id}')
+    db.images.update_one({"_id": image_info["_id"]}, {"$set": {"sliced": True}})
 
     return "Done"
