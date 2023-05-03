@@ -96,7 +96,7 @@ def get_image(img_id):
 
 @images_bp.route('/forest/<string:img_id>', methods=['GET'])
 def get_image_forest(img_id):
-    image_info = db.images.find_one(ObjectId(img_id))["forest_polygon"]
+    image_info = db.images.find_one(ObjectId(img_id))["deforestation_polygon"]  # forest_polygon
     if (image_info is None):
         abort(404)
     else:
