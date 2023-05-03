@@ -13,9 +13,9 @@ def get_image_RGB(image_name, geotif_bytes):
     image = gdal.Open("/vsimem/" + image_name)
 
     # As, there are 3 bands, we will store in 3 different variables 
-    band_1 = image.GetRasterBand(1) # red channel  
-    band_2 = image.GetRasterBand(2) # green channel  
-    band_3 = image.GetRasterBand(3) # blue channel   
+    band_1 = image.GetRasterBand(1)  # red channel
+    band_2 = image.GetRasterBand(2)  # green channel
+    band_3 = image.GetRasterBand(3)  # blue channel
 
     b1 = band_1.ReadAsArray()  
     b2 = band_2.ReadAsArray()  
@@ -30,6 +30,23 @@ def get_image_RGB(image_name, geotif_bytes):
     gdal.Unlink("/vsimem/" + image_name)
 
     return np.dstack((normalized_b1, normalized_b2, normalized_b3))
+
+
+def morph_operations(image_arr, update, use_gaussian_filter: bool = True):
+    if use_gaussian_filter:
+        # denoise the image with a Gaussian filter
+        blurred_image = cv2.GaussianBlur(image_arr, (5, 5), 0)
+
+    # Remove noise and fill holes in the binary image using morphological operations
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10, 10))
+    update(25)
+    return cv2.morphologyEx(image_arr, cv2.MORPH_OPEN, kernel)
+
+
+def find_contours(thresh):
+    # Find the contours in the input image
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    return contours
 
 
 def otsu_method(image_RGB, update):
@@ -51,14 +68,10 @@ def otsu_method(image_RGB, update):
     update(20)
 
     # Remove noise and fill holes in the binary image using morphological operations
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (20, 20))
-    update(25)
-
-    closed = cv2.morphologyEx(image_result, cv2.MORPH_OPEN, kernel)
+    closed = morph_operations(image_result, update, use_gaussian_filter=False)
     update(30)
 
     # Find the contours in the input image
-    contours, hierarchy = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
+    contours = find_contours(closed)
     update(35)
-
     return contours
