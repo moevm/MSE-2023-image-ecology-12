@@ -19,3 +19,8 @@ def thresholding_otsu(fs_id):
 @app.task(name='slice', queue="slice")
 def slice(fs_id):
     pass
+
+
+@app.task(name='deforestation', queue="image_process")
+def find_deforestation(img_id: str):
+    pass
