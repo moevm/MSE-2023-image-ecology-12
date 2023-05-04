@@ -9,6 +9,21 @@
       @grid-ready="fitActionsColumn"
     />
   </div>
+
+  <Modal
+    v-show="isDelDialogActive"
+    maxwidth="600px"
+    @cancel="closeDelDialog"
+    @accept="acceptDelDialog"
+  >
+    <template v-slot:header>
+      <p> Запрос на удаление карты. </p>
+    </template>
+
+    <template v-slot:body>
+      <p> Вы действительно хотите удалить эту карту? </p>
+    </template>
+  </Modal>
 </template>
 
 <script setup lang="ts">
@@ -25,6 +40,8 @@ import { dateFormatter } from "@/ag-grid/formatters";
 import { useRouter } from "vue-router";
 import { routeNames } from "@/router";
 import FlagRenderer from "@/components/renderers/FlagRenderer.vue";
+import Modal from '@/components/common/Modal.vue';
+
 
 const router = useRouter();
 
@@ -77,6 +94,16 @@ const columnDefs: ColDef<MapInfo>[] = [
         onClicked: (action, data) =>
           router.push({ name: routeNames.Report, params: { id: data.id } }),
       },
+      {
+        tooltip: "Удалить карту",
+        icon: "bi bi-trash",
+        button: "btn-danger",
+        hide: (data) => !(data.ready && data.sliced),
+        onClicked: (action, data) => {
+          isDelDialogActive.value = true;
+          delElement = data.id;
+        }
+      }
     ]),
   },
 ];
@@ -84,9 +111,23 @@ const columnDefs: ColDef<MapInfo>[] = [
 const options: GridOptions<MapInfo> = {
   ...getDefaultGridOptions(),
   domLayout: "autoHeight",
+  animateRows: true,
 };
 
 const data = await getMapsInfo();
+// Для модального окна удаления.
+let isDelDialogActive = ref(false);
+let delElement: string;
+
+function closeDelDialog() {
+  isDelDialogActive.value = false;
+}
+
+function acceptDelDialog() {
+  closeDelDialog();
+  deleteMap(delElement);
+}
+
 </script>
 
 <style scoped lang="scss"></style>
