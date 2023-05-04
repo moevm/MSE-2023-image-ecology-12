@@ -22,5 +22,5 @@ def slice(fs_id):
 
 
 @app.task(name='deforestation', queue="image_process")
-def find_deforestation(img_id: str):
+def deforestation(img_id):
     pass

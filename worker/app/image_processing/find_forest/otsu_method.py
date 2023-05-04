@@ -1,5 +1,5 @@
 import cv2
-from helpers import morph_operations, find_contours
+from app.image_processing.find_forest.helpers import morph_operations, find_contours
 
 
 def otsu_method(image_RGB, update):

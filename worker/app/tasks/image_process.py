@@ -5,12 +5,12 @@ from app.image_processing.find_forest.otsu_method import otsu_method
 from app.image_processing.find_forest.deforestation import find_deforestation
 from app.image_processing.find_forest.helpers import get_image_RGB
 from app.db import local
-from werkzeug.local import LocalProxy
-
-db = LocalProxy(local.db)
-# tile_fs = LocalProxy(get_tile_fs)
-map_fs = LocalProxy(local.map_fs)
-redis = LocalProxy(local.redis)
+# from werkzeug.local import LocalProxy
+#
+# db = local.db
+# # tile_fs = LocalProxy(get_tile_fs)
+# map_fs = local.map_fs
+# redis = local.redis
 
 
 @app.task(name='thresholding_otsu', queue="image_process")
@@ -20,9 +20,9 @@ def thresholding_otsu(img_id: str):
     где пиксели классифицируются как («полезные» и «фоновые»),
     рассчитывая такой порог, чтобы внутриклассовая дисперсия была минимальной.
     """
-    # db = local.db
-    # map_fs = local.map_fs
-    # redis = local.redis
+    db = local.db
+    map_fs = local.map_fs
+    redis = local.redis
 
     # Получаем запись из бд с информацией по изображению.
     image_info = db.images.find_one(ObjectId(img_id))
@@ -63,19 +63,19 @@ def thresholding_otsu(img_id: str):
     db.images.update_one({"_id": image_info["_id"]}, {"$set": {"forest_polygon": polygon_lat_long}})
 
     redis.delete(queue_item)
-    db.images.update_one({"_id": image_info["_id"]}, {"$set": {"ready": True}})
+    # db.images.update_one({"_id": image_info["_id"]}, {"$set": {"ready": True}})
 
     return "Done"
 
 
 @app.task(name='deforestation', queue="image_process")
-def find_deforestation(img_id: str):
+def deforestation(img_id: str):
     """
     Нахождение вырубков с помощью нейронной сети Attention Unet
     """
-    # db = local.db
-    # map_fs = local.map_fs
-    # redis = local.redis
+    db = local.db
+    map_fs = local.map_fs
+    redis = local.redis
 
     # Получаем запись из бд с информацией по изображению.
     image_info = db.images.find_one(ObjectId(img_id))
@@ -95,7 +95,6 @@ def find_deforestation(img_id: str):
     coord_transformer = CoordintesTransformer(image_bytes)
     update(10)
 
-    # lines = otsu_method(image_RGB, update)
     lines = find_deforestation(image_RGB, update)
     progress = 35
     d = (95 - progress) / len(lines)
