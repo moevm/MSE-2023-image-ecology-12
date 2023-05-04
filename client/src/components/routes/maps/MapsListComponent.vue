@@ -4,7 +4,7 @@
     <AgGridVue
       class="ag-theme-alpine"
       :column-defs="columnDefs"
-      :row-data="data"
+      :row-data="images"
       :grid-options="options"
       @grid-ready="fitActionsColumn"
     />
@@ -34,13 +34,15 @@ import {
   getActionsColDef,
   getDefaultGridOptions,
 } from "@/ag-grid/factory";
-import { getMapsInfo } from "@/components/routes/maps/api";
+import { deleteMap } from "@/components/routes/maps/api";
 import { MapInfo } from "@/types/maps";
 import { dateFormatter } from "@/ag-grid/formatters";
 import { useRouter } from "vue-router";
 import { routeNames } from "@/router";
 import FlagRenderer from "@/components/renderers/FlagRenderer.vue";
 import Modal from '@/components/common/Modal.vue';
+import { useImages } from "@/api/websocket/images";
+import { ref } from "vue";
 
 
 const router = useRouter();
@@ -114,7 +116,8 @@ const options: GridOptions<MapInfo> = {
   animateRows: true,
 };
 
-const data = await getMapsInfo();
+const { images } = await useImages();
+
 // Для модального окна удаления.
 let isDelDialogActive = ref(false);
 let delElement: string;
