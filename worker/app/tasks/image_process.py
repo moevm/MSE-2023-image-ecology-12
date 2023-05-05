@@ -1,7 +1,7 @@
 from bson import ObjectId
 from app import app
 from app.image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
-from app.image_processing.find_forest.otsu_method import get_image_RGB, otsu_method, EfficientNetModel, find_forest
+from app.image_processing.find_forest.otsu_method import get_image_RGB, EfficientNetModel, find_forest
 from app.db import local
 import tensorflow as tf
 from tensorflow.keras.models import load_model
@@ -39,7 +39,7 @@ def thresholding_otsu(img_id: str):
     coord_transformer = CoordintesTransformer(image_bytes)
     redis.hset(queue_item, 'progress', 40)
     
-    contures = find_forest(image_RGB)
+    contures = find_forest(image_RGB, update)
 
     polygon_lat_long = []
     for line in contures:

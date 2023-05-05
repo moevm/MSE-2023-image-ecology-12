@@ -99,12 +99,12 @@ def predict_block(block, threshold):
     return predicted_label
 
 
-def find_forest(img):
+def find_forest(img, update):
     block_size = 64
     table_size = 8
     threshold = 0.25
 
-    binary_image = otsu_method(img)
+    binary_image = otsu_method(img, update)
 
     is_forest_table = np.zeros((table_size, table_size))
     
@@ -231,7 +231,7 @@ def find_forest(img):
         row = 0
 
     img_with_contours = contours, hierarchy = cv2.findContours(binary_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-
+    update(37)
     return img_with_contours
 
 

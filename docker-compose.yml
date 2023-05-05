@@ -19,7 +19,7 @@ services:
     build:
       context: worker
     entrypoint: celery
-    command: -A app worker -Q image_process,dev --loglevel=ERROR -c 4
+    command: -A app worker -Q image_process,dev --loglevel=ERROR -c 1 -E
     depends_on:
       - redis
       - mongo
