@@ -23,6 +23,15 @@
               {{ routesTranslation[route] }}
             </router-link>
           </li>
+          <li class="nav-item ps-4">
+            <router-link
+              :to="{ name: routeNames.Home }"
+              class="nav-link"
+              active-class="text-info"
+            >
+              О проекте
+            </router-link>
+          </li>
         </ul>
       </div>
     </div>
