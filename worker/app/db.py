@@ -3,7 +3,6 @@ import redis
 import pymongo.database
 from celery.signals import worker_process_init, worker_process_shutdown
 from gridfs import GridFS
-#from tensorflow.keras.saving import load_model
 from app import config
 
 
@@ -27,9 +26,8 @@ def init_worker(**kwargs):
     
     
     from app.modelClass import EfficientNetModel 
-    local.model = EfficientNetModel(input_shape=(64, 64, 3), num_classes=1)
-    print("local model test before")
-    local.model.load_model('app/image_processing/models/efficientB2_model.h5')
+    local.model_forest = EfficientNetModel(input_shape=(64, 64, 3), num_classes=1)
+    local.model_forest.load_model('app/image_processing/models/efficientB2_model.h5')
     print('Initializing database connection for worker.')
 
 
@@ -37,5 +35,4 @@ def init_worker(**kwargs):
 def shutdown_worker(**kwargs):
     local.db.client.close()
     local.redis.close()
-
     print('Closing database connection for worker.')

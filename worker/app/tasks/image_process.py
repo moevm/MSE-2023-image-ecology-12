@@ -3,15 +3,10 @@ from app import app
 from app.image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
 from app.image_processing.find_forest.otsu_method import get_image_RGB, find_forest
 from app.db import local
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-import cv2
-import numpy as np
 
 
 @app.task(name='thresholding_otsu', queue="image_process")
 def thresholding_otsu(img_id: str):
-    print("fdsfs____________________________________________________________")
     """
     Метод Оцу включает в себя преобразование изображения в двоичный формат,
     где пиксели классифицируются как («полезные» и «фоновые»),
@@ -34,14 +29,14 @@ def thresholding_otsu(img_id: str):
     update(3)
 
     image_RGB = get_image_RGB(img_id, image_bytes)
+    update(7)
 
-    redis.hset(queue_item, 'progress', 30)
-    
     coord_transformer = CoordintesTransformer(image_bytes)
-    redis.hset(queue_item, 'progress', 40)
-    print("40============")
+    update(10)
+
     contures = find_forest(image_RGB, update)
-    print("50=================")
+    update(90)
+
     polygon_lat_long = []
     for line in contures:
 
@@ -51,7 +46,6 @@ def thresholding_otsu(img_id: str):
             x_pix, y_pix = point[0]
             line_arr.append(coord_transformer.pixel_xy_to_lat_long(x_pix, y_pix))
         polygon_lat_long.append(line_arr)
-        #update(progress := progress + d)
 
     coord_transformer.close()
     update(100)

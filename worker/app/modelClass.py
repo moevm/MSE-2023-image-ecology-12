@@ -1,4 +1,3 @@
-import numpy as np
 import tensorflow as tf
 
 class EfficientNetModel:
@@ -19,9 +18,7 @@ class EfficientNetModel:
         
         self.input_shape = input_shape
         self.num_classes = num_classes
-        print("________1________")
-        self.base_model = tf.keras.applications.efficientnet.EfficientNetB2(input_shape=self.input_shape, include_top=False, weights='imagenet')
-        print("________2________")
+        self.base_model = tf.keras.applications.efficientnet.EfficientNetB2(input_shape=self.input_shape, include_top=False)
         self.data_augmentation = tf.keras.Sequential([
             tf.keras.layers.RandomFlip("horizontal_and_vertical"),
             tf.keras.layers.RandomContrast(0.2),
@@ -32,9 +29,7 @@ class EfficientNetModel:
             ],
             name="img_augmentation",
             )
-        print("________3________")
         self.model = self.build_model()
-        print("________4________")
         
     def build_model(self):
         inputs = tf.keras.layers.Input(shape=self.input_shape)
@@ -42,7 +37,6 @@ class EfficientNetModel:
         x = self.base_model(x)
         
         for layer in self.base_model.layers[:40]:  #-20
-            # if not isinstance(layer, tf.keras.layers.BatchNormalization):
             layer.trainable = False
                 
         x = tf.keras.layers.GlobalAveragePooling2D()(x)
@@ -61,7 +55,6 @@ class EfficientNetModel:
         return self.model.evaluate(data)
     
     def predict(self, data, verbose=None):
-        print("model predict")
         return self.model.predict(data, verbose)
     
     def summary(self):
