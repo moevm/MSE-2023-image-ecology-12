@@ -4,7 +4,7 @@ services:
   mongo:
     container_name: mongo
     image: mongo
-    command: mongod --quiet
+    command: mongod --quiet --logpath /dev/null
     ports:
       - "27017:27017"
 

@@ -1,83 +1,16 @@
 import cv2
 import numpy as np
 from osgeo import gdal
-import cv2
 import tensorflow as tf
 from app.image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
-from tensorflow.keras.models import load_model
+from app.db import local
 
-
-class EfficientNetModel:
-    metrics_names = ['loss', 'tp', 'fp', 'tn', 'fn', 'accuracy', 'precision', 'recall', 'auc', 'prc']
-    METRICS = [
-          tf.keras.metrics.TruePositives(name='tp'),
-          tf.keras.metrics.FalsePositives(name='fp'),
-          tf.keras.metrics.TrueNegatives(name='tn'),
-          tf.keras.metrics.FalseNegatives(name='fn'), 
-          tf.keras.metrics.BinaryAccuracy(name='accuracy'),
-          tf.keras.metrics.Precision(name='precision'),
-          tf.keras.metrics.Recall(name='recall'),
-          tf.keras.metrics.AUC(name='auc'),
-          tf.keras.metrics.AUC(name='prc', curve='PR'), # precision-recall curve
-    ]
     
-    def __init__(self, input_shape, num_classes):
-        self.input_shape = input_shape
-        self.num_classes = num_classes
-        self.base_model = tf.keras.applications.efficientnet.EfficientNetB2(input_shape=self.input_shape, include_top=False, weights='imagenet')
-        self.data_augmentation = tf.keras.Sequential([
-            tf.keras.layers.RandomFlip("horizontal_and_vertical"),
-            tf.keras.layers.RandomContrast(0.2),
-            tf.keras.layers.RandomZoom(0.2),
-            tf.keras.layers.RandomRotation(factor=0.15),
-            tf.keras.layers.RandomTranslation(height_factor=0.1, width_factor=0.1),
-            tf.keras.layers.RandomContrast(factor=0.1),
-            ],
-            name="img_augmentation",
-            )
-        self.model = self.build_model()
-        
-    def build_model(self):
-        inputs = tf.keras.layers.Input(shape=self.input_shape)
-        x = self.data_augmentation(inputs)
-        x = self.base_model(x)
-        
-        for layer in self.base_model.layers[:40]:  #-20
-            # if not isinstance(layer, tf.keras.layers.BatchNormalization):
-            layer.trainable = False
-                
-        x = tf.keras.layers.GlobalAveragePooling2D()(x)
-        predictions = tf.keras.layers.Dense(self.num_classes, activation='sigmoid')(x)  # !!
-        model = tf.keras.models.Model(inputs=inputs, outputs=predictions)
-        return model
-
-     
-    def compile(self, learning_rate = 0.0001):
-        self.model.compile(optimizer=tf.keras.optimizers.Adam(
-            learning_rate=learning_rate),
-            loss='binary_crossentropy',
-            metrics=self.METRICS)  
-    
-    def evaluate(self, data):
-        return self.model.evaluate(data)
-    
-    def predict(self, data, verbose=None):
-        return self.model.predict(data, verbose)
-    
-    def summary(self):
-        return self.model.summary()
-    
-    def save_model(self, filepath):
-        self.model.save(filepath)
-        
-    def load_model(self, model_path):
-        self.model.load_weights(model_path)
-        
-    def plot_model_architecture(self, file_path):
-        tf.keras.utils.plot_model(self, to_file=file_path, show_shapes=True)
+input_size = (64, 64)
 
 
 def check_block_within_bounds(shape, block_size, lrx, lry, ulx, uly):
+    print("check")
     x_shape, y_shape = shape[0], shape[1]
 
     if lrx > x_shape:
@@ -86,16 +19,19 @@ def check_block_within_bounds(shape, block_size, lrx, lry, ulx, uly):
     if lry > y_shape:
         lry = y_shape
         uly = lry - block_size
-    
+    print("after check")
     return lrx, lry, ulx, uly
 
 def predict_block(block, threshold):
+    print("block")
     image = cv2.resize(block, input_size)
+    print("block 1")
     image = image.astype('float32') / 255.0 
-
-    prediction = model.predict(np.expand_dims(image, axis = 0))
+    print("block 2")
+    prediction = local.model.predict(np.expand_dims(image, axis = 0))
+    print("block 3")
     predicted_label = 1 if prediction.item() >= threshold else 0
-
+    print("after block")
     return predicted_label
 
 
@@ -103,15 +39,17 @@ def find_forest(img, update):
     block_size = 64
     table_size = 8
     threshold = 0.25
-
+    print("________in otsu 1________")
     binary_image = otsu_method(img, update)
+    print("_____after otsu_____")
 
     is_forest_table = np.zeros((table_size, table_size))
     
     # loop through each block and save as a separate JPEG file
     col = 0
     row = 0
-    for i in range(0, img.shape[0], block_size):       
+    for i in range(0, img.shape[0], block_size):  
+        print("aaaaaaaaaaaaaaaaaaa")     
         for j in range(0, img.shape[1], block_size):  
             # calculate the pixel coordinates of the block
             ulx = i
@@ -132,10 +70,12 @@ def find_forest(img, update):
             predicted_label = predict_block(block, threshold)
             is_forest_table[col, row] = predicted_label
             row += 1
+            print("bbbbbbbbbbbb")
         col += 1
+        
         row = 0
     # print(is_forest_table)
-
+    print("________in otsu 2________")
     for i in range(1, is_forest_table.shape[0] - 1):
         for j in range(1, is_forest_table.shape[1] - 1):
             
@@ -177,6 +117,7 @@ def find_forest(img, update):
             
     # расматриваем частный случай на краях:
     top_left = is_forest_table[0, 0]
+    print("________in otsu 3________")
     if top_left == 0:
         block_right = img[0:block_size, 32:block_size + 32, :]
         block_down = img[32:block_size + 32, 0:block_size, :]
@@ -284,19 +225,16 @@ def otsu_method(image_RGB, update):
     update(20)
 
     # Remove noise and fill holes in the binary image using morphological operations
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (20, 20))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10, 10))
     update(25)
 
     closed = cv2.morphologyEx(image_result, cv2.MORPH_OPEN, kernel)
     update(30)
 
     # Find the contours in the input image
-    contours, hierarchy = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
-    return contours
+    #contours, hierarchy = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
+    return closed
     
-    
-    
-input_size = (64, 64)
-model = EfficientNetModel(input_shape=(64, 64, 3), num_classes=1)
-model.load_model('app/image_processing/models/efficientB2_model.h5')
+
+
 
