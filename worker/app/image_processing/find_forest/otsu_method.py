@@ -171,9 +171,9 @@ def find_forest(img, update):
         col += 1
         row = 0
 
-    img_with_contours = contours, hierarchy = cv2.findContours(binary_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    contours, hierarchy = cv2.findContours(binary_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     update(37)
-    return img_with_contours
+    return contours
 
 
 

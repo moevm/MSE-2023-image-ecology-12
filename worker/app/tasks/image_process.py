@@ -51,7 +51,7 @@ def thresholding_otsu(img_id: str):
             x_pix, y_pix = point[0]
             line_arr.append(coord_transformer.pixel_xy_to_lat_long(x_pix, y_pix))
         polygon_lat_long.append(line_arr)
-        update(progress := progress + d)
+        #update(progress := progress + d)
 
     coord_transformer.close()
     update(100)
