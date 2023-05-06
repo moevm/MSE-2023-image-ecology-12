@@ -9,7 +9,12 @@
           accept=".tiff, .tif"
           multiple="true"
           label="Карты"
-          validation="required"
+          :validation-rules="{ checkFormat }"
+          validation="required|checkFormat"
+          validation-visibility="live"
+          :validation-messages="{
+            checkFormat: 'Требуются файлы .tif/.tiff',
+          }"
         />
         <FormKitSchema :schema="namesSchema" />
         <FormKit
@@ -25,10 +30,18 @@
 
 <script setup lang="ts">
 import { uploadMap } from "@/components/routes/upload/api";
-import { FormKitGroupValue } from "@formkit/core";
+import { FormKitGroupValue, FormKitNode } from "@formkit/core";
 import { useToaster } from "@/store/toaster";
 import { ToastTypes } from "@/config/toast";
 import { computed, ref } from "vue";
+
+const tiffRegExp = /.(tif|tiff)$/i;
+
+function checkFormat(node: FormKitNode) {
+  return (node.value as { name: string }[]).every((f) =>
+    tiffRegExp.test(f.name)
+  );
+}
 
 const toaster = useToaster();
 
