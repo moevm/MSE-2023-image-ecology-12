@@ -3,18 +3,15 @@
     <div class="m-auto col-10 col-lg-6">
       <FormKit type="form" :actions="false" @submit="submit">
         <FormKit
+          v-model="files"
           name="files"
           type="file"
           accept=".tiff, .tif"
-          label="Файл с картой"
+          multiple="true"
+          label="Карты"
           validation="required"
         />
-        <FormKit
-          name="name"
-          type="text"
-          label="Название карты"
-          validation="required"
-        />
+        <FormKitSchema :schema="namesSchema" />
         <FormKit
           outer-class="text-end"
           input-class="$reset btn btn-success"
@@ -31,23 +28,37 @@ import { uploadMap } from "@/components/routes/upload/api";
 import { FormKitGroupValue } from "@formkit/core";
 import { useToaster } from "@/store/toaster";
 import { ToastTypes } from "@/config/toast";
+import { computed, ref } from "vue";
 
 const toaster = useToaster();
 
+const files = ref<{ name: string; file: File }[]>([]);
+
+const namesSchema = computed(() =>
+  files.value.map((f) => ({
+    $formkit: "text",
+    name: f.name,
+    label: `Название карты на снимке ${f.name}`,
+    validation: "required",
+  }))
+);
+
 async function submit(data: FormKitGroupValue) {
-  const files = data.files as { name: string; file: File }[],
-    name = data.name as string;
   try {
-    await uploadMap(files[0].file, name);
+    await Promise.all(
+      files.value.map((f) =>
+        uploadMap(f.file, (data[f.name] as string) ?? f.name)
+      )
+    );
     toaster.addToast({
       title: "Информация",
-      body: "Карта загружена успешно",
+      body: "Карты загружены успешно",
       type: ToastTypes.success,
     });
   } catch (e) {
     toaster.addToast({
       title: "Информация",
-      body: "Не удалось загрузить файл",
+      body: "Не удалось загрузить файлы",
       type: ToastTypes.danger,
     });
   }
