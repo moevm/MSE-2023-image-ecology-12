@@ -25,7 +25,7 @@ def init_worker(**kwargs):
     local.tile_fs = GridFS(local.db, 'tile_fs')
     
     
-    from app.modelClass import EfficientNetModel 
+    from app.image_processing.find_forest.EfficientNetModel import EfficientNetModel 
     local.model_forest = EfficientNetModel(input_shape=(64, 64, 3), num_classes=1)
     local.model_forest.load_model('app/image_processing/models/efficientB2_model.h5')
     print('Initializing database connection for worker.')
