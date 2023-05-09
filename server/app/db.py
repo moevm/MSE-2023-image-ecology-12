@@ -37,7 +37,7 @@ def get_tile_fs():
 def get_redis():
     r = getattr(g, "redis", None)
     if r is None:
-        r = g.redis = redis.StrictRedis.from_url(app.config.get('REDIS_URI'))
+        r = g.redis = redis.StrictRedis.from_url(app.config.get('REDIS_URI'), decode_responses=True)
     return r
 
 

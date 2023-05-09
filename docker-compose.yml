@@ -4,6 +4,7 @@ services:
   mongo:
     container_name: mongo
     image: mongo
+    command: mongod --quiet
     ports:
       - "27017:27017"
 
@@ -13,12 +14,12 @@ services:
     ports:
       - "6379:6379"
 
-  celery:
-    container_name: celery
+  celery-image:
+    container_name: celery-image
     build:
       context: worker
     entrypoint: celery
-    command: -A app worker --loglevel=INFO
+    command: -A app worker -Q image_process,dev --loglevel=ERROR -c 4
     depends_on:
       - redis
       - mongo
@@ -26,12 +27,25 @@ services:
       MONGO_URI: "mongodb://mongo:27017/db"
       REDIS_URI: "redis://redis:6379/0"
 
+  celery-slice:
+    container_name: celery-slice
+    build:
+      context: worker
+    entrypoint: celery
+    command: -A app worker -Q slice --loglevel=ERROR -c 2
+    depends_on:
+      - redis
+      - mongo
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/db"
+      REDIS_URI: "redis://redis:6379/0"
+      
   server:
     container_name: server
     build:
       context: server
     restart: unless-stopped
-    command: python ./run.py
+    command: gunicorn -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 2 --bind 0.0.0.0:80 run:app
     ports:
       - "5000:80"
     environment:
@@ -40,7 +54,8 @@ services:
       REDIS_URI: "redis://redis:6379/0"
       DEBUG: False
     depends_on:
-      - celery
+      - celery-image
+      - celery-slice
       - redis
       - mongo
 
