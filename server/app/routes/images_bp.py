@@ -12,6 +12,8 @@ import io
 from app.tasks import slice
 from app.tasks import thresholding_otsu
 
+from app import socketio
+
 db = LocalProxy(get_db)
 tile_fs = LocalProxy(get_tile_fs)
 map_fs = LocalProxy(get_map_fs)
@@ -75,6 +77,23 @@ def add_image():
     thresholding_otsu.delay(str(img_id))
 
     return jsonify({'message': 'Image added successfully'})
+
+
+@images_bp.route('/delete_image/<string:img_id>', methods=['DELETE'])
+def delete_image(img_id):
+    image_info = db.images.find_one(ObjectId(img_id))
+    if (image_info):
+        fs_id = image_info["fs_id"]
+
+        db.images.delete_one({"_id": ObjectId(img_id)})
+
+        map_fs.delete(fs_id)
+        for tile in tile_fs.find({"image_id": ObjectId(img_id)}):
+            tile_fs.delete(tile._id)
+
+        socketio.emit("images", get_images_list())
+        return jsonify({'message': 'Image deleted successfully'})
+    return 'OK'
 
 
 # Маршрут для leaflet-а, возвращает кусочки для отображения.
