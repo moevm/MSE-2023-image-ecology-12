@@ -1,9 +1,7 @@
-from tensorflow.keras.models import load_model
 from app.image_processing.find_forest.helpers import morph_operations, find_contours
 import numpy as np
 import cv2
-
-model = load_model('app/image_processing/models/unet-attention-3d.hdf5')
+from app.db import local
 
 
 def find_deforestation(image_RGP, update):
@@ -12,7 +10,7 @@ def find_deforestation(image_RGP, update):
     update(12)
     image_norm = resized_image / 255
     update(15)
-    prediction = model.predict(image_norm.reshape(1, 512, 512, 3))
+    prediction = local.deforestation_model.predict(image_norm.reshape(1, 512, 512, 3))
     update(20)
     mask = (np.round(prediction[0])).astype(np.uint8)
     update(22)
