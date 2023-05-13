@@ -1,7 +1,7 @@
 from bson import ObjectId
 from app import app
 from app.image_processing.coordinates_transform.transform_coordinates import CoordintesTransformer
-from app.image_processing.find_forest.otsu_method import get_image_RGB, otsu_method
+from app.image_processing.find_forest.otsu_method import get_image_RGB, find_forest
 from app.db import local
 
 
@@ -29,24 +29,23 @@ def thresholding_otsu(img_id: str):
     update(3)
 
     image_RGB = get_image_RGB(img_id, image_bytes)
-    update(5)
+    update(7)
 
     coord_transformer = CoordintesTransformer(image_bytes)
     update(10)
 
-    lines = otsu_method(image_RGB, update)
-    progress = 35
-    d = (95 - progress) / len(lines)
+    contures = find_forest(image_RGB, update)
+    update(90)
 
     polygon_lat_long = []
-    for line in lines:
+    for line in contures:
+
         # Преобразовываем координаты каждой точки из пикселей в широту и долготу.
         line_arr = []
         for point in line:
             x_pix, y_pix = point[0]
             line_arr.append(coord_transformer.pixel_xy_to_lat_long(x_pix, y_pix))
         polygon_lat_long.append(line_arr)
-        update(progress := progress + d)
 
     coord_transformer.close()
     update(100)
