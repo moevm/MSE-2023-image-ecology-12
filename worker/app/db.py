@@ -24,7 +24,7 @@ local = Local(None, None, None, None)
 def init_worker(**kwargs):
     client = pymongo.MongoClient(config.MONGO_URI)
     local.db = client.get_database('ecologyDB')
-    local.redis = redis.StrictRedis.from_url(config.REDIS_URI)
+    local.redis = redis.StrictRedis.from_url(config.REDIS_URI, decode_responses=True)
     local.map_fs = GridFS(local.db, 'map_fs')
     local.tile_fs = GridFS(local.db, 'tile_fs')
 

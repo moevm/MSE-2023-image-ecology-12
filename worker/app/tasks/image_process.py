@@ -30,22 +30,21 @@ def thresholding_otsu(img_id: str):
 
     redis.hset(queue_item, 'status', 'processing')
 
-    update = lambda x: redis.hset(queue_item, 'progress', x)
+    update = lambda x: redis.hset(queue_item, 'progress', float(redis.hget(f'queue:{img_id}', 'progress')) + x)
 
     # Получаем саму картинку из GridFS.
     image_bytes = map_fs.get(ObjectId(image_info['fs_id'])).read()
-    update(3)
+    update(1)
 
     image_RGB = get_image_RGB(img_id, image_bytes)
-    update(5)
+    update(2)
 
     coord_transformer = CoordintesTransformer(image_bytes)
-    update(10)
+    update(3)
 
     lines = otsu_method(image_RGB, update)
-    progress = 35
-    d = (95 - progress) / len(lines)
 
+    d = 40 / len(lines)
     polygon_lat_long = []
     for line in lines:
         # Преобразовываем координаты каждой точки из пикселей в широту и долготу.
@@ -54,16 +53,17 @@ def thresholding_otsu(img_id: str):
             x_pix, y_pix = point[0]
             line_arr.append(coord_transformer.pixel_xy_to_lat_long(x_pix, y_pix))
         polygon_lat_long.append(line_arr)
-        update(progress := progress + d)
+        update(d)
 
     coord_transformer.close()
-    update(100)
 
     # Добавим полученные контуры в базу данных.
     db.images.update_one({"_id": image_info["_id"]}, {"$set": {"forest_polygon": polygon_lat_long}})
 
-    redis.delete(queue_item)
-    # db.images.update_one({"_id": image_info["_id"]}, {"$set": {"ready": True}})
+    redis.hset(queue_item, 'processing_functions', int(redis.hget(queue_item, 'processing_functions')) - 1)
+    if int(redis.hget(queue_item, 'processing_functions')) == 0:
+        redis.delete(queue_item)
+        db.images.update_one({"_id": image_info["_id"]}, {"$set": {"ready": True}})
 
     return "Done"
 
@@ -83,22 +83,21 @@ def deforestation(img_id: str):
 
     redis.hset(queue_item, 'status', 'processing')
 
-    update = lambda x: redis.hset(queue_item, 'progress', x)
+    update = lambda x: redis.hset(queue_item, 'progress', float(redis.hget(f'queue:{img_id}', 'progress')) + x)
 
     # Получаем саму картинку из GridFS.
     image_bytes = map_fs.get(ObjectId(image_info['fs_id'])).read()
-    update(3)
+    update(1)
 
     image_RGB = get_image_RGB(img_id, image_bytes)
-    update(5)
+    update(2)
 
     coord_transformer = CoordintesTransformer(image_bytes)
-    update(10)
+    update(3)
 
     lines = find_deforestation(image_RGB, update)
-    progress = 35
-    d = (95 - progress) / len(lines)
 
+    d = 40 / len(lines)
     polygon_lat_long = []
     for line in lines:
         # Преобразовываем координаты каждой точки из пикселей в широту и долготу.
@@ -107,15 +106,16 @@ def deforestation(img_id: str):
             x_pix, y_pix = point[0]
             line_arr.append(coord_transformer.pixel_xy_to_lat_long(x_pix, y_pix))
         polygon_lat_long.append(line_arr)
-        update(progress := progress + d)
+        update(d)
 
     coord_transformer.close()
-    update(100)
 
     # Добавим полученные контуры в базу данных.
     db.images.update_one({"_id": image_info["_id"]}, {"$set": {"deforestation_polygon": polygon_lat_long}})
 
-    redis.delete(queue_item)
-    db.images.update_one({"_id": image_info["_id"]}, {"$set": {"ready": True}})
+    redis.hset(queue_item, 'processing_functions', int(redis.hget(queue_item, 'processing_functions')) - 1)
+    if int(redis.hget(queue_item, 'processing_functions')) == 0:
+        redis.delete(queue_item)
+        db.images.update_one({"_id": image_info["_id"]}, {"$set": {"ready": True}})
 
     return "Done"

@@ -32,14 +32,13 @@ def get_image_RGB(image_name, geotif_bytes):
     return np.dstack((normalized_b1, normalized_b2, normalized_b3))
 
 
-def morph_operations(image_arr, update, use_gaussian_filter: bool = True):
+def morph_operations(image_arr, use_gaussian_filter: bool = True):
     if use_gaussian_filter:
         # denoise the image with a Gaussian filter
         blurred_image = cv2.GaussianBlur(image_arr, (5, 5), 0)
 
     # Remove noise and fill holes in the binary image using morphological operations
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10, 10))
-    update(25)
     return cv2.morphologyEx(image_arr, cv2.MORPH_OPEN, kernel)
 
 

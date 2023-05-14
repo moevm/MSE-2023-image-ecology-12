@@ -68,7 +68,8 @@ def add_image():
         'progress': 0,
         'name': img_name,
         'uploadDate': datetime.now().isoformat(),
-        'status': 'enqueued'
+        'status': 'enqueued',
+        'processing_functions': 2
     })
 
     redis.hset(f'slice_queue:{img_id}', mapping={'id': str(img_id)})
