@@ -50,6 +50,7 @@ def find_contours(thresh):
     contours_approx = []
     for line in contours:
         # Преобразовываем координаты каждой точки из пикселей в широту и долготу.
-        line_approx = cv2.approxPolyDP(line, 0.7, True)
+        eps = 0.0001 * cv2.arcLength(line, True)
+        line_approx = cv2.approxPolyDP(line, eps, True)
         contours_approx.append(line_approx)
     return contours_approx
