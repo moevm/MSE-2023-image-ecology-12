@@ -1,4 +1,4 @@
-from app.image_processing.find_forest.helpers import morph_operations, find_contours
+from app.image_processing.find_forest.helpers import find_contours
 import numpy as np
 import cv2
 from app.db import local
@@ -11,11 +11,11 @@ def find_deforestation(image_RGP, update):
     image_norm = resized_image / 255
     prediction = local.deforestation_model.predict(image_norm.reshape(1, 512, 512, 3))
     update(1)
-    mask = (np.round(prediction[0])).astype(np.uint8)
-    denoised_img = morph_operations(mask)
-    denoised_img = cv2.resize(denoised_img, (shape_image[1], shape_image[0]))
+    mask = (prediction[0] == 1).astype(np.uint8)
+    # denoised_img = morph_operations(mask)
+    image = cv2.resize(mask, (shape_image[1], shape_image[0]))
     update(1)
-    contour_img = find_contours(denoised_img)
+    contour_img = find_contours(image)
     update(1)
 
     return contour_img
