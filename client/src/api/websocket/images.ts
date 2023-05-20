@@ -1,23 +1,19 @@
-import { ref, onBeforeUnmount, onBeforeMount, readonly } from "vue";
+import { ref, readonly } from "vue";
 import { MapInfo } from "@/types/maps";
 import { getMapsInfo } from "@/components/routes/maps/api";
 import { socket } from "@/api/websocket/index";
+import {
+  createSharedComposable,
+  tryOnBeforeMount,
+  tryOnScopeDispose,
+} from "@vueuse/core";
 
-const images = ref<MapInfo[]>();
-const consumers = ref(0);
-const listener = (newImages: MapInfo[]) => {
-  images.value = newImages;
-};
-
-export async function useImages() {
-  if (consumers.value === 0) onBeforeMount(() => socket.on("images", listener));
-  consumers.value++;
-
-  onBeforeUnmount(() => {
-    consumers.value--;
-    if (consumers.value === 0) socket.off("images");
-  });
-
+export const useImages = createSharedComposable(async () => {
+  const images = ref<MapInfo[]>([]);
+  tryOnBeforeMount(() =>
+    socket.on("images", (newImages: MapInfo[]) => (images.value = newImages))
+  );
+  tryOnScopeDispose(() => socket.off("queue"));
   images.value = await getMapsInfo();
   return { images: readonly(images) };
-}
+});
