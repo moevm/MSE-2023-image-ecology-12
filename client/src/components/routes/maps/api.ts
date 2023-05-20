@@ -6,6 +6,6 @@ export async function getMapsInfo(): Promise<MapInfo[]> {
   return (await axios.get<MapInfo[]>(baseURL + "/images/")).data;
 }
 
-export async function deleteMap(id: string) {
-  axios.delete(baseURL + "/images/delete_image/" + id);
+export function deleteMap(id: string) {
+  return axios.delete(baseURL + "/images/delete_image/" + id);
 }
