@@ -44,5 +44,12 @@ def morph_operations(image_arr, use_gaussian_filter: bool = True):
 
 def find_contours(thresh):
     # Find the contours in the input image
-    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    return contours
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
+
+    # Аппроксимируем контур, чтобы уменьшить число точек.
+    contours_approx = []
+    for line in contours:
+        # Преобразовываем координаты каждой точки из пикселей в широту и долготу.
+        line_approx = cv2.approxPolyDP(line, 0.7, True)
+        contours_approx.append(line_approx)
+    return contours_approx
