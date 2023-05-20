@@ -97,7 +97,7 @@ def deforestation(img_id: str):
 
     lines = find_deforestation(image_RGB, update)
 
-    d = 40 / len(lines)
+    d = 40 / (len(lines) + 1)
     polygon_lat_long = []
     for line in lines:
         # Преобразовываем координаты каждой точки из пикселей в широту и долготу.

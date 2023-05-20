@@ -42,6 +42,36 @@ def morph_operations(image_arr, use_gaussian_filter: bool = True):
     return cv2.morphologyEx(image_arr, cv2.MORPH_OPEN, kernel)
 
 
+def connected_components(threshold, connectivity=8):
+    # perform connected component analysis
+    # apply connected component analysis to the thresholded image
+    output = cv2.connectedComponentsWithStats(threshold, connectivity, cv2.CV_32S)
+    (numLabels, labels, stats, centroids) = output
+    # initialize an output mask to store all forests parsed from
+    # the image
+    mask = np.zeros(threshold.shape, dtype="uint8")
+    # loop over the number of unique connected component labels
+
+    for i in range(1, numLabels):
+        # extract the connected component statistics and centroid for the current label
+        x = stats[i, cv2.CC_STAT_LEFT]
+        y = stats[i, cv2.CC_STAT_TOP]
+        w = stats[i, cv2.CC_STAT_WIDTH]
+        h = stats[i, cv2.CC_STAT_HEIGHT]
+        area = stats[i, cv2.CC_STAT_AREA]
+        # ensure the width, height, and area are all neither too small
+        # nor too big
+        keepWidth = w > 50
+        keepHeight = h > 50
+        keepArea = area > 250
+        # (cX, cY) = centroids[i]
+        # ensure the connected component we are examining passes all
+        # three tests
+        if all((keepWidth, keepHeight, keepArea)):
+            mask[y:y + h, x:x + w, :] = threshold[y:y + h, x:x + w, :]
+    return mask
+
+
 def find_contours(thresh):
     # Find the contours in the input image
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
