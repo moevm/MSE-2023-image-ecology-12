@@ -14,7 +14,4 @@ export default defineConfig({
     ],
   },
   envPrefix: "CLIENT_",
-  esbuild: {
-    drop: ["console", "debugger"],
-  },
 });
