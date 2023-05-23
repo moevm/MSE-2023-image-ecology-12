@@ -1,4 +1,4 @@
-from datetime import datetime
+import arrow
 
 from flask import Blueprint, jsonify, request, send_file, abort
 from redis.client import StrictRedis
@@ -57,6 +57,7 @@ def add_image():
         "fs_id": file_id,
         "forest_polygon": None,
         "deforestation_polygon": None,
+        "upload_date": str(arrow.now().to('UTC')),
         "name": img_name,
         'ready': False,
         'sliced': False
@@ -69,7 +70,7 @@ def add_image():
         'id': str(img_id),
         'progress': 0,
         'name': img_name,
-        'uploadDate': datetime.now().isoformat(),
+        'uploadDate': item["upload_date"],
         'status': 'enqueued',
         'processing_functions': 2
     })

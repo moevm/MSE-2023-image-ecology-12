@@ -1,5 +1,12 @@
 import { AnomalyInfo } from "@/types/anomalies";
+import axios from "axios";
+import { baseURL } from "@/api";
 
+export async function getAnomaliesInfo(): Promise<AnomalyInfo[]> {
+  return (await axios.get<AnomalyInfo[]>(baseURL + "/anomalies/")).data;
+}
+
+/*
 export function getAnomaliesInfo(): Promise<AnomalyInfo[]> {
   return Promise.resolve([
     {
@@ -38,4 +45,4 @@ export function getAnomaliesInfo(): Promise<AnomalyInfo[]> {
       detectDate: "2023-03-06T16:03:03",
     },
   ]);
-}
+}*/
