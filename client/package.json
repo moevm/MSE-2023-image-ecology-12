@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "vite": "vite --host --port 3000",
-    "watch-tsc": "tsc --watch --noEmit",
+    "watch-tsc": "vue-tsc --watch --noEmit",
     "dev": "npm-run-all --parallel watch-tsc vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",

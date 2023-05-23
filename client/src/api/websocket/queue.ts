@@ -1,21 +1,17 @@
-import { ref, onBeforeUnmount, onBeforeMount, readonly } from "vue";
+import { ref, readonly } from "vue";
 import { QueueItemInfo } from "@/types/queue";
 import { socket } from "@/api/websocket/index";
+import {
+  createSharedComposable,
+  tryOnBeforeMount,
+  tryOnScopeDispose,
+} from "@vueuse/core";
 
-const queue = ref<QueueItemInfo[]>([]);
-const consumers = ref(0);
-const listener = (newQueue: QueueItemInfo[]) => {
-  queue.value = newQueue;
-};
-
-export const useQueue = () => {
-  if (consumers.value === 0) onBeforeMount(() => socket.on("queue", listener));
-  consumers.value++;
-
-  onBeforeUnmount(() => {
-    consumers.value--;
-    if (consumers.value === 0) socket.off("queue");
-  });
-
+export const useQueue = createSharedComposable(() => {
+  const queue = ref<QueueItemInfo[]>([]);
+  tryOnBeforeMount(() =>
+    socket.on("queue", (newQueue: QueueItemInfo[]) => (queue.value = newQueue))
+  );
+  tryOnScopeDispose(() => socket.off("queue"));
   return { queue: readonly(queue) };
-};
+});
