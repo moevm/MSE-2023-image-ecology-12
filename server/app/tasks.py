@@ -11,16 +11,10 @@ def delete_all_data_in_db_and_fs():
     pass
 
 
-@app.task(name='thresholding_otsu', queue="image_process")
-def thresholding_otsu(fs_id):
+@app.task(name='image_process', queue="image_process")
+def process_image(img_id):
     pass
-
 
 @app.task(name='slice', queue="slice")
-def slice(fs_id):
-    pass
-
-
-@app.task(name='deforestation', queue="image_process")
-def deforestation(img_id):
+def slice(img_id):
     pass
