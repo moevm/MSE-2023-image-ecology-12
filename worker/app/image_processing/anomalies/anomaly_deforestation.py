@@ -33,9 +33,16 @@ class AnomalyDeforestation(AnomalyBase):
         self.update(20)
 
         mask = (prediction[0] == 1).astype(np.uint8)
+
+        # Remove white pixels from image (resize to perserve resize errors)
+        white_mask = cv2.inRange(resized_image, (255, 255, 255), (255, 255, 255))
+        white_mask[white_mask > 0] = 1
+        cv2.multiply(mask, 1 - white_mask, mask)
+        self.update(5)
+
         filtered_mask = connected_components(mask)
         image = cv2.resize(filtered_mask, (shape_image[1], shape_image[0]))
-        self.update(10)
+        self.update(5)
 
         contours = find_contours(image)
         self.update(10)
