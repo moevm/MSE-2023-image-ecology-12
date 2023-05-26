@@ -1,5 +1,4 @@
 from app import app
-from app.tasks.image_process import thresholding_otsu
 from app.db import local
 
 

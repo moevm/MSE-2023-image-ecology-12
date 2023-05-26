@@ -1,19 +1,11 @@
-from datetime import datetime
-
-from flask import Blueprint, jsonify, request, send_file, abort
+import io
+from flask import Blueprint, send_file
 from redis.client import StrictRedis
-
-from app.db import get_db, get_tile_fs, get_map_fs, get_redis
-
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
-import io
 
-from app.tasks import slice
-from app.tasks import thresholding_otsu
-from app.tasks import deforestation
 
-from app import socketio
+from app.db import get_db, get_tile_fs, get_map_fs, get_redis
 
 db = LocalProxy(get_db)
 tile_fs = LocalProxy(get_tile_fs)
