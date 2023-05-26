@@ -110,9 +110,6 @@ export function add_tile_layer_map(map: L.Map, controlLayer: L.Control.Layers, i
 
 export function add_anomalies(map: L.Map, controlLayer: L.Control.Layers, anomaliesList: AnomaliesMapData[]) {
   for (let i = 0; i < anomaliesList.length; i++) {
-    window.console.log('Anomaly: ' + anomaliesList[i].color)
-    window.console.log('Anomaly: ' + anomaliesList[i].name)
-    window.console.log('Anomaly: ' + anomaliesList[i].polygons)
     // Anomaly Polygon Layer.
     let anomalyPolygon: Polygon = L.polygon(
       anomaliesList[i].polygons as LatLngExpression[][],
