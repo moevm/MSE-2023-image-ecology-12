@@ -127,10 +127,10 @@ export function add_anomalies(map: L.Map, controlLayer: L.Control.Layers, anomal
     map.fitBounds([
       [
         anomaliesList[i].polygons[0][0][0], // miny
-        anomaliesList[i].polygons[0][1][1], // maxx
+        anomaliesList[i].polygons[0][0][1], // maxx
       ],
       [
-        anomaliesList[i].polygons[0][1][0], // maxy
+        anomaliesList[i].polygons[0][0][0], // maxy
         anomaliesList[i].polygons[0][0][1], // minx
       ],
     ]); 
