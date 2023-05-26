@@ -5,36 +5,25 @@
 <script setup lang="ts">
 import {
   getXMLinfo,
-  getForestPolygon,
+  getAnomalies,
   init_map,
   add_tile_layer_map,
-  add_forest_polygon,
-  add_deforestation_polygon,
-  getDeforestationPolygon
+  add_anomalies
 } from "@/components/common/map/api";
 import { onMounted } from "vue";
 
 const props = defineProps<{ id: string }>();
 const xmlImageInfoDoc = await getXMLinfo(props.id);
-let forestPolygonArr = await getForestPolygon(props.id);
-let deforestationPolygonArr = await getDeforestationPolygon(props.id);
+let anomaliesList = await getAnomalies(props.id);
 
 onMounted(() => {
   let mapAndControl = init_map();
 
-  if (forestPolygonArr) {
-    add_forest_polygon(
+  if (anomaliesList) {
+    add_anomalies(
       mapAndControl.map, 
       mapAndControl.controlLayer, 
-      forestPolygonArr
-    );
-  }
-
-  if (deforestationPolygonArr){
-    add_deforestation_polygon(
-        mapAndControl.map,
-        mapAndControl.controlLayer,
-        deforestationPolygonArr
+      anomaliesList
     );
   }
 

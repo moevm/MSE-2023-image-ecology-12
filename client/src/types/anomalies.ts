@@ -15,3 +15,9 @@ export interface AnomalyData {
   detectDate: string;
   coordinates: [number, number];
 }
+
+export interface AnomaliesMapData {
+    name: string,
+    color: string,
+    polygons: number[][][]
+}
