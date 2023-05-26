@@ -1,19 +1,16 @@
+import io
 import arrow
-
 from flask import Blueprint, jsonify, request, send_file, abort
 from redis.client import StrictRedis
-
-from app.db import get_db, get_tile_fs, get_map_fs, get_redis
-
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
-import io
-
-from app.tasks import slice
-from app.tasks import thresholding_otsu
-from app.tasks import deforestation
 
 from app import socketio
+from app.db import get_db, get_tile_fs, get_map_fs, get_redis
+from app.tasks import process_image
+from app.tasks import slice
+
+
 
 db = LocalProxy(get_db)
 tile_fs = LocalProxy(get_tile_fs)
@@ -55,8 +52,7 @@ def add_image():
     item = {
         "tile_map_resource": None,
         "fs_id": file_id,
-        "forest_polygon": None,
-        "deforestation_polygon": None,
+        "anomalies": [],
         "upload_date": str(arrow.now().to('UTC')),
         "name": img_name,
         'ready': False,
@@ -66,20 +62,8 @@ def add_image():
     result = db.images.insert_one(item)
     img_id = result.inserted_id
 
-    redis.hset(f'queue:{img_id}', mapping={
-        'id': str(img_id),
-        'progress': 0,
-        'name': img_name,
-        'uploadDate': item["upload_date"],
-        'status': 'enqueued',
-        'processing_functions': 2
-    })
-
-    redis.hset(f'slice_queue:{img_id}', mapping={'id': str(img_id)})
-
     slice.delay(str(img_id))
-    deforestation.delay(str(img_id))
-    thresholding_otsu.delay(str(img_id))
+    process_image.delay(str(img_id))
 
     return jsonify({'message': 'Image added successfully'})
 
