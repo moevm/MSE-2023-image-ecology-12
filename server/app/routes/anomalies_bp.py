@@ -4,8 +4,8 @@ from redis.client import StrictRedis
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 
-
 from app.db import get_db, get_tile_fs, get_map_fs, get_redis
+
 
 db = LocalProxy(get_db)
 tile_fs = LocalProxy(get_tile_fs)
@@ -19,21 +19,19 @@ anomalies_bp = Blueprint('anomalies_bp', __name__, url_prefix="/anomalies")
 def get_anomalies_list():
     anomalies = []
     for img in db.images.find({}):
-        #Надо продумать хранение аномалий, потому что это хардкод в чистом виде :(
-        anomalies.append({
-            "id": str(img["_id"]),
-            "area": 123, #TODO img["anomaly_name"]["area"]
-            "upload_date": img["upload_date"],
-            "detected_date": img["upload_date"],
-        })
-    if len(anomalies) == 0:
-        anomalies = [{
-            "id": "1",
-            "area": 123, #TODO img["anomaly_name"]["area"]
-            "upload_date": "2023-03-03T13:03:03",
-            "detected_date": "2023-03-03T13:03:03"
-        }]
+        img_anomalies_types = img["anomalies"]
+        for img_anomalies in img_anomalies_types:
+            if (img_anomalies['name'] != 'Forest'):
+                for i in range(len(img_anomalies['area'])):
+                    anomalies.append({
+                        "id": str(img["_id"]),
+                        "name": img_anomalies["name"],
+                        "area": img_anomalies['area'][i],
+                        "upload_date": img["upload_date"],
+                        "detected_date": img["upload_date"],
+                    })
     return anomalies
+
 
 @anomalies_bp.route('/<string:img_id>', methods=['GET'])
 def get_anomaly(img_id):
