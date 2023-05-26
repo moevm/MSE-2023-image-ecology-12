@@ -102,22 +102,13 @@ def get_image(img_id):
     return send_file(io.BytesIO(image_file), mimetype='image/tiff')
 
 
-@images_bp.route('/forest/<string:img_id>', methods=['GET'])
-def get_image_forest(img_id):
-    image_info = db.images.find_one(ObjectId(img_id))["forest_polygon"]  # forest_polygon
-    if (image_info is None):
+@images_bp.route('/anomalies/<string:img_id>', methods=['GET'])
+def get_all_anomalies(img_id):
+    anomalies = db.images.find_one(ObjectId(img_id))["anomalies"]  # forest_polygon
+    if (anomalies is None):
         abort(404)
     else:
-        return image_info
-
-
-@images_bp.route('/deforestation/<string:img_id>', methods=['GET'])
-def get_image_deforestation(img_id):
-    image_info = db.images.find_one(ObjectId(img_id))["deforestation_polygon"]
-    if (image_info is None):
-        abort(404)
-    else:
-        return image_info
+        return anomalies
 
 
 @images_bp.route('/<string:img_id>/analysis', methods=['GET'])
