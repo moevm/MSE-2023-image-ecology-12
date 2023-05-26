@@ -28,6 +28,17 @@ export async function getForestPolygon(id: string): Promise<number[][][] | void>
 }
 
 
+export async function getDeforestationPolygon(id: string): Promise<number[][][] | void> {
+  return axios.get<number[][][]>(baseURL + "/images/deforestation/" + id).then(response => {
+    return response.data;
+  }).catch((err: AxiosError) => {
+    if (!err.response || (err.response && err.response.status !== 404)) {
+      throw err;
+    }
+  });
+}
+
+
 export function init_map() {
   //  OpenStreetMap.
   let osm: L.Layer = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
@@ -127,6 +138,31 @@ export function add_forest_polygon(map: L.Map, controlLayer: L.Control.Layers, f
     [
       forestPolygonArr[0][1][0], // maxy
       forestPolygonArr[0][0][1], // minx
+    ],
+  ]);
+}
+
+
+export function add_deforestation_polygon(map: L.Map, controlLayer: L.Control.Layers, deforestationPolygonArr: number[][][]) {
+  // Forest Polygon Layer.
+  let deforestationPolygon: Polygon = L.polygon(
+      deforestationPolygonArr as LatLngExpression[][],
+      { color: "red", fillOpacity: 0.4 }
+  );
+  let deforestationPolygonLayer: L.LayerGroup = L.layerGroup([deforestationPolygon]);
+
+  // Add layer to map.
+  controlLayer.addOverlay(deforestationPolygonLayer, "<span style='color: red'>Deforestation </span>");
+
+  // Fit to overlay bounds (SW and NE points with (lat, lon))
+  map.fitBounds([
+    [
+      deforestationPolygonArr[0][0][0], // miny
+      deforestationPolygonArr[0][1][1], // maxx
+    ],
+    [
+      deforestationPolygonArr[0][1][0], // maxy
+      deforestationPolygonArr[0][0][1], // minx
     ],
   ]);
 }

@@ -11,6 +11,7 @@ import io
 
 from app.tasks import slice
 from app.tasks import thresholding_otsu
+from app.tasks import deforestation
 
 from app import socketio
 
@@ -55,6 +56,7 @@ def add_image():
         "tile_map_resource": None,
         "fs_id": file_id,
         "forest_polygon": None,
+        "deforestation_polygon": None,
         "name": img_name,
         'ready': False,
         'sliced': False
@@ -68,12 +70,14 @@ def add_image():
         'progress': 0,
         'name': img_name,
         'uploadDate': datetime.now().isoformat(),
-        'status': 'enqueued'
+        'status': 'enqueued',
+        'processing_functions': 2
     })
 
     redis.hset(f'slice_queue:{img_id}', mapping={'id': str(img_id)})
 
     slice.delay(str(img_id))
+    deforestation.delay(str(img_id))
     thresholding_otsu.delay(str(img_id))
 
     return jsonify({'message': 'Image added successfully'})
@@ -115,7 +119,16 @@ def get_image(img_id):
 
 @images_bp.route('/forest/<string:img_id>', methods=['GET'])
 def get_image_forest(img_id):
-    image_info = db.images.find_one(ObjectId(img_id))["forest_polygon"]
+    image_info = db.images.find_one(ObjectId(img_id))["forest_polygon"]  # forest_polygon
+    if (image_info is None):
+        abort(404)
+    else:
+        return image_info
+
+
+@images_bp.route('/deforestation/<string:img_id>', methods=['GET'])
+def get_image_deforestation(img_id):
+    image_info = db.images.find_one(ObjectId(img_id))["deforestation_polygon"]
     if (image_info is None):
         abort(404)
     else:
