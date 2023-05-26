@@ -108,12 +108,12 @@ class AnomalyBase:
         '''
         Метод, который сохраняет объект найденные аномалии одного типа в базу данных.
         '''
+        db = local.db
+        redis = local.redis
+        image_info = db.images.find_one(ObjectId(self.img_id))
+        queue_item = f'queue:{self.img_id}'
+        
         if (len(self.polygons) > 0):
-            db = local.db
-            redis = local.redis
-            image_info = db.images.find_one(ObjectId(self.img_id))
-            queue_item = f'queue:{self.img_id}'
-
             # Формируем словарь найденных аномалий.
             anomaly_dict = {
                 'name': self.name,
