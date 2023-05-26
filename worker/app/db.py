@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from tensorflow.keras.models import load_model
 
 import redis
 import pymongo.database
@@ -23,9 +24,11 @@ local = Local(None, None, None, None)
 def init_worker(**kwargs):
     client = pymongo.MongoClient(config.MONGO_URI)
     local.db = client.get_database('ecologyDB')
-    local.redis = redis.StrictRedis.from_url(config.REDIS_URI)
+    local.redis = redis.StrictRedis.from_url(config.REDIS_URI, decode_responses=True)
     local.map_fs = GridFS(local.db, 'map_fs')
     local.tile_fs = GridFS(local.db, 'tile_fs')
+
+    local.deforestation_model = load_model('app/image_processing/models/unet-attention-3d.hdf5')
 
     print('Initializing database connection for worker.')
 
