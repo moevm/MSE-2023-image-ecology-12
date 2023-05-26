@@ -68,7 +68,7 @@ class AnomalyBase:
 
         coord_transf.close()
 
-        return abs(right_down[1] - left_up[1]) / width, abs(right_down[0] - left_up[0]) / height
+        return abs(right_down[0] - left_up[0]) / width, abs(right_down[1] - left_up[1]) / height
 
     def find_area(self, contours):
         '''
@@ -81,7 +81,7 @@ class AnomalyBase:
         self.area = []
         for polygon in contours:
             # Находим площадь в пикселях и умножаем на разрешение каждого пикселя.
-            area = cv2.contourArea(polygon) #* sptial_res[0] * sptial_res[1]
+            area = cv2.contourArea(polygon) * sptial_res[0] * sptial_res[1]
             self.area.append(area)
             self.update(step_progress)
 

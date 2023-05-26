@@ -36,18 +36,18 @@ class CoordintesTransformer:
         
     def pixel_xy_to_meters(self, x, y):
         xy_in_image_crs = self.image.xy(y, x)
-        if (self.image_crs != self.lat_long_crs):
-            long_lat = rasterio.warp.transform(
+        if (self.image_crs != self.meters_crs):
+            meters_x_y = rasterio.warp.transform(
                 self.image_crs,
                 self.meters_crs,
                 [xy_in_image_crs[0]],
                 [xy_in_image_crs[1]]
             )
-            # return [lattitude, longitude]
-            return long_lat[1][0], long_lat[0][0]
+            # return [x, y]
+            return meters_x_y[0][0], meters_x_y[1][0]
         else:
-            # return [lattitude, longitude]
-            return xy_in_image_crs[1], xy_in_image_crs[0]
+            # return [x, y]
+            return xy_in_image_crs[0], xy_in_image_crs[1]
     
     def close(self):
         self.image.close()
