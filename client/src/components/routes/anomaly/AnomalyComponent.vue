@@ -1,6 +1,6 @@
 <template>
   <div class="container-lg">
-    <h2 class="text-center mt-2 text-primary">Просмотр аномалии №{{ id }}</h2>
+    <h2 class="text-center mt-2 text-primary">Просмотр аномалии {{ name }} номер {{ anomalyIndex }} на карте №{{ id }}</h2>
     <div class="row justify-content-end">
       <router-link
         class="col-auto"
@@ -40,10 +40,11 @@ import { routeNames } from "@/router";
 import { getAnomalyData } from "@/components/routes/anomaly/api";
 import { AgGridVue } from "ag-grid-vue3";
 
-const props = defineProps<{ id: string }>();
+const props = defineProps<{ id: string, name: string, anomalyIndex: string}>();
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
   { headerName: "Название", field: "name", flex: 4, minWidth: 180 },
+  { headerName: "Индекс", field: "anomalyIndex", flex: 4, minWidth: 180 },
   { headerName: "Площадь", field: "area", flex: 4, minWidth: 180 },
   {
     headerName: "Дата загрузки",
@@ -74,7 +75,7 @@ const options: GridOptions<AnomalyInfo> = {
   ...getDefaultGridOptions(),
 };
 
-const anomalyData = await getAnomalyData(props.id);
+const anomalyData = await getAnomalyData(props.id, props.name, props.anomalyIndex);
 </script>
 
 <style scoped lang="scss"></style>
