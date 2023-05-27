@@ -11,7 +11,6 @@ from app.tasks import process_image
 from app.tasks import slice
 
 
-
 db = LocalProxy(get_db)
 tile_fs = LocalProxy(get_tile_fs)
 map_fs = LocalProxy(get_map_fs)
@@ -27,6 +26,7 @@ def get_images_list():
         images.append({
             "id": str(img["_id"]),
             "name": img["name"],
+            'uploadDate': img["upload_date"],
             'size': map_fs.find_one({'_id': img["fs_id"]}).length,
             "ready": img["ready"],
             "sliced": img["sliced"]
@@ -54,11 +54,12 @@ def add_image():
         "fs_id": file_id,
         "anomalies": [],
         "upload_date": str(arrow.now().to('UTC')),
+        "detect_date": "",
         "name": img_name,
         'ready': False,
         'sliced': False
     }
-
+    
     result = db.images.insert_one(item)
     img_id = result.inserted_id
 

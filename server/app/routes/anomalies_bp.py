@@ -26,16 +26,29 @@ def get_anomalies_list():
                     anomalies.append({
                         "id": str(img["_id"]),
                         "name": img_anomalies["name"],
+                        "anomalyIndex": i,
                         "area": img_anomalies['area'][i],
-                        "upload_date": img["upload_date"],
-                        "detected_date": img["upload_date"],
+                        "uploadDate": img["upload_date"],
+                        "detectDate": img["detect_date"]
                     })
     return anomalies
 
 
-@anomalies_bp.route('/<string:img_id>', methods=['GET'])
-def get_anomaly(img_id):
-    image_info = db.images.find_one(ObjectId(img_id))
-    image_file = tile_fs.get(image_info["fs_id"])
-    return send_file(io.BytesIO(image_file), mimetype='image/tiff')
-
+@anomalies_bp.route('/<string:img_id>/<string:anomaly_name>/<string:anomaly_index>', methods=['GET'])
+def get_anomaly(img_id, anomaly_name, anomaly_index):
+    img = db.images.find_one(ObjectId(img_id))
+    img_anomalies_types = img["anomalies"]
+    area = 0
+    for img_anomalies in img_anomalies_types:
+        if (img_anomalies['name'] == anomaly_name):
+            area = img_anomalies['area'][int(anomaly_index)]
+    result = {
+        "reportId": "0", #TODO
+        "id": str(img_id),
+        "name": anomaly_name,
+        "anomalyIndex": anomaly_index,
+        "area": area,
+        "uploadDate": img["upload_date"],
+        "detectDate": img["detect_date"] 
+    }
+    return result
