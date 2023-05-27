@@ -1,4 +1,5 @@
 import cv2
+import arrow
 from typing import List, Any
 from bson import ObjectId
 
@@ -126,6 +127,7 @@ class AnomalyBase:
             anomalies_list = image_info['anomalies']
             anomalies_list.append(anomaly_dict)
             db.images.update_one({"_id": image_info['_id']}, {"$set": {"anomalies": anomalies_list}})
+            db.images.update_one({"_id": image_info['_id']}, {"$set": {"detect_date": str(arrow.now().to('UTC'))}})
 
         # Удаляем запись в redis-е, если обработки всех аномалий завершились.
         redis.hset(queue_item, 'processing_functions', int(redis.hget(queue_item, 'processing_functions')) - 1)
