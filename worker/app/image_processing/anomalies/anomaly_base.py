@@ -46,6 +46,11 @@ class AnomalyBase:
         for line in contours_of_anomaly:
             # Преобразовываем координаты каждой точки из пикселей в широту и долготу.
             line_arr = []
+
+            # Убираем контуры, состоящие из одной или менее точек (могут появится после обрезки краев, например)
+            if (len(line) <= 1):
+                continue
+
             for point in line:
                 x_pix, y_pix = point[0]
                 line_arr.append(coord_transformer.pixel_xy_to_lat_long(x_pix, y_pix))
@@ -81,6 +86,10 @@ class AnomalyBase:
 
         self.area = []
         for polygon in contours:
+            # Убираем контуры, состоящие из одной или менее точек (могут появится после обрезки краев, например)
+            if (len(polygon) <= 1):
+                continue
+
             # Находим площадь в пикселях и умножаем на разрешение каждого пикселя.
             area = cv2.contourArea(polygon) * sptial_res[0] * sptial_res[1]
             self.area.append(area)
