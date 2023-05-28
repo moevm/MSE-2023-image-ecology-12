@@ -36,4 +36,3 @@ def process_image(img_id: str):
         anomaly_class.create_and_process.delay(img_id)
 
     return "Done"
-
