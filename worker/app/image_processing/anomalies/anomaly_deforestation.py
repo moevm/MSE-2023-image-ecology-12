@@ -61,5 +61,6 @@ class AnomalyDeforestation(AnomalyBase):
 
         deforestation_anomaly = AnomalyDeforestation(img_id, image_bytes)
         AnomalyBase.process_anomaly(deforestation_anomaly)
+        deforestation_anomaly.filter_polygons_by_area(10)
         deforestation_anomaly.after_end_of_process()
         return "Processing completed"

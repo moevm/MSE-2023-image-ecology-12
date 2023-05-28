@@ -56,5 +56,6 @@ class AnomalyForest(AnomalyBase):
 
         forest_anomaly = AnomalyForest(img_id, image_bytes)
         AnomalyBase.process_anomaly(forest_anomaly)
+        forest_anomaly.filter_polygons_by_area(10)
         forest_anomaly.after_end_of_process()
         return "Processing completed"
