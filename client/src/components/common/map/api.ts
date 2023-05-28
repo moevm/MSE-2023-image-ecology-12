@@ -1,6 +1,5 @@
 import axios, { AxiosError } from "axios";
-import "leaflet/dist/leaflet.css";
-import L, { LatLngExpression, Polygon } from "leaflet";
+import L, { LatLngExpression, Polygon} from "leaflet";
 
 import { baseURL } from "@/api";
 import { AnomaliesMapData } from "@/types/anomalies";
@@ -29,7 +28,7 @@ export async function getAnomalies(id: string): Promise<AnomaliesMapData[] | voi
 }
 
 
-export function init_map() {
+export function initMap() {
   //  OpenStreetMap.
   let osm: L.Layer = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     attribution:
@@ -55,7 +54,7 @@ export function init_map() {
 }
 
 
-export function add_tile_layer_map(map: L.Map, controlLayer: L.Control.Layers, id: string, xmlImageInfoDoc: Document) {
+export function addTileLayerMap(map: L.Map, controlLayer: L.Control.Layers, id: string, xmlImageInfoDoc: Document) {
   // Overlay layers (TMS).
   let lyr: L.Layer = L.tileLayer(
     baseURL + "/images/tile/" + id + "/{z}/{x}/{y}",
@@ -108,7 +107,7 @@ export function add_tile_layer_map(map: L.Map, controlLayer: L.Control.Layers, i
 }
 
 
-export function add_anomalies(map: L.Map, controlLayer: L.Control.Layers, anomaliesList: AnomaliesMapData[]) {
+export function addAnomalies(map: L.Map, controlLayer: L.Control.Layers, anomaliesList: AnomaliesMapData[]) {
   for (let i = 0; i < anomaliesList.length; i++) {
     // Anomaly Polygon Layer.
     let anomalyPolygon: Polygon = L.polygon(
