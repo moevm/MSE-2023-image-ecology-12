@@ -105,14 +105,8 @@ def get_image(img_id):
 
 @images_bp.route('/anomalies/<string:img_id>', methods=['GET'])
 def get_all_anomalies(img_id):
-    anomalies = db.images.find_one(ObjectId(img_id))["anomalies"]  # forest_polygon
+    anomalies = db.images.find_one(ObjectId(img_id))["anomalies"] 
     if (anomalies is None):
         abort(404)
     else:
         return anomalies
-
-
-@images_bp.route('/<string:img_id>/analysis', methods=['GET'])
-def get_image_analysis(img_id):
-    # analysis = ImageService.get_image_analysis(image_id)
-    return jsonify({'analysis': []})  # jsonify(analysis)
