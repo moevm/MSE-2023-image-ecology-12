@@ -24,5 +24,4 @@ docker compose up --build
 [Ссылка](https://drive.google.com/file/d/1v7AndMWR2ltUdBlKSv7MFNOtTrWpj7yX/view?usp=share_link)
 
 ## Правила работы с репозиторием
-Справка по git-flow: [GITFLOW.md](https://github.com/moevm/MSE-2023-image-ecology-12/blob/dev/GITFLOW.md)
-
+Справка по git-flow: [GITFLOW.md](https://github.com/moevm/MSE-2023-image-ecology-12/blob/main/GITFLOW.md)

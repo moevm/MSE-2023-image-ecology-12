@@ -18,3 +18,8 @@ def process_image(img_id):
 @app.task(name='slice', queue="slice")
 def slice(img_id):
     pass
+
+
+@app.task(name='deforestation', queue="image_process")
+def deforestation(img_id):
+    pass

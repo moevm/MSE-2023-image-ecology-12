@@ -10,18 +10,23 @@
     />
   </div>
 
-  <Modal
-    v-show="isDelDialogActive"
-    maxwidth="600px"
-    @cancel="closeDelDialog"
-    @accept="acceptDelDialog"
-  >
-    <template v-slot:header>
-      <p> Запрос на удаление карты. </p>
+  <Modal ref="modal" backdrop="static">
+    <template #header="{ close }">
+      <h4 class="modal-title">Удалить карту</h4>
+      <button type="button" class="btn-close" @click="close"></button>
     </template>
 
-    <template v-slot:body>
-      <p> Вы действительно хотите удалить эту карту? </p>
+    <template #body>
+      <p>Вы действительно хотите удалить карту {{ delElement }} ?</p>
+    </template>
+
+    <template #footer="{ close }">
+      <button type="button" class="btn btn-secondary" @click="close">
+        Отмена
+      </button>
+      <button type="button" class="btn btn-danger" @click="acceptDelDialog">
+        Удалить
+      </button>
     </template>
   </Modal>
 </template>
@@ -40,10 +45,9 @@ import { dateFormatter } from "@/ag-grid/formatters";
 import { useRouter } from "vue-router";
 import { routeNames } from "@/router";
 import FlagRenderer from "@/components/renderers/FlagRenderer.vue";
-import Modal from '@/components/common/Modal.vue';
+import Modal from "@/components/common/Modal.vue";
 import { useImages } from "@/api/websocket/images";
 import { ref } from "vue";
-
 
 const router = useRouter();
 
@@ -102,10 +106,10 @@ const columnDefs: ColDef<MapInfo>[] = [
         button: "btn-danger",
         hide: (data) => !(data.ready && data.sliced),
         onClicked: (action, data) => {
-          isDelDialogActive.value = true;
-          delElement = data.id;
-        }
-      }
+          delElement.value = data.id;
+          modal.value?.open();
+        },
+      },
     ]),
   },
 ];
@@ -119,18 +123,13 @@ const options: GridOptions<MapInfo> = {
 const { images } = await useImages();
 
 // Для модального окна удаления.
-let isDelDialogActive = ref(false);
-let delElement: string;
-
-function closeDelDialog() {
-  isDelDialogActive.value = false;
-}
+const modal = ref<InstanceType<typeof Modal> | null>(null),
+  delElement = ref<string | null>(null);
 
 function acceptDelDialog() {
-  closeDelDialog();
-  deleteMap(delElement);
+  modal.value?.close();
+  if (delElement.value) deleteMap(delElement.value);
 }
-
 </script>
 
 <style scoped lang="scss"></style>
