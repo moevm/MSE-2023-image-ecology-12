@@ -6,21 +6,42 @@
 import {
   getXMLinfo,
   getAnomalies,
-  init_map,
-  add_tile_layer_map,
-  add_anomalies
+  initMap,
+  addTileLayerMap,
+  addAnomalies
 } from "@/components/common/map/api";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import L  from "leaflet";
+import "leaflet/dist/leaflet.css";
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
-const props = defineProps<{ id: string }>();
+
+let addMarker = ref<(markerPosition: [number, number]) => void>();
+let flyToCoordinates = ref<(coordinates: [number, number]) => void>();
+defineExpose({addMarker, flyToCoordinates});
+
+const props = defineProps<{ id: string}>();
 const xmlImageInfoDoc = await getXMLinfo(props.id);
 let anomaliesList = await getAnomalies(props.id);
 
 onMounted(() => {
-  let mapAndControl = init_map();
+  // Загружаем картинки и параметры маркера в leaflet 
+  L.Marker.prototype.options.icon = L.icon({
+    iconRetinaUrl: iconRetinaUrl,
+    iconUrl: iconUrl,
+    shadowUrl: shadowUrl,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    tooltipAnchor: [16, -28],
+    shadowSize: [41, 41],
+  });
 
+  let mapAndControl = initMap();
   if (anomaliesList) {
-    add_anomalies(
+    addAnomalies(
       mapAndControl.map, 
       mapAndControl.controlLayer, 
       anomaliesList
@@ -28,12 +49,22 @@ onMounted(() => {
   }
 
   if (xmlImageInfoDoc) {
-    add_tile_layer_map(
+    addTileLayerMap(
       mapAndControl.map, 
       mapAndControl.controlLayer, 
       props.id, 
       xmlImageInfoDoc
     );
+  }
+
+  // Создаем насколько функций для использования родительскими элементами для управления картой.
+  addMarker.value = (markerPosition: [number, number]) => {
+    let marker = new L.Marker(markerPosition);
+    marker.addTo(mapAndControl.map);
+  }
+
+  flyToCoordinates.value = (coordinates: [number, number]) => {
+    mapAndControl.map.panTo(coordinates);
   }
 });
 </script>
