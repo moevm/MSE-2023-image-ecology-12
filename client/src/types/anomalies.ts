@@ -13,6 +13,7 @@ export interface AnomalyData {
   name: string;
   anomalyIndex: string;
   area: number;
+  coordinates: [number, number];
   uploadDate: string;
   detectDate: string;
 }

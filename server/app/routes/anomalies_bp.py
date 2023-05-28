@@ -38,16 +38,26 @@ def get_anomalies_list():
 def get_anomaly(img_id, anomaly_name, anomaly_index):
     img = db.images.find_one(ObjectId(img_id))
     img_anomalies_types = img["anomalies"]
+
     area = 0
     for img_anomalies in img_anomalies_types:
         if (img_anomalies['name'] == anomaly_name):
             area = img_anomalies['area'][int(anomaly_index)]
+            coordinates = [0, 0]
+            for polygon_point in img_anomalies['polygons'][int(anomaly_index)]:
+                coordinates[0] += polygon_point[0]
+                coordinates[1] += polygon_point[1]
+            coordinates[0] /= len(img_anomalies['polygons'][int(anomaly_index)])
+            coordinates[1] /= len(img_anomalies['polygons'][int(anomaly_index)])
+            break
+    
     result = {
         "reportId": "0", #TODO
-        "id": str(img_id),
+        "mapId": str(img_id),
         "name": anomaly_name,
         "anomalyIndex": anomaly_index,
         "area": area,
+        "coordinates": coordinates,
         "uploadDate": img["upload_date"],
         "detectDate": img["detect_date"] 
     }
