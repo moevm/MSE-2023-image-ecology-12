@@ -28,8 +28,8 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const columnDefs: ColDef<ReportInfo>[] = [
-  { headerName: "Id", field: "id", flex: 2, minWidth: 120 },
-  { headerName: "Имя", field: "name", flex: 3, minWidth: 180 },
+  { headerName: "Id изображения", field: "id", flex: 2, minWidth: 120 },
+  { headerName: "Имя изображения", field: "name", flex: 3, minWidth: 180 },
   {
     headerName: "Дата загрузки",
     field: "date",
