@@ -2,6 +2,7 @@ import { MapAnomaly } from "@/types/maps";
 
 export interface ReportInfo {
   id: string;
+  anomalyIndex: string;
   name: string;
   date: string;
   anomalies: number;
