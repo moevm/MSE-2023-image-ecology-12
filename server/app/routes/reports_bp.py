@@ -1,5 +1,4 @@
-import io
-from flask import Blueprint, send_file
+from flask import Blueprint
 from redis.client import StrictRedis
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
@@ -20,7 +19,7 @@ def get_reports_list():
     reports = []
     for img in db.images.find({}):
         img_anomalies_types = img["anomalies"]
-        count = len(list(filter(lambda x: x['name'] != 'Forest', img_anomalies_types)))
+        count = sum([len(anomalies['polygons']) for anomalies in filter(lambda x: x['name'] != 'Forest', img_anomalies_types)])
         if count > 0:
             reports.append({
                 "id": str(img["_id"]),
