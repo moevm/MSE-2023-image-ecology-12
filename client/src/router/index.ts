@@ -18,7 +18,7 @@ export const routePaths = {
   [routeNames.ReportsList]: "/reports",
   [routeNames.AnomaliesList]: "/anomalies",
   [routeNames.Upload]: "/upload",
-  [routeNames.Map]: "/map/:id",
+  [routeNames.Map]: "/map/:id/:name?/:anomalyIndex?",
   [routeNames.Report]: "/report/:id",
   [routeNames.Anomaly]: "/anomaly/:id/:name/:anomalyIndex",
   [routeNames.Home]: "/home",
@@ -54,7 +54,7 @@ export const routes: RouteRecordRaw[] = [
     name: routeNames.Map,
     path: routePaths[routeNames.Map],
     component: () => import("@/views/MapView.vue"),
-    props: (route) => ({ id: route.params.id }),
+    props: (route) => ({ id: route.params.id, name: route.params.name, anomalyIndex: route.params.anomalyIndex }),
   },
   {
     name: routeNames.Report,
