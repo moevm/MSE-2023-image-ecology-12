@@ -5,7 +5,7 @@
       <h3 class="col">Аномалии</h3>
       <router-link
         class="col-auto"
-        :to="{ name: routeNames.Map, params: { id: data.mapId } }"
+        :to="{ name: routeNames.Map, params: { id: id } }"
       >
         <button class="btn btn-secondary">Открыть карту</button>
       </router-link>
@@ -54,6 +54,8 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
         tooltip: "Показать на карте",
         icon: "bi bi-eye",
         button: "btn-info",
+        onClicked: (action, data) =>
+          router.push({ name: routeNames.Map, params: { id: data.id, name: data.name, anomalyIndex: data.anomalyIndex} }),
       },
     ]),
   },
