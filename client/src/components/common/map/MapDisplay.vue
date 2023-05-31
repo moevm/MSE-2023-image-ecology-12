@@ -18,9 +18,10 @@ import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
 
-let addMarker = ref<(markerPosition: [number, number]) => void>();
+let addMarker = ref<(markerPosition: [number, number]) => L.Marker>();
+let removeMarker = ref<(marker: L.Marker) => void>();
 let flyToCoordinates = ref<(coordinates: [number, number]) => void>();
-defineExpose({addMarker, flyToCoordinates});
+defineExpose({addMarker, removeMarker, flyToCoordinates});
 
 const props = defineProps<{ id: string}>();
 const xmlImageInfoDoc = await getXMLinfo(props.id);
@@ -61,10 +62,16 @@ onMounted(() => {
   addMarker.value = (markerPosition: [number, number]) => {
     let marker = new L.Marker(markerPosition);
     marker.addTo(mapAndControl.map);
+    
+    return marker;
   }
 
   flyToCoordinates.value = (coordinates: [number, number]) => {
     mapAndControl.map.panTo(coordinates);
+  }
+
+  removeMarker.value = (marker: L.Marker) => {
+    mapAndControl.map.removeLayer(marker);
   }
 });
 </script>
