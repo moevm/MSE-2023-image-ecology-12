@@ -105,8 +105,4 @@ def get_image(img_id):
 
 @images_bp.route('/anomalies/<string:img_id>', methods=['GET'])
 def get_all_anomalies(img_id):
-    anomalies = db.images.find_one(ObjectId(img_id))["anomalies"] 
-    if (anomalies is None):
-        abort(404)
-    else:
-        return anomalies
+    return db.images.find_one(ObjectId(img_id))["anomalies"] 

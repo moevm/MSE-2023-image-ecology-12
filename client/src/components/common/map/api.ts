@@ -18,13 +18,7 @@ export async function getXMLinfo(id: string): Promise<Document | void> {
 
 
 export async function getAnomalies(id: string): Promise<AnomaliesMapData[] | void> {
-  return axios.get<AnomaliesMapData[]>(baseURL + "/images/anomalies/" + id).then(response => {
-    return response.data;
-  }).catch((err: AxiosError) => {
-    if (!err.response || (err.response && err.response.status !== 404)) {
-      throw err;
-    }
-  });
+  return (await axios.get<AnomaliesMapData[]>(baseURL + "/images/anomalies/" + id)).data;
 }
 
 
