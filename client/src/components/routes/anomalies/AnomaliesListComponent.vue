@@ -30,6 +30,7 @@ const router = useRouter();
 const columnDefs: ColDef<AnomalyInfo>[] = [
   { headerName: "Id", field: "id", flex: 2, minWidth: 120 },
   { headerName: "Название", field: "name", flex: 4, minWidth: 180 },
+  { headerName: "Индекс", field: "anomalyIndex", flex: 4, minWidth: 180 },
   { headerName: "Площадь", field: "area", flex: 4, minWidth: 120 },
   {
     headerName: "Дата загрузки",
@@ -52,7 +53,7 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
         icon: "bi bi-radioactive",
         button: "btn-danger",
         onClicked: (action, data) =>
-          router.push({ name: routeNames.Anomaly, params: { id: data.id } }),
+          router.push({ name: routeNames.Anomaly, params: { id: data.id, name: data.name, anomalyIndex: data.anomalyIndex } }),
       },
     ]),
   },

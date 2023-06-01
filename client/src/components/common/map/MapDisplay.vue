@@ -5,41 +5,49 @@
 <script setup lang="ts">
 import {
   getXMLinfo,
-  getForestPolygon,
-  init_map,
-  add_tile_layer_map,
-  add_forest_polygon,
-  add_deforestation_polygon,
-  getDeforestationPolygon
+  getAnomalies,
+  initMap,
+  addTileLayerMap,
+  addAnomalies
 } from "@/components/common/map/api";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import L  from "leaflet";
+import "leaflet/dist/leaflet.css";
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
-const props = defineProps<{ id: string }>();
+let mapAndControl: { map: L.Map; controlLayer: L.Control.Layers;} | null  = null
+defineExpose({addMarker, flyToCoordinates});
+
+const props = defineProps<{ id: string}>();
 const xmlImageInfoDoc = await getXMLinfo(props.id);
-let forestPolygonArr = await getForestPolygon(props.id);
-let deforestationPolygonArr = await getDeforestationPolygon(props.id);
+let anomaliesList = await getAnomalies(props.id);
 
 onMounted(() => {
-  let mapAndControl = init_map();
+  // Загружаем картинки и параметры маркера в leaflet 
+  L.Marker.prototype.options.icon = L.icon({
+    iconRetinaUrl: iconRetinaUrl,
+    iconUrl: iconUrl,
+    shadowUrl: shadowUrl,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    tooltipAnchor: [16, -28],
+    shadowSize: [41, 41],
+  });
 
-  if (forestPolygonArr) {
-    add_forest_polygon(
+  mapAndControl = initMap();
+  if (anomaliesList) {
+    addAnomalies(
       mapAndControl.map, 
       mapAndControl.controlLayer, 
-      forestPolygonArr
-    );
-  }
-
-  if (deforestationPolygonArr){
-    add_deforestation_polygon(
-        mapAndControl.map,
-        mapAndControl.controlLayer,
-        deforestationPolygonArr
+      anomaliesList
     );
   }
 
   if (xmlImageInfoDoc) {
-    add_tile_layer_map(
+    addTileLayerMap(
       mapAndControl.map, 
       mapAndControl.controlLayer, 
       props.id, 
@@ -47,6 +55,18 @@ onMounted(() => {
     );
   }
 });
+
+// Создаем насколько функций для использования родительскими элементами для управления картой.
+function addMarker(markerPosition: [number, number]) {
+  let marker = new L.Marker(markerPosition);
+  if (mapAndControl)
+    marker.addTo(mapAndControl.map);
+}
+
+function flyToCoordinates(coordinates: [number, number]) {
+  if (mapAndControl)
+    mapAndControl.map.panTo(coordinates);
+}
 </script>
 
 <style scoped lang="scss">

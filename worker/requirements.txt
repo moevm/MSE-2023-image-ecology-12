@@ -5,3 +5,4 @@ rasterio==1.3.6
 redis==4.5.4
 celery==5.2.7
 tensorflow==2.12.0
+arrow==1.2.3

@@ -20,7 +20,7 @@ export const routePaths = {
   [routeNames.Upload]: "/upload",
   [routeNames.Map]: "/map/:id",
   [routeNames.Report]: "/report/:id",
-  [routeNames.Anomaly]: "/anomaly/:id",
+  [routeNames.Anomaly]: "/anomaly/:id/:name/:anomalyIndex",
   [routeNames.Home]: "/home",
 };
 
@@ -66,7 +66,7 @@ export const routes: RouteRecordRaw[] = [
     name: routeNames.Anomaly,
     path: routePaths[routeNames.Anomaly],
     component: () => import("@/views/AnomalyView.vue"),
-    props: (route) => ({ id: route.params.id }),
+    props: (route) => ({ id: route.params.id, name: route.params.name, anomalyIndex: route.params.anomalyIndex}),
   },
   {
     name: routeNames.Home,
