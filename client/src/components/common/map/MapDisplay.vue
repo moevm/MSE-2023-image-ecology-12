@@ -17,9 +17,7 @@ import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
-
-let addMarker = ref<(markerPosition: [number, number]) => void>();
-let flyToCoordinates = ref<(coordinates: [number, number]) => void>();
+let mapAndControl: { map: L.Map; controlLayer: L.Control.Layers;} | null  = null
 defineExpose({addMarker, flyToCoordinates});
 
 const props = defineProps<{ id: string}>();
@@ -39,7 +37,7 @@ onMounted(() => {
     shadowSize: [41, 41],
   });
 
-  let mapAndControl = initMap();
+  mapAndControl = initMap();
   if (anomaliesList) {
     addAnomalies(
       mapAndControl.map, 
@@ -56,17 +54,19 @@ onMounted(() => {
       xmlImageInfoDoc
     );
   }
-
-  // Создаем насколько функций для использования родительскими элементами для управления картой.
-  addMarker.value = (markerPosition: [number, number]) => {
-    let marker = new L.Marker(markerPosition);
-    marker.addTo(mapAndControl.map);
-  }
-
-  flyToCoordinates.value = (coordinates: [number, number]) => {
-    mapAndControl.map.panTo(coordinates);
-  }
 });
+
+// Создаем насколько функций для использования родительскими элементами для управления картой.
+function addMarker(markerPosition: [number, number]) {
+  let marker = new L.Marker(markerPosition);
+  if (mapAndControl)
+    marker.addTo(mapAndControl.map);
+}
+
+function flyToCoordinates(coordinates: [number, number]) {
+  if (mapAndControl)
+    mapAndControl.map.panTo(coordinates);
+}
 </script>
 
 <style scoped lang="scss">
