@@ -61,7 +61,7 @@ onMounted(() => {
 function addMarker(markerPosition: [number, number]) {
   let marker = new L.Marker(markerPosition);
   if (mapAndControl)
-    marker.addTo(mapAndControl.map);
+    return marker.addTo(mapAndControl.map);
 }
 
 function removeMarker(marker: L.Marker) {
