@@ -1,19 +1,15 @@
-from datetime import datetime
-
+import io
+import arrow
 from flask import Blueprint, jsonify, request, send_file, abort
 from redis.client import StrictRedis
-
-from app.db import get_db, get_tile_fs, get_map_fs, get_redis
-
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
-import io
-
-from app.tasks import slice
-from app.tasks import thresholding_otsu
-from app.tasks import deforestation
 
 from app import socketio
+from app.db import get_db, get_tile_fs, get_map_fs, get_redis
+from app.tasks import process_image
+from app.tasks import slice
+
 
 db = LocalProxy(get_db)
 tile_fs = LocalProxy(get_tile_fs)
@@ -30,6 +26,7 @@ def get_images_list():
         images.append({
             "id": str(img["_id"]),
             "name": img["name"],
+            'uploadDate': img["upload_date"],
             'size': map_fs.find_one({'_id': img["fs_id"]}).length,
             "ready": img["ready"],
             "sliced": img["sliced"]
@@ -55,30 +52,19 @@ def add_image():
     item = {
         "tile_map_resource": None,
         "fs_id": file_id,
-        "forest_polygon": None,
-        "deforestation_polygon": None,
+        "anomalies": [],
+        "upload_date": str(arrow.now().to('UTC')),
+        "detect_date": "",
         "name": img_name,
         'ready': False,
         'sliced': False
     }
-
+    
     result = db.images.insert_one(item)
     img_id = result.inserted_id
 
-    redis.hset(f'queue:{img_id}', mapping={
-        'id': str(img_id),
-        'progress': 0,
-        'name': img_name,
-        'uploadDate': datetime.now().isoformat(),
-        'status': 'enqueued',
-        'processing_functions': 2
-    })
-
-    redis.hset(f'slice_queue:{img_id}', mapping={'id': str(img_id)})
-
     slice.delay(str(img_id))
-    deforestation.delay(str(img_id))
-    thresholding_otsu.delay(str(img_id))
+    process_image.delay(str(img_id))
 
     return jsonify({'message': 'Image added successfully'})
 
@@ -117,25 +103,6 @@ def get_image(img_id):
     return send_file(io.BytesIO(image_file), mimetype='image/tiff')
 
 
-@images_bp.route('/forest/<string:img_id>', methods=['GET'])
-def get_image_forest(img_id):
-    image_info = db.images.find_one(ObjectId(img_id))["forest_polygon"]  # forest_polygon
-    if (image_info is None):
-        abort(404)
-    else:
-        return image_info
-
-
-@images_bp.route('/deforestation/<string:img_id>', methods=['GET'])
-def get_image_deforestation(img_id):
-    image_info = db.images.find_one(ObjectId(img_id))["deforestation_polygon"]
-    if (image_info is None):
-        abort(404)
-    else:
-        return image_info
-
-
-@images_bp.route('/<string:img_id>/analysis', methods=['GET'])
-def get_image_analysis(img_id):
-    # analysis = ImageService.get_image_analysis(image_id)
-    return jsonify({'analysis': []})  # jsonify(analysis)
+@images_bp.route('/anomalies/<string:img_id>', methods=['GET'])
+def get_all_anomalies(img_id):
+    return db.images.find_one(ObjectId(img_id))["anomalies"] 

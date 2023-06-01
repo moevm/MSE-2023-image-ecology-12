@@ -1,8 +1,8 @@
 import axios, { AxiosError } from "axios";
-import "leaflet/dist/leaflet.css";
-import L, { LatLngExpression, Polygon } from "leaflet";
+import L, { LatLngExpression, Polygon} from "leaflet";
 
 import { baseURL } from "@/api";
+import { AnomaliesMapData } from "@/types/anomalies";
 
 
 export async function getXMLinfo(id: string): Promise<Document | void> {
@@ -17,29 +17,12 @@ export async function getXMLinfo(id: string): Promise<Document | void> {
 }
 
 
-export async function getForestPolygon(id: string): Promise<number[][][] | void> {
-  return axios.get<number[][][]>(baseURL + "/images/forest/" + id).then(response => {
-    return response.data;
-  }).catch((err: AxiosError) => {
-    if (!err.response || (err.response && err.response.status !== 404)) {
-      throw err;
-    }
-  });
+export async function getAnomalies(id: string): Promise<AnomaliesMapData[] | void> {
+  return (await axios.get<AnomaliesMapData[]>(baseURL + "/images/anomalies/" + id)).data;
 }
 
 
-export async function getDeforestationPolygon(id: string): Promise<number[][][] | void> {
-  return axios.get<number[][][]>(baseURL + "/images/deforestation/" + id).then(response => {
-    return response.data;
-  }).catch((err: AxiosError) => {
-    if (!err.response || (err.response && err.response.status !== 404)) {
-      throw err;
-    }
-  });
-}
-
-
-export function init_map() {
+export function initMap() {
   //  OpenStreetMap.
   let osm: L.Layer = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     attribution:
@@ -65,7 +48,7 @@ export function init_map() {
 }
 
 
-export function add_tile_layer_map(map: L.Map, controlLayer: L.Control.Layers, id: string, xmlImageInfoDoc: Document) {
+export function addTileLayerMap(map: L.Map, controlLayer: L.Control.Layers, id: string, xmlImageInfoDoc: Document) {
   // Overlay layers (TMS).
   let lyr: L.Layer = L.tileLayer(
     baseURL + "/images/tile/" + id + "/{z}/{x}/{y}",
@@ -118,51 +101,31 @@ export function add_tile_layer_map(map: L.Map, controlLayer: L.Control.Layers, i
 }
 
 
-export function add_forest_polygon(map: L.Map, controlLayer: L.Control.Layers, forestPolygonArr: number[][][]) {
-  // Forest Polygon Layer.
-  let forestPolygon: Polygon = L.polygon(
-    forestPolygonArr as LatLngExpression[][],
-    { color: "green", fillOpacity: 0.4 }
-  );
-  let forestPolygonLayer: L.LayerGroup = L.layerGroup([forestPolygon]);
+export function addAnomalies(map: L.Map, controlLayer: L.Control.Layers, anomaliesList: AnomaliesMapData[]) {
+  for (let i = 0; i < anomaliesList.length; i++) {
+    // Anomaly Polygon Layer.
+    let anomalyPolygon: Polygon = L.polygon(
+      anomaliesList[i].polygons as LatLngExpression[][],
+      { color: anomaliesList[i].color, fillOpacity: 0.4 }
+    );
+    let anomalyPolygonLayer: L.LayerGroup = L.layerGroup([anomalyPolygon]);
 
-  // Add layer to map.
-  controlLayer.addOverlay(forestPolygonLayer, "<span style='color: green'>Forest </span>");
+    // Add layer to map.
+    controlLayer.addOverlay(
+      anomalyPolygonLayer, 
+      "<span style='color: " + anomaliesList[i].color + "'> " + anomaliesList[i].name + " </span>"
+    );
 
-  // Fit to overlay bounds (SW and NE points with (lat, lon))
-  map.fitBounds([
-    [
-      forestPolygonArr[0][0][0], // miny
-      forestPolygonArr[0][1][1], // maxx
-    ],
-    [
-      forestPolygonArr[0][1][0], // maxy
-      forestPolygonArr[0][0][1], // minx
-    ],
-  ]);
-}
-
-
-export function add_deforestation_polygon(map: L.Map, controlLayer: L.Control.Layers, deforestationPolygonArr: number[][][]) {
-  // Forest Polygon Layer.
-  let deforestationPolygon: Polygon = L.polygon(
-      deforestationPolygonArr as LatLngExpression[][],
-      { color: "red", fillOpacity: 0.4 }
-  );
-  let deforestationPolygonLayer: L.LayerGroup = L.layerGroup([deforestationPolygon]);
-
-  // Add layer to map.
-  controlLayer.addOverlay(deforestationPolygonLayer, "<span style='color: red'>Deforestation </span>");
-
-  // Fit to overlay bounds (SW and NE points with (lat, lon))
-  map.fitBounds([
-    [
-      deforestationPolygonArr[0][0][0], // miny
-      deforestationPolygonArr[0][1][1], // maxx
-    ],
-    [
-      deforestationPolygonArr[0][1][0], // maxy
-      deforestationPolygonArr[0][0][1], // minx
-    ],
-  ]);
+    // Fit to overlay bounds (SW and NE points with (lat, lon))
+    map.fitBounds([
+      [
+        anomaliesList[i].polygons[0][0][0], // miny
+        anomaliesList[i].polygons[0][0][1], // maxx
+      ],
+      [
+        anomaliesList[i].polygons[0][0][0], // maxy
+        anomaliesList[i].polygons[0][0][1], // minx
+      ],
+    ]); 
+  }
 }

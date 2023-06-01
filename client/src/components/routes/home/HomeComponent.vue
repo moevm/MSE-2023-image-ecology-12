@@ -119,7 +119,34 @@
           </button>
         </h2>
         <div id="anomalies" class="accordion-collapse collapse">
-          <div class="accordion-body"></div>
+          <div class="accordion-body">
+            В разделе
+            <span class="text-primary">Аномалии</span>
+            находятся все найденные области аномалий на полностью
+            обработанных изображениях. Там же можно открыть на просмотр
+            одну отдельную аномалию.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#anomaly"
+          >
+            Просмотр аномалии
+          </button>
+        </h2>
+        <div id="anomaly" class="accordion-collapse collapse">
+          <div class="accordion-body">
+            В режиме просмотра аномалии можно посмотреть все параметры 
+            найденной аномалии, отметить её на карте с помощью клавиши 
+            "Показать на карте", а так же открыть отчет изображения, на 
+            котором была найдена аномалия.
+          </div>
         </div>
       </div>
     </div>

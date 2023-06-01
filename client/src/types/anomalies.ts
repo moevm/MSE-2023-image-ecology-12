@@ -1,6 +1,7 @@
 export interface AnomalyInfo {
   id: string;
   name: string;
+  anomalyIndex: string;
   area: number;
   uploadDate: string;
   detectDate: string;
@@ -10,8 +11,15 @@ export interface AnomalyData {
   reportId: string;
   mapId: string;
   name: string;
+  anomalyIndex: string;
   area: number;
+  coordinates: [number, number];
   uploadDate: string;
   detectDate: string;
-  coordinates: [number, number];
+}
+
+export interface AnomaliesMapData {
+    name: string,
+    color: string,
+    polygons: number[][][]
 }
