@@ -1,8 +1,6 @@
 <template>
   <div class="container-lg">
-    <h2 class="text-center mt-2 text-primary">
-      Просмотр аномалии {{ name }} номер {{ anomalyIndex }} на карте №{{ id }}
-    </h2>
+    <h2 class="text-center mt-2 text-primary">Просмотр аномалии {{ name }} номер {{ anomalyIndex }} на карте №{{ id }}</h2>
     <div class="row justify-content-end">
       <router-link
         class="col-auto"
@@ -22,7 +20,7 @@
     />
 
     <div class="d-flex justify-content-center mt-3">
-      <MapDisplay :id="id" ref="mapDisplay" @map-ready="onMapReady" />
+      <MapDisplay :id="id" ref="mapDisplay"/>
     </div>
   </div>
 </template>
@@ -42,7 +40,8 @@ import { getAnomalyData } from "@/components/routes/anomaly/api";
 import { AgGridVue } from "ag-grid-vue3";
 import MapDisplay from "@/components/common/map/MapDisplay.vue";
 
-const props = defineProps<{ id: string; name: string; anomalyIndex: string }>();
+
+const props = defineProps<{ id: string, name: string, anomalyIndex: string}>();
 const mapDisplay = ref<InstanceType<typeof MapDisplay>>();
 
 const columnDefs: ColDef<AnomalyData>[] = [
@@ -71,7 +70,7 @@ const columnDefs: ColDef<AnomalyData>[] = [
         button: "btn-info",
         onClicked: (action, data) => {
           mapDisplay.value?.flyToCoordinates?.(anomalyData.coordinates);
-        },
+        }
       },
     ]),
   },
@@ -81,15 +80,17 @@ const options: GridOptions<AnomalyData> = {
   ...getDefaultGridOptions(),
 };
 
-function onMapReady() {
-  mapDisplay.value?.addMarker?.(anomalyData.coordinates);
-}
+onMounted(() => {
+  setTimeout(function createMarker() {
+    if (! mapDisplay.value) {
+      setTimeout(createMarker, 500);
+    } else {
+      mapDisplay.value.addMarker?.(anomalyData.coordinates);
+    }
+  }, 500);
+})
 
-const anomalyData = await getAnomalyData(
-  props.id,
-  props.name,
-  props.anomalyIndex
-);
+const anomalyData = await getAnomalyData(props.id, props.name, props.anomalyIndex);
 </script>
 
 <style scoped lang="scss"></style>
