@@ -22,13 +22,13 @@
     />
 
     <div class="d-flex justify-content-center mt-3">
-      <MapDisplay :id="id" ref="mapDisplay" />
+      <MapDisplay :id="id" ref="mapDisplay" @map-ready="onMapReady" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { ColDef, GridOptions } from "ag-grid-community";
 import { AnomalyData } from "@/types/anomalies";
 import { dateFormatter } from "@/ag-grid/formatters";
@@ -81,15 +81,9 @@ const options: GridOptions<AnomalyData> = {
   ...getDefaultGridOptions(),
 };
 
-onMounted(() => {
-  setTimeout(function createMarker() {
-    if (!mapDisplay.value) {
-      setTimeout(createMarker, 500);
-    } else {
-      mapDisplay.value.addMarker?.(anomalyData.coordinates);
-    }
-  }, 500);
-});
+function onMapReady() {
+  mapDisplay.value?.addMarker?.(anomalyData.coordinates);
+}
 
 const anomalyData = await getAnomalyData(
   props.id,

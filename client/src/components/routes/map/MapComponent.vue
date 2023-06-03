@@ -19,13 +19,13 @@
       @grid-ready="fitActionsColumn"
     />
     <div class="d-flex justify-content-center mt-3">
-      <MapDisplay :id="id" ref="mapDisplay" />
+      <MapDisplay :id="id" ref="mapDisplay" @map-ready="onMapReady" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { getMapData } from "@/components/routes/map/api";
 import { AgGridVue } from "ag-grid-vue3";
 import { ColDef, GridOptions } from "ag-grid-community";
@@ -93,7 +93,7 @@ const options: GridOptions<AnomalyData> = {
   domLayout: "autoHeight",
 };
 
-onMounted(() => {
+function onMapReady() {
   if (props.name && props.anomalyIndex) {
     let coordinates: [number, number] = [0, 0];
     for (let i = 0; i < mapData.length; i++) {
@@ -105,19 +105,12 @@ onMounted(() => {
         break;
       }
     }
-
-    setTimeout(function createMarker() {
-      if (!mapDisplay.value) {
-        setTimeout(createMarker, 500);
-      } else {
-        if (lastMarker) {
-          mapDisplay.value.removeMarker?.(lastMarker);
-        }
-        lastMarker = mapDisplay.value.addMarker?.(coordinates);
-      }
-    }, 500);
+    if (lastMarker) {
+      mapDisplay.value?.removeMarker?.(lastMarker);
+    }
+    lastMarker = mapDisplay.value?.addMarker?.(coordinates);
   }
-});
+}
 
 const mapData = await getMapData(props.id);
 </script>
