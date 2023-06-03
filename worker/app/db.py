@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 from tensorflow.keras.models import load_model
+import onnx
+from onnx_tf.backend import prepare
+import onnxruntime
 
 import redis
 import pymongo.database
@@ -29,7 +32,11 @@ def init_worker(**kwargs):
     local.tile_fs = GridFS(local.db, 'tile_fs')
 
     local.deforestation_model = load_model('app/image_processing/models/unet-attention-3d.hdf5')
-
+    # init roads
+    # roads_model = onnx.load("model_roads.onnx")
+    # roads_model = prepare(roads_model)
+    session_roads = onnxruntime.InferenceSession("app/image_processing/models/model_roads.onnx")
+    local.roads_model = session_roads
     print('Initializing database connection for worker.')
 
 
