@@ -29,6 +29,7 @@ def init_worker(**kwargs):
     local.tile_fs = GridFS(local.db, 'tile_fs')
 
     local.deforestation_model = load_model('app/image_processing/models/unet-attention-3d.hdf5')
+    # init roads
 
     print('Initializing database connection for worker.')
 
