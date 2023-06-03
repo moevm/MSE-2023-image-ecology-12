@@ -25,6 +25,8 @@ const props = defineProps<{ id: string}>();
 const xmlImageInfoDoc = await getXMLinfo(props.id);
 let anomaliesList = await getAnomalies(props.id);
 
+const emit = defineEmits<{ (e: "map-ready"): void }>();
+
 onMounted(() => {
   // Загружаем картинки и параметры маркера в leaflet 
   L.Marker.prototype.options.icon = L.icon({
@@ -55,6 +57,8 @@ onMounted(() => {
       xmlImageInfoDoc
     );
   }
+
+  emit("map-ready");
 });
 
 // Создаем насколько функций для использования родительскими элементами для управления картой.
