@@ -4,7 +4,7 @@
     <div class="row justify-content-end">
       <router-link
         class="col-auto"
-        :to="{ name: routeNames.Report, params: { id: anomalyData?.reportId } }"
+        :to="{ name: routeNames.Report, params: { id: anomalyData.id } }"
       >
         <button class="btn btn-primary">Открыть отчёт</button>
       </router-link>
@@ -26,9 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { ColDef, GridOptions } from "ag-grid-community";
-import { AnomalyInfo } from "@/types/anomalies";
+import { AnomalyData } from "@/types/anomalies";
 import { dateFormatter } from "@/ag-grid/formatters";
 import {
   fitActionsColumn,
@@ -43,9 +43,8 @@ import MapDisplay from "@/components/common/map/MapDisplay.vue";
 
 const props = defineProps<{ id: string, name: string, anomalyIndex: string}>();
 const mapDisplay = ref<InstanceType<typeof MapDisplay>>();
-let markerAdded = false;
 
-const columnDefs: ColDef<AnomalyInfo>[] = [
+const columnDefs: ColDef<AnomalyData>[] = [
   { headerName: "Название", field: "name", flex: 4, minWidth: 180 },
   { headerName: "Индекс", field: "anomalyIndex", flex: 4, minWidth: 180 },
   { headerName: "Площадь", field: "area", flex: 4, minWidth: 180 },
@@ -70,10 +69,6 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
         icon: "bi bi-eye",
         button: "btn-info",
         onClicked: (action, data) => {
-          if (! markerAdded && mapDisplay.value?.addMarker) {
-            mapDisplay.value.addMarker?.(anomalyData.coordinates);
-            markerAdded = true;
-          }
           mapDisplay.value?.flyToCoordinates?.(anomalyData.coordinates);
         }
       },
@@ -81,9 +76,19 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
   },
 ];
 
-const options: GridOptions<AnomalyInfo> = {
+const options: GridOptions<AnomalyData> = {
   ...getDefaultGridOptions(),
 };
+
+onMounted(() => {
+  setTimeout(function createMarker() {
+    if (! mapDisplay.value) {
+      setTimeout(createMarker, 500);
+    } else {
+      mapDisplay.value.addMarker?.(anomalyData.coordinates);
+    }
+  }, 500);
+})
 
 const anomalyData = await getAnomalyData(props.id, props.name, props.anomalyIndex);
 </script>

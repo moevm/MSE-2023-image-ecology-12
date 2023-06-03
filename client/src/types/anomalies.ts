@@ -8,8 +8,7 @@ export interface AnomalyInfo {
 }
 
 export interface AnomalyData {
-  reportId: string;
-  mapId: string;
+  id: string;
   name: string;
   anomalyIndex: string;
   area: number;

@@ -5,14 +5,14 @@
       <h3 class="col">Аномалии</h3>
       <router-link
         class="col-auto"
-        :to="{ name: routeNames.Map, params: { id: reportData.mapId } }"
+        :to="{ name: routeNames.Map, params: { id: id } }"
       >
         <button class="btn btn-secondary">Открыть карту</button>
       </router-link>
     </div>
     <AgGridVue
       class="ag-theme-alpine mt-3"
-      :row-data="reportData.anomalies"
+      :row-data="data"
       :column-defs="columnDefs"
       :grid-options="options"
       @grid-ready="fitActionsColumn"
@@ -38,6 +38,7 @@ const props = defineProps<{ id: string }>();
 
 const columnDefs: ColDef<AnomalyInfo>[] = [
   { headerName: "Id", field: "id", flex: 2, minWidth: 120 },
+  { headerName: "Индекс", field: "anomalyIndex", flex: 2, minWidth: 120 },
   { headerName: "Название", field: "name", flex: 4, minWidth: 180 },
   { headerName: "Площадь", field: "area", flex: 4, minWidth: 180 },
   {
@@ -47,12 +48,14 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
         icon: "bi bi-radioactive",
         button: "btn-danger",
         onClicked: (action, data) =>
-          router.push({ name: routeNames.Anomaly, params: { id: data.id } }),
+          router.push({ name: routeNames.Anomaly, params: { id: data.id, name: data.name, anomalyIndex: data.anomalyIndex} }),
       },
       {
         tooltip: "Показать на карте",
         icon: "bi bi-eye",
         button: "btn-info",
+        onClicked: (action, data) =>
+          router.push({ name: routeNames.Map, params: { id: data.id, name: data.name, anomalyIndex: data.anomalyIndex} }),
       },
     ]),
   },
@@ -63,7 +66,7 @@ const options: GridOptions<AnomalyInfo> = {
   domLayout: "autoHeight",
 };
 
-const reportData = await getReportData(props.id);
+const data = await getReportData(props.id);
 </script>
 
 <style scoped lang="scss"></style>

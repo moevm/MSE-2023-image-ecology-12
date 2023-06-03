@@ -6,15 +6,3 @@ export interface MapInfo {
   ready: boolean;
   sliced: boolean;
 }
-
-export interface MapAnomaly {
-  id: string;
-  name: string;
-  area: number;
-  coordinates: [number, number];
-}
-
-export interface MapData {
-  reportId?: string;
-  anomalies?: MapAnomaly[];
-}
