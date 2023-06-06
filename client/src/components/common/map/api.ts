@@ -1,36 +1,40 @@
 import axios, { AxiosError } from "axios";
-import L, { LatLngExpression, Polygon} from "leaflet";
+import L, { LatLngExpression, Polygon } from "leaflet";
 
 import { baseURL } from "@/api";
 import { AnomaliesMapData } from "@/types/anomalies";
 
-
 export async function getXMLinfo(id: string): Promise<Document | void> {
-  return axios.get<string>(baseURL + "/images/tile_map_resource/" + id).then(response => {
-    const parser: DOMParser = new DOMParser();
-    return parser.parseFromString(response.data, "text/xml");
-  }).catch((err: AxiosError) => {
-    if (!err.response || (err.response && err.response.status !== 404)) {
-      throw err;
-    }
-  });
+  return axios
+    .get<string>(baseURL + "/images/tile_map_resource/" + id)
+    .then((response) => {
+      const parser: DOMParser = new DOMParser();
+      return parser.parseFromString(response.data, "text/xml");
+    })
+    .catch((err: AxiosError) => {
+      if (!err.response || (err.response && err.response.status !== 404)) {
+        throw err;
+      }
+    });
 }
 
-
-export async function getAnomalies(id: string): Promise<AnomaliesMapData[] | void> {
-  return (await axios.get<AnomaliesMapData[]>(baseURL + "/images/anomalies/" + id)).data;
+export async function getAnomalies(
+  id: string
+): Promise<AnomaliesMapData[] | void> {
+  return (
+    await axios.get<AnomaliesMapData[]>(baseURL + "/images/anomalies/" + id)
+  ).data;
 }
-
 
 export function initMap() {
   //  OpenStreetMap.
-  let osm: L.Layer = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+  const osm: L.Layer = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     attribution:
       "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors",
   });
 
   // Map.
-  let map: L.Map = L.map("map", {
+  const map: L.Map = L.map("map", {
     center: [59.9375, 30.308611],
     zoom: 10,
     minZoom: 5,
@@ -38,19 +42,25 @@ export function initMap() {
     layers: [osm],
   });
 
-  let basemaps = { OpenStreetMap: osm };
+  const basemaps = { OpenStreetMap: osm };
 
   // Add base layers
-  let controlLayer: L.Control.Layers = L.control.layers(basemaps, undefined, { collapsed: false });
+  const controlLayer: L.Control.Layers = L.control.layers(basemaps, undefined, {
+    collapsed: false,
+  });
   controlLayer.addTo(map);
 
-  return {"map": map, "controlLayer": controlLayer}
+  return { map: map, controlLayer: controlLayer };
 }
 
-
-export function addTileLayerMap(map: L.Map, controlLayer: L.Control.Layers, id: string, xmlImageInfoDoc: Document) {
+export function addTileLayerMap(
+  map: L.Map,
+  controlLayer: L.Control.Layers,
+  id: string,
+  xmlImageInfoDoc: Document
+) {
   // Overlay layers (TMS).
-  let lyr: L.Layer = L.tileLayer(
+  const lyr: L.Layer = L.tileLayer(
     baseURL + "/images/tile/" + id + "/{z}/{x}/{y}",
     { tms: true, opacity: 1, attribution: "" }
   );
@@ -83,37 +93,50 @@ export function addTileLayerMap(map: L.Map, controlLayer: L.Control.Layers, id: 
   ]);
 
   // Set zoom according to tile layer parameters.
-  map.setZoom(parseInt(
-    xmlImageInfoDoc.getElementsByTagName("TileSet")[0].attributes[0]
-      .nodeValue as string
-  ));
+  map.setZoom(
+    parseInt(
+      xmlImageInfoDoc.getElementsByTagName("TileSet")[0].attributes[0]
+        .nodeValue as string
+    )
+  );
 
-  map.setMinZoom(parseInt(
-    xmlImageInfoDoc.getElementsByTagName("TileSet")[0].attributes[0]
-      .nodeValue as string
-  ));
+  map.setMinZoom(
+    parseInt(
+      xmlImageInfoDoc.getElementsByTagName("TileSet")[0].attributes[0]
+        .nodeValue as string
+    )
+  );
 
-  map.setMaxZoom(parseInt(
-    xmlImageInfoDoc.getElementsByTagName("TileSet")[
-      xmlImageInfoDoc.getElementsByTagName("TileSet").length - 1
-    ].attributes[0].nodeValue as string
-  ));
+  map.setMaxZoom(
+    parseInt(
+      xmlImageInfoDoc.getElementsByTagName("TileSet")[
+        xmlImageInfoDoc.getElementsByTagName("TileSet").length - 1
+      ].attributes[0].nodeValue as string
+    )
+  );
 }
 
-
-export function addAnomalies(map: L.Map, controlLayer: L.Control.Layers, anomaliesList: AnomaliesMapData[]) {
+export function addAnomalies(
+  map: L.Map,
+  controlLayer: L.Control.Layers,
+  anomaliesList: AnomaliesMapData[]
+) {
   for (let i = 0; i < anomaliesList.length; i++) {
     // Anomaly Polygon Layer.
-    let anomalyPolygon: Polygon = L.polygon(
+    const anomalyPolygon: Polygon = L.polygon(
       anomaliesList[i].polygons as LatLngExpression[][],
       { color: anomaliesList[i].color, fillOpacity: 0.4 }
     );
-    let anomalyPolygonLayer: L.LayerGroup = L.layerGroup([anomalyPolygon]);
+    const anomalyPolygonLayer: L.LayerGroup = L.layerGroup([anomalyPolygon]);
 
     // Add layer to map.
     controlLayer.addOverlay(
-      anomalyPolygonLayer, 
-      "<span style='color: " + anomaliesList[i].color + "'> " + anomaliesList[i].name + " </span>"
+      anomalyPolygonLayer,
+      "<span style='color: " +
+        anomaliesList[i].color +
+        "'> " +
+        anomaliesList[i].name +
+        " </span>"
     );
 
     // Fit to overlay bounds (SW and NE points with (lat, lon))
@@ -126,6 +149,6 @@ export function addAnomalies(map: L.Map, controlLayer: L.Control.Layers, anomali
         anomaliesList[i].polygons[0][0][0], // maxy
         anomaliesList[i].polygons[0][0][1], // minx
       ],
-    ]); 
+    ]);
   }
 }
