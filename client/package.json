@@ -7,7 +7,8 @@
     "watch-tsc": "vue-tsc --watch --noEmit",
     "dev": "npm-run-all --parallel watch-tsc vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint --fix 'src/**/*.ts' 'src/**/*.vue'"
   },
   "dependencies": {
     "@formkit/themes": "^1.0.0-beta.15",
