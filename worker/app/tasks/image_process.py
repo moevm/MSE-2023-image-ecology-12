@@ -11,6 +11,8 @@ def process_image(img_id: str):
     db = local.db
     redis = local.redis
     image_info = db.images.find_one(ObjectId(img_id))
+    if image_info is None:
+        return "Image not found"
     
     # 
     ## Список аномалий для поиска

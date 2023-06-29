@@ -6,3 +6,7 @@ redis==4.5.4
 celery==5.2.7
 tensorflow==2.12.0
 arrow==1.2.3
+tzdata==2023.3
+segment-geospatial==0.8.3
+groundingdino-py==0.4.0
+
