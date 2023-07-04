@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { ColDef, GridOptions } from "ag-grid-community";
 import { AnomalyData } from "@/types/anomalies";
 import { dateFormatter } from "@/ag-grid/formatters";
@@ -81,6 +81,7 @@ const options: GridOptions<AnomalyData> = {
   ...getDefaultGridOptions(),
 };
 
+
 function onMapReady() {
   mapDisplay.value?.addMarker?.(anomalyData.coordinates);
 }
@@ -90,6 +91,7 @@ const anomalyData = await getAnomalyData(
   props.name,
   props.anomalyIndex
 );
+
 </script>
 
 <style scoped lang="scss"></style>

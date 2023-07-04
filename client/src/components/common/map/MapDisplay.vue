@@ -17,6 +17,7 @@ import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
 import iconUrl from "leaflet/dist/images/marker-icon.png";
 import shadowUrl from "leaflet/dist/images/marker-shadow.png";
 
+
 let mapAndControl: { map: L.Map; controlLayer: L.Control.Layers } | null = null;
 defineExpose({ addMarker, removeMarker, flyToCoordinates });
 
@@ -59,11 +60,13 @@ onMounted(() => {
 // Создаем насколько функций для использования родительскими элементами для управления картой.
 function addMarker(markerPosition: [number, number]) {
   let marker = new L.Marker(markerPosition);
+
   if (mapAndControl) return marker.addTo(mapAndControl.map);
 }
 
 function removeMarker(marker: L.Marker) {
   if (mapAndControl) mapAndControl.map.removeLayer(marker);
+
 }
 
 function flyToCoordinates(coordinates: [number, number]) {

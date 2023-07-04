@@ -93,6 +93,7 @@ const options: GridOptions<AnomalyData> = {
   domLayout: "autoHeight",
 };
 
+
 function onMapReady() {
   if (props.name && props.anomalyIndex) {
     let coordinates: [number, number] = [0, 0];

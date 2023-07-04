@@ -11,6 +11,7 @@
 import MapComponent from "@/components/routes/map/MapComponent.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 
+
 defineProps<{ id: string; name?: string; anomalyIndex?: string }>();
 </script>
 

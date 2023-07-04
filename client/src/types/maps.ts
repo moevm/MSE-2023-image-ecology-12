@@ -6,3 +6,4 @@ export interface MapInfo {
   ready: boolean;
   sliced: boolean;
 }
+
