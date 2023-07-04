@@ -6,8 +6,4 @@ redis==4.5.4
 celery==5.2.7
 tensorflow==2.12.0
 arrow==1.2.3
-segmentation-models-pytorch==0.3.2
-onnx==1.14.0
-onnx-tf==1.10.0
-onnxruntime==1.15.0
-tensorflow-probability==0.20.1
+segmentation-models==1.0.1

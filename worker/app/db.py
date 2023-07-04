@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 from tensorflow.keras.models import load_model
-import onnx
-from onnx_tf.backend import prepare
-import onnxruntime
 
 import redis
 import pymongo.database
@@ -10,6 +7,10 @@ from celery.signals import worker_process_init, worker_process_shutdown
 from gridfs import GridFS
 
 from app import config
+import os
+
+os.environ['SM_FRAMEWORK'] = "tf.keras"
+import segmentation_models as sm
 
 
 @dataclass
@@ -31,12 +32,12 @@ def init_worker(**kwargs):
     local.map_fs = GridFS(local.db, 'map_fs')
     local.tile_fs = GridFS(local.db, 'tile_fs')
 
+    BACKBONE = 'resnet50'
+
     local.deforestation_model = load_model('app/image_processing/models/unet-attention-3d.hdf5')
-    # init roads
-    # roads_model = onnx.load("model_roads.onnx")
-    # roads_model = prepare(roads_model)
-    session_roads = onnxruntime.InferenceSession("app/image_processing/models/model_roads.onnx")
-    local.roads_model = session_roads
+    local.roads_model = sm.Unet(BACKBONE, classes=1, activation='sigmoid')
+    local.roads_model.load_weights('app/image_processing/models/unet-road.hdf5')
+    local.preprocessing_fn = sm.get_preprocessing(BACKBONE)
     print('Initializing database connection for worker.')
 
 

@@ -16,8 +16,6 @@ def process_image(img_id: str):
     #
     ## Список аномалий для поиска
     anomalies = [AnomalyForest, AnomalyDeforestation, AnomalyRoads]
-    ## 
-    # 
 
     # Создаем запись в redis-е для отображения очереди на клиенте.
     queue_item = f'queue:{img_id}'
