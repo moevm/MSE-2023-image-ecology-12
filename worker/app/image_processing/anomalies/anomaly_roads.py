@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import cv2
+=======
+import cv2 as cv
+>>>>>>> add6ff44010833186681f7d90f11119a32594fd0
 import numpy as np
 from bson import ObjectId
 
