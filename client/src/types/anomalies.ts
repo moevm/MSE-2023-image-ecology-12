@@ -18,7 +18,7 @@ export interface AnomalyData {
 }
 
 export interface AnomaliesMapData {
-    name: string,
-    color: string,
-    polygons: number[][][]
+  name: string;
+  color: string;
+  polygons: number[][][];
 }

@@ -53,7 +53,14 @@ const columnDefs: ColDef<AnomalyInfo>[] = [
         icon: "bi bi-radioactive",
         button: "btn-danger",
         onClicked: (action, data) =>
-          router.push({ name: routeNames.Anomaly, params: { id: data.id, name: data.name, anomalyIndex: data.anomalyIndex } }),
+          router.push({
+            name: routeNames.Anomaly,
+            params: {
+              id: data.id,
+              name: data.name,
+              anomalyIndex: data.anomalyIndex,
+            },
+          }),
       },
     ]),
   },
