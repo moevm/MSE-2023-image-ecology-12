@@ -1,9 +1,6 @@
 from dataclasses import dataclass
 import tensorflow as tf
 from tensorflow.keras.models import load_model
-import onnx
-from onnx_tf.backend import prepare
-import onnxruntime
 
 import redis
 import pymongo.database
