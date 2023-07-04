@@ -36,9 +36,9 @@ def init_worker(**kwargs):
     BACKBONE = 'resnet50'
 
     local.deforestation_model = load_model('app/image_processing/models/unet-attention-3d.hdf5')
-    local.roads_model = sm.Unet(BACKBONE, classes=1, activation='sigmoid')
-    local.roads_model.load_weights('app/image_processing/models/unet-road.hdf5')
     local.preprocessing_fn = sm.get_preprocessing(BACKBONE)
+    local.roads_model = sm.Unet(BACKBONE, classes=1, activation='sigmoid')
+    local.roads_model.load_weights('app/image_processing/models/unet_road.h5')
     print('Initializing database connection for worker.')
 
 
