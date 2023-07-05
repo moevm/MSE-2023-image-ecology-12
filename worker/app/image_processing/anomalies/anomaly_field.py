@@ -1,6 +1,6 @@
 import cv2
 from bson import ObjectId
-
+import numpy as np
 from app import app
 from app.db import local
 from app.image_processing.anomalies.anomaly_base import AnomalyBase
@@ -16,7 +16,7 @@ class AnomalyField(AnomalyBase):
         super().__init__(img_id, image_bytes)
 
         self.name = 'Field'
-        self.color = 'green'
+        self.color = 'red'
 
     def find_contours_of_anomaly(self):
         """
@@ -59,7 +59,7 @@ class AnomalyField(AnomalyBase):
         return filtered_contours
 
     @staticmethod
-    @app.task(name='forest_find', queue="image_process")
+    @app.task(name='field_find', queue="image_process")
     def create_and_process(img_id):
         db = local.db
         map_fs = local.map_fs
@@ -68,8 +68,8 @@ class AnomalyField(AnomalyBase):
         # Получаем саму картинку из GridFS.
         image_bytes = map_fs.get(ObjectId(image_info['fs_id'])).read()
 
-        forest_anomaly = AnomalyForest(img_id, image_bytes)
-        AnomalyBase.process_anomaly(forest_anomaly)
-        forest_anomaly.filter_polygons_by_area(10)
-        forest_anomaly.after_end_of_process()
+        field_anomaly = AnomalyField(img_id, image_bytes)
+        AnomalyBase.process_anomaly(field_anomaly)
+        field_anomaly.filter_polygons_by_area(10)
+        field_anomaly.after_end_of_process()
         return "Processing completed"
