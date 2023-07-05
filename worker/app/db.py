@@ -1,14 +1,13 @@
 from dataclasses import dataclass
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import tensorflow as tf
 from tensorflow.keras.models import load_model
-
 import redis
 import pymongo.database
 from celery.signals import worker_process_init, worker_process_shutdown
 from gridfs import GridFS
-
 from app import config
-import os
 
 os.environ['SM_FRAMEWORK'] = "tf.keras"
 import segmentation_models as sm

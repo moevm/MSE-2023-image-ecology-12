@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 from bson import ObjectId
-
 from app import app
 from app.db import local
 from app.image_processing.anomalies.anomaly_base import AnomalyBase
@@ -9,9 +8,9 @@ from app.image_processing.utility import connected_components, find_contours, ge
 
 
 class AnomalyRoads(AnomalyBase):
-    '''
+    """
         Класс для нахождения дорог на изображении.
-    '''
+    """
 
     def __init__(self, img_id, image_bytes):
         super().__init__(img_id, image_bytes)
@@ -20,9 +19,9 @@ class AnomalyRoads(AnomalyBase):
         self.color = 'red'
 
     def find_contours_of_anomaly(self):
-        '''
+        """
         Использование нейросети для нахождения областей дорог.
-        '''
+        """
 
         image_RGB = get_image_RGB(self.img_id, self.image_bytes)
         shape_image = image_RGB.shape
@@ -35,8 +34,6 @@ class AnomalyRoads(AnomalyBase):
         pr_mask = pr_mask[..., 0].squeeze()
         pr_mask = (pr_mask * 255).astype(np.uint8)
         self.update(20)
-        # Find the contours in the input image
-        # contours, _ = cv2.findContours(pr_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
         contours = find_contours(pr_mask)
         areas = [cv2.contourArea(contour) for contour in contours]
         mean_area = np.mean(areas)
@@ -49,7 +46,6 @@ class AnomalyRoads(AnomalyBase):
         contours = find_contours(pr_mask)
         self.update(10)
         return contours
-
 
     @staticmethod
     @app.task(name='roads_find', queue="image_process")
