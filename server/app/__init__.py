@@ -14,6 +14,6 @@ CORS(app)
 
 from .websocket.queue import send_queue
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(send_queue, 'interval', seconds=1)
+scheduler = BackgroundScheduler(job_defaults={'misfire_grace_time': 15*60})
+scheduler.add_job(send_queue, 'interval', seconds=10)
 scheduler.start()
