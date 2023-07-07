@@ -1,17 +1,20 @@
 from dataclasses import dataclass
 from samgeo import text_sam
 from samgeo import SamGeo
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import tensorflow as tf
 from tensorflow.keras.models import load_model
-
 import redis
 import pymongo.database
 from celery.signals import worker_process_init, worker_process_shutdown, worker_init, celeryd_init
 from gridfs import GridFS
 from celery.utils.log import get_task_logger
-import os
 from app.image_processing.find_forest.EfficientNetModel import EfficientNetModel
-
 from app import config
+
+os.environ['SM_FRAMEWORK'] = "tf.keras"
+import segmentation_models as sm
 
 
 logger = get_task_logger(__name__)
@@ -43,6 +46,10 @@ def load_models(**kwargs):
     if os.environ["WORKER_NAME"] == 'celery@worker_image_process':
         logger.info('loading deforestation model')
         local.deforestation_model = load_model('app/image_processing/models/unet-attention-3d.hdf5')
+        BACKBONE = 'resnet50'
+        local.preprocessing_fn = sm.get_preprocessing(BACKBONE)
+        local.roads_model = sm.Unet(BACKBONE, classes=1, activation='sigmoid')
+        local.roads_model.load_weights('app/image_processing/models/unet_road.h5')
         logger.info('loading EfficientNetModel')
         local.model_forest = EfficientNetModel(input_shape=(64, 64, 3), num_classes=1)
         local.model_forest.load_model('app/image_processing/models/efficientB2_model.h5')
@@ -64,8 +71,6 @@ def init_worker(**kwargs):
     local.redis = redis.StrictRedis.from_url(config.REDIS_URI, decode_responses=True)
     local.map_fs = GridFS(local.db, 'map_fs')
     local.tile_fs = GridFS(local.db, 'tile_fs')
-
-
     print('Initializing database connection for worker.')
 
 

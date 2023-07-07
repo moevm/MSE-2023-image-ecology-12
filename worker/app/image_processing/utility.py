@@ -43,7 +43,7 @@ def morph_operations(image_arr, use_gaussian_filter: bool = True):
     return cv2.morphologyEx(image_arr, cv2.MORPH_OPEN, kernel)
 
 
-def connected_components(threshold, connectivity=8):
+def connected_components(threshold, threshold_area=250, threshold_width=50, threshold_height=50, connectivity=8):
     # perform connected component analysis
     # apply connected component analysis to the thresholded image
     output = cv2.connectedComponentsWithStats(threshold, connectivity, cv2.CV_32S)
@@ -62,14 +62,16 @@ def connected_components(threshold, connectivity=8):
         area = stats[i, cv2.CC_STAT_AREA]
         # ensure the width, height, and area are all neither too small
         # nor too big
-        keepWidth = w > 50
-        keepHeight = h > 50
-        keepArea = area > 250
+        keepWidth = w > threshold_width
+        keepHeight = h > threshold_height
+        keepArea = area > threshold_area
         # (cX, cY) = centroids[i]
         # ensure the connected component we are examining passes all
         # three tests
         if all((keepWidth, keepHeight, keepArea)):
-            mask[y:y + h, x:x + w, :] = threshold[y:y + h, x:x + w, :]
+            componentMask = (labels == i).astype("uint8")  # * 255
+            mask = cv2.bitwise_or(mask, componentMask)
+            # mask[y:y + h, x:x + w, :] = threshold[y:y + h, x:x + w, :]
     return mask
 
 
