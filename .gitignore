@@ -1,3 +1,4 @@
 .idea
 **/node_modules
 **/__pycache__/
+worker/app/image_processing/models/unet_road.h5

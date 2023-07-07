@@ -7,3 +7,4 @@ celery==5.2.7
 tzdata==2023.3
 tensorflow==2.12.0
 arrow==1.2.3
+segmentation-models==1.0.1
