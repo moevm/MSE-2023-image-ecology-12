@@ -4,6 +4,7 @@ from app import app
 from app.db import local
 from app.image_processing.anomalies.anomaly_forest import AnomalyForest
 from app.image_processing.anomalies.anomaly_deforestation import AnomalyDeforestation
+from app.image_processing.anomalies.anomaly_field import AnomalyField
 from app.image_processing.anomalies.anomaly_roads import AnomalyRoads
 
 
@@ -12,8 +13,8 @@ def process_image(img_id: str):
     db = local.db
     redis = local.redis
     image_info = db.images.find_one(ObjectId(img_id))
-    ## Список аномалий для поиска
-    anomalies = [AnomalyForest, AnomalyDeforestation, AnomalyRoads]
+    anomalies = [AnomalyForest, AnomalyDeforestation, AnomalyField, AnomalyRoads]
+
 
     # Создаем запись в redis-е для отображения очереди на клиенте.
     queue_item = f'queue:{img_id}'
