@@ -13,8 +13,8 @@ def process_image(img_id: str):
     db = local.db
     redis = local.redis
     image_info = db.images.find_one(ObjectId(img_id))
-
     anomalies = [AnomalyForest, AnomalyDeforestation, AnomalyField, AnomalyRoads]
+
 
     # Создаем запись в redis-е для отображения очереди на клиенте.
     queue_item = f'queue:{img_id}'
