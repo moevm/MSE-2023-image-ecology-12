@@ -1,12 +1,16 @@
 from dataclasses import dataclass
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import tensorflow as tf
 from tensorflow.keras.models import load_model
-
 import redis
 import pymongo.database
 from celery.signals import worker_process_init, worker_process_shutdown
 from gridfs import GridFS
-
 from app import config
+
+os.environ['SM_FRAMEWORK'] = "tf.keras"
+import segmentation_models as sm
 
 
 @dataclass
@@ -28,8 +32,12 @@ def init_worker(**kwargs):
     local.map_fs = GridFS(local.db, 'map_fs')
     local.tile_fs = GridFS(local.db, 'tile_fs')
 
-    local.deforestation_model = load_model('app/image_processing/models/unet-attention-3d.hdf5')
+    BACKBONE = 'resnet50'
 
+    local.deforestation_model = load_model('app/image_processing/models/unet-attention-3d.hdf5')
+    local.preprocessing_fn = sm.get_preprocessing(BACKBONE)
+    local.roads_model = sm.Unet(BACKBONE, classes=1, activation='sigmoid')
+    local.roads_model.load_weights('app/image_processing/models/unet_road.h5')
     print('Initializing database connection for worker.')
 
 
