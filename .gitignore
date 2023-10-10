@@ -1,3 +1,6 @@
 .idea
 **/node_modules
 **/__pycache__/
+worker/app/image_processing/models/efficientB2_model.h5
+worker/app/image_processing/models/sam_vit_h_4b8939.pth
+worker/app/image_processing/models/unet_road.h5
