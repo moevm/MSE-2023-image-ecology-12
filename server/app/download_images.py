@@ -1,4 +1,3 @@
-
 from os import listdir, makedirs
 import getpass
 import asf_search as asf
