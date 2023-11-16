@@ -1,9 +1,11 @@
 from os import listdir, makedirs
 import getpass
 import asf_search as asf
+from app import app
 
 
-def downloader(username: str, password: str, start_date: str, end_date: str, polygon: str):
+@app.task(name='download_images', queue='download_images')
+def download_images(username: str, password: str, start_date: str, end_date: str, polygon: str):
     session = asf.ASFSession().auth_with_creds(username=username, password=password)
 
     results = asf.geo_search(
@@ -32,4 +34,4 @@ if __name__ == '__main__':
     start_date = input('Start date [sample: 2020-12-31 leave it blank for default]:')
     end_date = input('End date [sample: 2021-01-31 leave it blank for default]:')
     polygon = input('Enter polygin [sample: POLYGON((-91.97 28.78,-88.85 28.78,-88.85 30.31,-91.97 30.31,-91.97 28.78)) leave it blank for default]:')
-    downloader(username, password, start_date, end_date, polygon)
+    download_images(username, password, start_date, end_date, polygon)

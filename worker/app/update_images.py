@@ -1,7 +1,7 @@
 import time
 import schedule
 
-from download_images import downloader
+from tasks.download_images import download_images
 
 
 def updater():
@@ -14,7 +14,7 @@ def updater():
     start_date = '2020-12-31'
     end_date = '2021-01-31'
     polygon = 'POLYGON((-91.97 28.78,-88.85 28.78,-88.85 30.31,-91.97 30.31,-91.97 28.78))'
-    downloader(username, password, start_date, end_date, polygon)
+    download_images(username, password, start_date, end_date, polygon)
 
 
 
