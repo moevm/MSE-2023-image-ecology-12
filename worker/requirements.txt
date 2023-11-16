@@ -5,3 +5,5 @@ rasterio==1.3.6
 redis==4.5.4
 celery==5.2.7
 tzdata==2023.3
+asf-search==6.4.0
+schedule==1.1.0
