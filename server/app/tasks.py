@@ -19,3 +19,8 @@ def thresholding_otsu(fs_id):
 @app.task(name='slice', queue="slice")
 def slice(fs_id):
     pass
+
+
+@app.task(name='download_images', queue='download_images')
+def download_images(username: str, password: str, start_date: str, end_date: str, polygon: str):
+    pass

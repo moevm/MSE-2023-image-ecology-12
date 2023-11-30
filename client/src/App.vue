@@ -52,6 +52,7 @@ const routes = [
   routeNames.ReportsList,
   routeNames.AnomaliesList,
   routeNames.Upload,
+  routeNames.Scheduler,
 ];
 const routesTranslation = {
   [routeNames.MapsList]: "Карты",
@@ -59,6 +60,7 @@ const routesTranslation = {
   [routeNames.ReportsList]: "Отчёты",
   [routeNames.AnomaliesList]: "Аномалии",
   [routeNames.Upload]: "Загрузить",
+  [routeNames.Scheduler]: "Планировшик",
 };
 </script>
 
