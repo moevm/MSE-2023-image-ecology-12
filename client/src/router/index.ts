@@ -10,6 +10,7 @@ export const routeNames = {
   Report: "Report",
   Anomaly: "Anomaly",
   Home: "Home",
+  Scheduler: "Scheduler",
 };
 
 export const routePaths = {
@@ -22,6 +23,7 @@ export const routePaths = {
   [routeNames.Report]: "/report/:id",
   [routeNames.Anomaly]: "/anomaly/:id",
   [routeNames.Home]: "/home",
+  [routeNames.Scheduler]: "/scheduler",
 };
 
 export const routes: RouteRecordRaw[] = [
@@ -72,6 +74,11 @@ export const routes: RouteRecordRaw[] = [
     name: routeNames.Home,
     path: routePaths[routeNames.Home],
     component: () => import("@/views/HomeView.vue"),
+  },
+  {
+    name: routeNames.Scheduler,
+    path: routePaths[routeNames.Scheduler],
+    component: () => import("@/views/SchedulerView.vue"),
   },
 ];
 
