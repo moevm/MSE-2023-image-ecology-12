@@ -22,4 +22,3 @@ def crop_image(input_geotiff_path: str, output_geotiff_path: str, minx: int, min
 
     with rasterio.open(output_geotiff_path, "w", **out_meta) as dest:
         dest.write(out_image)
-    
