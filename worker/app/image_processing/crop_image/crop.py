@@ -7,9 +7,9 @@ import pycrs
 
 def crop_image(input_geotiff_path: str, output_geotiff_path: str, minx: int, miny: int, maxx: int, maxy: int):
     bbox = box(minx, miny, maxx, maxy)
-    geo = gpd.GeoDataFrame({'geometry': bbox}, index=[0], crs=pycrs.parse.from_epsg_code(4326).to_proj4())
-
+    geo = gpd.GeoDataFrame({'geometry': bbox}, index=[0], crs="EPSG:4326")
     with rasterio.open(input_geotiff_path) as src:
+        geo = geo.to_crs(src.crs)
         out_image, out_transform = mask(src, geo.geometry, crop=True)
         out_meta = src.meta.copy()
 
