@@ -9,8 +9,11 @@ from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 import io
 
-from app.tasks import slice
-from app.tasks import thresholding_otsu
+from app.tasks import (
+    slice,
+    thresholding_otsu,
+    pipeline,
+)
 
 from app import socketio
 
@@ -75,6 +78,7 @@ def add_image():
 
     slice.delay(str(img_id))
     thresholding_otsu.delay(str(img_id))
+    pipeline.delay(str(img_id))
 
     return jsonify({'message': 'Image added successfully'})
 
