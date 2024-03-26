@@ -8,24 +8,175 @@ $ python3 image_processing/benchmark/benchmark.py
 
 sample output
 ```
-crop_image для ../map_samples/5.tif заняло 1.3859 секунд
-crop_image для ../map_samples/6.tif заняло 1.4098 секунд
-/home/kirillkry/.local/lib/python3.10/site-packages/rasterio/mask.py:189: NodataShadowWarning: The dataset's nodata attribute is shadowing the alpha band. All masks will be determined by the nodata attribute
-  out_image = dataset.read(
-crop_image для ../map_samples/2.tif заняло 0.4402 секунд
-crop_image для ../map_samples/8.tif заняло 1.5056 секунд
-crop_image для ../map_samples/3.tif заняло 0.0687 секунд
-crop_image для ../map_samples/7.tif заняло 0.2955 секунд
-/home/kirillkry/.local/lib/python3.10/site-packages/rasterio/mask.py:189: NodataShadowWarning: The dataset's nodata attribute is shadowing the alpha band. All masks will be determined by the nodata attribute
-  out_image = dataset.read(
-crop_image для ../map_samples/1.tif заняло 0.3919 секунд
-Среднее время обрезки: 0.7854 секунд
-compress для ../map_samples/5.tif заняло 2.8556 секунд
-compress для ../map_samples/6.tif заняло 2.9475 секунд
-compress для ../map_samples/2.tif заняло 0.8234 секунд
-compress для ../map_samples/8.tif заняло 3.1708 секунд
-compress для ../map_samples/3.tif заняло 0.1451 секунд
-compress для ../map_samples/7.tif заняло 0.6134 секунд
-compress для ../map_samples/1.tif заняло 0.8112 секунд
-Среднее время сжатия: 1.6238 секунд
+$ python3 image_processing/benchmark/benchmark.py
+crop_image выполнение 1 для ../map_samples/5.tif заняло 1353780742.0000 наносекунд
+crop_image выполнение 2 для ../map_samples/5.tif заняло 1335850299.0000 наносекунд
+crop_image выполнение 3 для ../map_samples/5.tif заняло 1334010030.0000 наносекунд
+crop_image выполнение 4 для ../map_samples/5.tif заняло 1374488544.0000 наносекунд
+crop_image выполнение 5 для ../map_samples/5.tif заняло 1376484011.0000 наносекунд
+crop_image выполнение 6 для ../map_samples/5.tif заняло 1342814122.0000 наносекунд
+crop_image выполнение 7 для ../map_samples/5.tif заняло 1351995874.0000 наносекунд
+crop_image выполнение 8 для ../map_samples/5.tif заняло 1342656021.0000 наносекунд
+crop_image выполнение 9 для ../map_samples/5.tif заняло 1348383376.0000 наносекунд
+crop_image выполнение 10 для ../map_samples/5.tif заняло 1351416345.0000 наносекунд
+Среднее время для ../map_samples/5.tif: 1351187936.4000 наносекунд
+
+crop_image выполнение 1 для ../map_samples/6.tif заняло 1366260289.0000 наносекунд
+crop_image выполнение 2 для ../map_samples/6.tif заняло 1364735139.0000 наносекунд
+crop_image выполнение 3 для ../map_samples/6.tif заняло 1373170605.0000 наносекунд
+crop_image выполнение 4 для ../map_samples/6.tif заняло 1381772299.0000 наносекунд
+crop_image выполнение 5 для ../map_samples/6.tif заняло 1378305555.0000 наносекунд
+crop_image выполнение 6 для ../map_samples/6.tif заняло 1370233833.0000 наносекунд
+crop_image выполнение 7 для ../map_samples/6.tif заняло 1385741978.0000 наносекунд
+crop_image выполнение 8 для ../map_samples/6.tif заняло 1369887258.0000 наносекунд
+crop_image выполнение 9 для ../map_samples/6.tif заняло 1389751902.0000 наносекунд
+crop_image выполнение 10 для ../map_samples/6.tif заняло 1383010656.0000 наносекунд
+Среднее время для ../map_samples/6.tif: 1376286951.4000 наносекунд
+
+crop_image выполнение 1 для ../map_samples/2.tif заняло 447695982.0000 наносекунд
+crop_image выполнение 2 для ../map_samples/2.tif заняло 414902917.0000 наносекунд
+crop_image выполнение 3 для ../map_samples/2.tif заняло 445047140.0000 наносекунд
+crop_image выполнение 4 для ../map_samples/2.tif заняло 422339192.0000 наносекунд
+crop_image выполнение 5 для ../map_samples/2.tif заняло 421257988.0000 наносекунд
+crop_image выполнение 6 для ../map_samples/2.tif заняло 417865810.0000 наносекунд
+crop_image выполнение 7 для ../map_samples/2.tif заняло 422363382.0000 наносекунд
+crop_image выполнение 8 для ../map_samples/2.tif заняло 422589368.0000 наносекунд
+crop_image выполнение 9 для ../map_samples/2.tif заняло 416840213.0000 наносекунд
+crop_image выполнение 10 для ../map_samples/2.tif заняло 418083924.0000 наносекунд
+Среднее время для ../map_samples/2.tif: 424898591.6000 наносекунд
+
+crop_image выполнение 1 для ../map_samples/8.tif заняло 1522882055.0000 наносекунд
+crop_image выполнение 2 для ../map_samples/8.tif заняло 1542473823.0000 наносекунд
+crop_image выполнение 3 для ../map_samples/8.tif заняло 1556288102.0000 наносекунд
+crop_image выполнение 4 для ../map_samples/8.tif заняло 1581257517.0000 наносекунд
+crop_image выполнение 5 для ../map_samples/8.tif заняло 1606198319.0000 наносекунд
+crop_image выполнение 6 для ../map_samples/8.tif заняло 1531851304.0000 наносекунд
+crop_image выполнение 7 для ../map_samples/8.tif заняло 1556735924.0000 наносекунд
+crop_image выполнение 8 для ../map_samples/8.tif заняло 1539563462.0000 наносекунд
+crop_image выполнение 9 для ../map_samples/8.tif заняло 1547726532.0000 наносекунд
+crop_image выполнение 10 для ../map_samples/8.tif заняло 1530822679.0000 наносекунд
+Среднее время для ../map_samples/8.tif: 1551579971.7000 наносекунд
+
+crop_image выполнение 1 для ../map_samples/3.tif заняло 73718663.0000 наносекунд
+crop_image выполнение 2 для ../map_samples/3.tif заняло 71862923.0000 наносекунд
+crop_image выполнение 3 для ../map_samples/3.tif заняло 68356076.0000 наносекунд
+crop_image выполнение 4 для ../map_samples/3.tif заняло 67862195.0000 наносекунд
+crop_image выполнение 5 для ../map_samples/3.tif заняло 69006619.0000 наносекунд
+crop_image выполнение 6 для ../map_samples/3.tif заняло 69114259.0000 наносекунд
+crop_image выполнение 7 для ../map_samples/3.tif заняло 72405600.0000 наносекунд
+crop_image выполнение 8 для ../map_samples/3.tif заняло 69089584.0000 наносекунд
+crop_image выполнение 9 для ../map_samples/3.tif заняло 68987459.0000 наносекунд
+crop_image выполнение 10 для ../map_samples/3.tif заняло 67806065.0000 наносекунд
+Среднее время для ../map_samples/3.tif: 69820944.3000 наносекунд
+
+crop_image выполнение 1 для ../map_samples/7.tif заняло 309554473.0000 наносекунд
+crop_image выполнение 2 для ../map_samples/7.tif заняло 304702787.0000 наносекунд
+crop_image выполнение 3 для ../map_samples/7.tif заняло 306264530.0000 наносекунд
+crop_image выполнение 4 для ../map_samples/7.tif заняло 313657450.0000 наносекунд
+crop_image выполнение 5 для ../map_samples/7.tif заняло 301508972.0000 наносекунд
+crop_image выполнение 6 для ../map_samples/7.tif заняло 302544246.0000 наносекунд
+crop_image выполнение 7 для ../map_samples/7.tif заняло 302100877.0000 наносекунд
+crop_image выполнение 8 для ../map_samples/7.tif заняло 302131240.0000 наносекунд
+crop_image выполнение 9 для ../map_samples/7.tif заняло 302777522.0000 наносекунд
+crop_image выполнение 10 для ../map_samples/7.tif заняло 300918355.0000 наносекунд
+Среднее время для ../map_samples/7.tif: 304616045.2000 наносекунд
+
+crop_image выполнение 1 для ../map_samples/1.tif заняло 378541579.0000 наносекунд
+crop_image выполнение 2 для ../map_samples/1.tif заняло 380860724.0000 наносекунд
+crop_image выполнение 3 для ../map_samples/1.tif заняло 398506988.0000 наносекунд
+crop_image выполнение 4 для ../map_samples/1.tif заняло 399808643.0000 наносекунд
+crop_image выполнение 5 для ../map_samples/1.tif заняло 382674935.0000 наносекунд
+crop_image выполнение 6 для ../map_samples/1.tif заняло 385966716.0000 наносекунд
+crop_image выполнение 7 для ../map_samples/1.tif заняло 393404979.0000 наносекунд
+crop_image выполнение 8 для ../map_samples/1.tif заняло 383928088.0000 наносекунд
+crop_image выполнение 9 для ../map_samples/1.tif заняло 382103786.0000 наносекунд
+crop_image выполнение 10 для ../map_samples/1.tif заняло 412201680.0000 наносекунд
+Среднее время для ../map_samples/1.tif: 389799811.8000 наносекунд
+
+Среднее время обрезки: 781169973.7714 наносекунд
+compress выполнение 1 для ../map_samples/5.tif заняло 2877786664.0000 наносекунд
+compress выполнение 2 для ../map_samples/5.tif заняло 2839050848.0000 наносекунд
+compress выполнение 3 для ../map_samples/5.tif заняло 2850397041.0000 наносекунд
+compress выполнение 4 для ../map_samples/5.tif заняло 2839473025.0000 наносекунд
+compress выполнение 5 для ../map_samples/5.tif заняло 2856235943.0000 наносекунд
+compress выполнение 6 для ../map_samples/5.tif заняло 2850254764.0000 наносекунд
+compress выполнение 7 для ../map_samples/5.tif заняло 2837941300.0000 наносекунд
+compress выполнение 8 для ../map_samples/5.tif заняло 2864155677.0000 наносекунд
+compress выполнение 9 для ../map_samples/5.tif заняло 2863450307.0000 наносекунд
+compress выполнение 10 для ../map_samples/5.tif заняло 2837970445.0000 наносекунд
+Среднее время для ../map_samples/5.tif: 2851671601.4000 наносекунд
+
+compress выполнение 1 для ../map_samples/6.tif заняло 2958274824.0000 наносекунд
+compress выполнение 2 для ../map_samples/6.tif заняло 2937599810.0000 наносекунд
+compress выполнение 3 для ../map_samples/6.tif заняло 2925054687.0000 наносекунд
+compress выполнение 4 для ../map_samples/6.tif заняло 2931836817.0000 наносекунд
+compress выполнение 5 для ../map_samples/6.tif заняло 2931798803.0000 наносекунд
+compress выполнение 6 для ../map_samples/6.tif заняло 2906205305.0000 наносекунд
+compress выполнение 7 для ../map_samples/6.tif заняло 2901106816.0000 наносекунд
+compress выполнение 8 для ../map_samples/6.tif заняло 2900919816.0000 наносекунд
+compress выполнение 9 для ../map_samples/6.tif заняло 2903941045.0000 наносекунд
+compress выполнение 10 для ../map_samples/6.tif заняло 2930166421.0000 наносекунд
+Среднее время для ../map_samples/6.tif: 2922690434.4000 наносекунд
+
+compress выполнение 1 для ../map_samples/2.tif заняло 825933595.0000 наносекунд
+compress выполнение 2 для ../map_samples/2.tif заняло 822031625.0000 наносекунд
+compress выполнение 3 для ../map_samples/2.tif заняло 820635307.0000 наносекунд
+compress выполнение 4 для ../map_samples/2.tif заняло 820442486.0000 наносекунд
+compress выполнение 5 для ../map_samples/2.tif заняло 822597031.0000 наносекунд
+compress выполнение 6 для ../map_samples/2.tif заняло 820477026.0000 наносекунд
+compress выполнение 7 для ../map_samples/2.tif заняло 821749684.0000 наносекунд
+compress выполнение 8 для ../map_samples/2.tif заняло 821437348.0000 наносекунд
+compress выполнение 9 для ../map_samples/2.tif заняло 820815361.0000 наносекунд
+compress выполнение 10 для ../map_samples/2.tif заняло 821534791.0000 наносекунд
+Среднее время для ../map_samples/2.tif: 821765425.4000 наносекунд
+
+compress выполнение 1 для ../map_samples/8.tif заняло 3160754835.0000 наносекунд
+compress выполнение 2 для ../map_samples/8.tif заняло 3143332783.0000 наносекунд
+compress выполнение 3 для ../map_samples/8.tif заняло 3153321705.0000 наносекунд
+compress выполнение 4 для ../map_samples/8.tif заняло 3137706907.0000 наносекунд
+compress выполнение 5 для ../map_samples/8.tif заняло 3140737993.0000 наносекунд
+compress выполнение 6 для ../map_samples/8.tif заняло 3133272019.0000 наносекунд
+compress выполнение 7 для ../map_samples/8.tif заняло 3149216169.0000 наносекунд
+compress выполнение 8 для ../map_samples/8.tif заняло 3158574653.0000 наносекунд
+compress выполнение 9 для ../map_samples/8.tif заняло 3157688910.0000 наносекунд
+compress выполнение 10 для ../map_samples/8.tif заняло 3152135757.0000 наносекунд
+Среднее время для ../map_samples/8.tif: 3148674173.1000 наносекунд
+
+compress выполнение 1 для ../map_samples/3.tif заняло 144162368.0000 наносекунд
+compress выполнение 2 для ../map_samples/3.tif заняло 148583911.0000 наносекунд
+compress выполнение 3 для ../map_samples/3.tif заняло 143399065.0000 наносекунд
+compress выполнение 4 для ../map_samples/3.tif заняло 143524839.0000 наносекунд
+compress выполнение 5 для ../map_samples/3.tif заняло 143045565.0000 наносекунд
+compress выполнение 6 для ../map_samples/3.tif заняло 142731585.0000 наносекунд
+compress выполнение 7 для ../map_samples/3.tif заняло 142813229.0000 наносекунд
+compress выполнение 8 для ../map_samples/3.tif заняло 146075797.0000 наносекунд
+compress выполнение 9 для ../map_samples/3.tif заняло 144290831.0000 наносекунд
+compress выполнение 10 для ../map_samples/3.tif заняло 143846387.0000 наносекунд
+Среднее время для ../map_samples/3.tif: 144247357.7000 наносекунд
+
+compress выполнение 1 для ../map_samples/7.tif заняло 607153285.0000 наносекунд
+compress выполнение 2 для ../map_samples/7.tif заняло 612259171.0000 наносекунд
+compress выполнение 3 для ../map_samples/7.tif заняло 608254807.0000 наносекунд
+compress выполнение 4 для ../map_samples/7.tif заняло 608823141.0000 наносекунд
+compress выполнение 5 для ../map_samples/7.tif заняло 609782822.0000 наносекунд
+compress выполнение 6 для ../map_samples/7.tif заняло 606518900.0000 наносекунд
+compress выполнение 7 для ../map_samples/7.tif заняло 608057281.0000 наносекунд
+compress выполнение 8 для ../map_samples/7.tif заняло 608722264.0000 наносекунд
+compress выполнение 9 для ../map_samples/7.tif заняло 609916859.0000 наносекунд
+compress выполнение 10 для ../map_samples/7.tif заняло 607524754.0000 наносекунд
+Среднее время для ../map_samples/7.tif: 608701328.4000 наносекунд
+
+compress выполнение 1 для ../map_samples/1.tif заняло 804428540.0000 наносекунд
+compress выполнение 2 для ../map_samples/1.tif заняло 804106947.0000 наносекунд
+compress выполнение 3 для ../map_samples/1.tif заняло 814109201.0000 наносекунд
+compress выполнение 4 для ../map_samples/1.tif заняло 839290852.0000 наносекунд
+compress выполнение 5 для ../map_samples/1.tif заняло 812774005.0000 наносекунд
+compress выполнение 6 для ../map_samples/1.tif заняло 813162839.0000 наносекунд
+compress выполнение 7 для ../map_samples/1.tif заняло 810134737.0000 наносекунд
+compress выполнение 8 для ../map_samples/1.tif заняло 808118180.0000 наносекунд
+compress выполнение 9 для ../map_samples/1.tif заняло 813225470.0000 наносекунд
+compress выполнение 10 для ../map_samples/1.tif заняло 804933029.0000 наносекунд
+Среднее время для ../map_samples/1.tif: 812428380.0000 наносекунд
+
+Среднее время сжатия: 1615739756.2143 наносекунд
 ```
