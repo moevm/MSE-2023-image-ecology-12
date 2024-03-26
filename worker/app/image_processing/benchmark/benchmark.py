@@ -20,16 +20,16 @@ def benchmark(files, operation, *args, **kwargs):
     for file_path in files:
         input_bytes = read_geotiff(file_path)
 
-        start_time = time.time()
+        start_time = time.time_ns()
 
         output_bytes = operation(input_bytes, *args, **kwargs)
 
-        end_time = time.time()
+        end_time = time.time_ns()
 
         elapsed_time = end_time - start_time
         times.append(elapsed_time)
 
-        print(f"{operation.__name__} для {file_path} заняло {elapsed_time:.4f} секунд")
+        print(f"{operation.__name__} для {file_path} заняло {elapsed_time:.4f} наносекунд")
 
     return sum(times) / len(times)
 
@@ -38,7 +38,7 @@ if __name__ =="__main__":
     geotiff_files = glob.glob("../map_samples/*.tif")
 
     avg_crop_time = benchmark(geotiff_files, crop_image, 0, 0, 1000, 1000)
-    print(f"Среднее время обрезки: {avg_crop_time:.4f} секунд")
+    print(f"Среднее время обрезки: {avg_crop_time:.4f} наносекунд")
 
     avg_compress_time = benchmark(geotiff_files, compress)
-    print(f"Среднее время сжатия: {avg_compress_time:.4f} секунд")
+    print(f"Среднее время сжатия: {avg_compress_time:.4f} наносекунд")
