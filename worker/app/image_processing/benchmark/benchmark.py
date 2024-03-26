@@ -34,10 +34,11 @@ def benchmark(files, operation, *args, **kwargs):
     return sum(times) / len(times)
 
 
-geotiff_files = glob.glob("../map_samples/*.tif")
+if __name__ =="__main__":
+    geotiff_files = glob.glob("../map_samples/*.tif")
 
-avg_crop_time = benchmark(geotiff_files, crop_image, 0, 0, 1000, 1000)
-print(f"Среднее время обрезки: {avg_crop_time:.4f} секунд")
+    avg_crop_time = benchmark(geotiff_files, crop_image, 0, 0, 1000, 1000)
+    print(f"Среднее время обрезки: {avg_crop_time:.4f} секунд")
 
-avg_compress_time = benchmark(geotiff_files, compress)
-print(f"Среднее время сжатия: {avg_compress_time:.4f} секунд")
+    avg_compress_time = benchmark(geotiff_files, compress)
+    print(f"Среднее время сжатия: {avg_compress_time:.4f} секунд")
