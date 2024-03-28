@@ -30,8 +30,10 @@ def slice(img_id: str):
 
     # Нарезаем на фрагменты.
     sliceToTiles(
-        img_id, image_bytes, f'./{img_id}',
-        optionsSliceToTiles={"nb_processes": max(1, multiprocessing.cpu_count() // (1 + slicers))}
+        img_id,
+        image_bytes,
+        f'./{img_id}',
+        optionsSliceToTiles={"nb_processes": max(1, multiprocessing.cpu_count() // (1 + slicers))},
     )
 
     # Удаляем фрагменты, если они уже были в GridFS.
@@ -53,13 +55,15 @@ def slice(img_id: str):
                         image_id=ObjectId(img_id),
                         z=int(path[1]),
                         x=int(path[2]),
-                        y=int(file.split('.')[0])
+                        y=int(file.split('.')[0]),
                     )
 
     # Добавляем данные для отображения изображения.
     with open(f'{img_id}/tilemapresource.xml', "r") as f:
         xml_content = f.read()
-        db.images.update_one({"_id": image_info["_id"]}, {"$set": {"tile_map_resource": xml_content}})
+        db.images.update_one(
+            {"_id": image_info["_id"]}, {"$set": {"tile_map_resource": xml_content}}
+        )
 
     # Удаляем временную папку с слайсами.
     for root, dirs, files in os.walk(img_id, topdown=False):

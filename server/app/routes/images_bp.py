@@ -26,13 +26,15 @@ images_bp = Blueprint('images_bp', __name__, url_prefix="/images")
 def get_images_list():
     images = []
     for img in db.images.find({}):
-        images.append({
-            "id": str(img["_id"]),
-            "name": img["name"],
-            'size': map_fs.find_one({'_id': img["fs_id"]}).length,
-            "ready": img["ready"],
-            "sliced": img["sliced"]
-        })
+        images.append(
+            {
+                "id": str(img["_id"]),
+                "name": img["name"],
+                'size': map_fs.find_one({'_id': img["fs_id"]}).length,
+                "ready": img["ready"],
+                "sliced": img["sliced"],
+            }
+        )
 
     return images
 
@@ -57,19 +59,22 @@ def add_image():
         "forest_polygon": None,
         "name": img_name,
         'ready': False,
-        'sliced': False
+        'sliced': False,
     }
 
     result = db.images.insert_one(item)
     img_id = result.inserted_id
 
-    redis.hset(f'queue:{img_id}', mapping={
-        'id': str(img_id),
-        'progress': 0,
-        'name': img_name,
-        'uploadDate': datetime.now().isoformat(),
-        'status': 'enqueued'
-    })
+    redis.hset(
+        f'queue:{img_id}',
+        mapping={
+            'id': str(img_id),
+            'progress': 0,
+            'name': img_name,
+            'uploadDate': datetime.now().isoformat(),
+            'status': 'enqueued',
+        },
+    )
 
     redis.hset(f'slice_queue:{img_id}', mapping={'id': str(img_id)})
 
@@ -82,7 +87,7 @@ def add_image():
 @images_bp.route('/delete_image/<string:img_id>', methods=['DELETE'])
 def delete_image(img_id):
     image_info = db.images.find_one(ObjectId(img_id))
-    if (image_info):
+    if image_info:
         fs_id = image_info["fs_id"]
 
         db.images.delete_one({"_id": ObjectId(img_id)})
@@ -116,7 +121,7 @@ def get_image(img_id):
 @images_bp.route('/forest/<string:img_id>', methods=['GET'])
 def get_image_forest(img_id):
     image_info = db.images.find_one(ObjectId(img_id))["forest_polygon"]
-    if (image_info is None):
+    if image_info is None:
         abort(404)
     else:
         return image_info
