@@ -64,7 +64,6 @@ def pipeline():
 
     for file_name in listdir("./satellite_images"):
         with open(f'./satellite_images/{file_name}', 'rb') as file:
-            # Считываем содержимое файла в переменную data
             data = file.read()
         file_id = map_fs.put(data, filename=file_name, chunk_size=256 * 1024)
         item = {
