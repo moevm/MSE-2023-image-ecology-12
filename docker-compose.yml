@@ -19,7 +19,7 @@ services:
     build:
       context: worker
     entrypoint: celery
-    command: -A app worker -Q image_process,dev --loglevel=ERROR -c 4
+    command: -A app worker -Q image_process,dev,pipeline --loglevel=ERROR -c 4
     depends_on:
       - redis
       - mongo
@@ -52,7 +52,8 @@ services:
       FLASK_PORT: 80
       MONGO_URI: "mongodb://mongo:27017/db"
       REDIS_URI: "redis://redis:6379/0"
-      DEBUG: False
+      DEBUG: True
+      FLASK_DEBUG: 1
     depends_on:
       - celery-image
       - celery-slice
