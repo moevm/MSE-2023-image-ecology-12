@@ -1,4 +1,6 @@
 import time
+import shutil
+import os
 from os import listdir, makedirs
 
 from abc import ABC, abstractmethod
@@ -62,8 +64,9 @@ def pipeline():
 
     Downloader(username, password, None, None, None).download_images()
 
-    for file_name in listdir("./satellite_images"):
-        with open(f"./satellite_images/{file_name}", "rb") as file:
+    folder_path = "./satellite_images"
+    for file_name in listdir(folder_path):
+        with open(f"{folder_path}/{file_name}", "rb") as file:
             data = file.read()
         file_id = map_fs.put(data, filename=file_name, chunk_size=256 * 1024)
         item = {
@@ -97,5 +100,8 @@ def pipeline():
         update(30)
         time.sleep(10)
         redis.delete(f"slice_queue:{img_id}")
+    if os.path.exists(folder_path) and os.path.isdir(folder_path):
+        # Удаляем папку и все содержимое
+        shutil.rmtree(folder_path)
     # raise Exception(f">>>>>>>>>>>>>>>>>>>>>>>>>>>test<<<<<<<<<<<<<<<< {len(cropped_byte)}")
     return "Done"
