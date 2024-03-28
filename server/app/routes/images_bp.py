@@ -9,11 +9,8 @@ from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 import io
 
-from app.tasks import (
-    slice,
-    thresholding_otsu,
-    pipeline,
-)
+from app.tasks import slice
+from app.tasks import thresholding_otsu
 
 from app import socketio
 
