@@ -40,6 +40,7 @@ disable=
     unspecified-encoding,
     wrong-import-position,
     inconsistent-return-statements,
+    import-self,
     cyclic-import
 
 enable=
