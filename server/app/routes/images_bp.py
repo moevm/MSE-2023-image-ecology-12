@@ -1,18 +1,13 @@
+import io
 from datetime import datetime
 
-from flask import Blueprint, jsonify, request, send_file, abort
-from redis.client import StrictRedis
-
-from app.db import get_db, get_tile_fs, get_map_fs, get_redis
-
-from werkzeug.local import LocalProxy
-from bson.objectid import ObjectId
-import io
-
-from app.tasks import slice
-from app.tasks import thresholding_otsu
-
 from app import socketio
+from app.db import get_db, get_map_fs, get_redis, get_tile_fs
+from app.tasks import slice, thresholding_otsu
+from bson.objectid import ObjectId
+from flask import Blueprint, abort, jsonify, request, send_file
+from redis.client import StrictRedis
+from werkzeug.local import LocalProxy
 
 db = LocalProxy(get_db)
 tile_fs = LocalProxy(get_tile_fs)
@@ -107,8 +102,7 @@ def get_tile(img_id, z, x, y):
     tile = tile_fs.find_one({'image_id': ObjectId(img_id), 'z': z, 'x': x, 'y': y})
     if tile:
         return send_file(io.BytesIO(tile.read()), mimetype='image/png')
-    else:
-        return 'OK'
+    return 'OK'
 
 
 @images_bp.route('/<string:img_id>', methods=['GET'])

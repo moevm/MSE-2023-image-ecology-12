@@ -1,7 +1,7 @@
+from app import app, socketio
+from app.db import get_redis
 from redis.client import StrictRedis
 from werkzeug.local import LocalProxy
-from app import socketio, app
-from app.db import get_redis
 
 redis: StrictRedis = LocalProxy(get_redis)
 

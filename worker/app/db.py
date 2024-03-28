@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 
-import redis
 import pymongo.database
+import redis
+from app import config
 from celery.signals import worker_process_init, worker_process_shutdown
 from gridfs import GridFS
-
-from app import config
 
 
 @dataclass

@@ -1,6 +1,5 @@
 import rasterio.warp
 from rasterio.crs import CRS
-from rasterio.io import MemoryFile
 
 
 class CoordintesTransformer:
@@ -24,9 +23,8 @@ class CoordintesTransformer:
             )
             # return [lattitude, longitude]
             return long_lat[1][0], long_lat[0][0]
-        else:
-            # return [lattitude, longitude]
-            return xy_in_image_crs[1], xy_in_image_crs[0]
+        # return [lattitude, longitude]
+        return xy_in_image_crs[1], xy_in_image_crs[0]
 
     def close(self):
         self.image.close()

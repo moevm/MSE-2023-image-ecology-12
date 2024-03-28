@@ -1,6 +1,6 @@
 import time
-import schedule
 
+import schedule
 from download_images import downloader
 
 

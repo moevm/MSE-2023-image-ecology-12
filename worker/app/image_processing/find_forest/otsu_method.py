@@ -45,7 +45,7 @@ def otsu_method(image_RGB, update):
     blurred_image = cv2.GaussianBlur(gray, (5, 5), 0)
     update(15)
 
-    otsu_threshold, image_result = cv2.threshold(
+    _, image_result = cv2.threshold(
         blurred_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU
     )
     update(20)
@@ -58,7 +58,7 @@ def otsu_method(image_RGB, update):
     update(30)
 
     # Find the contours in the input image
-    contours, hierarchy = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
+    contours, _ = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
     update(35)
 
     return contours

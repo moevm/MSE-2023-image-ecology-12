@@ -1,5 +1,6 @@
-from os import listdir, makedirs
 import getpass
+from os import listdir, makedirs
+
 import asf_search as asf
 
 
