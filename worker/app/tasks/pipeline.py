@@ -50,8 +50,8 @@ class AlaskaImageDownloader(ImageDownloader):
 
 
 Downloader = AlaskaImageDownloader
-username = ''
-password = ''
+username = ""
+password = ""
 
 
 @app.task(name="pipeline", queue="pipeline")
@@ -63,7 +63,7 @@ def pipeline():
     Downloader(username, password, None, None, None).download_images()
 
     for file_name in listdir("./satellite_images"):
-        with open(f'./satellite_images/{file_name}', 'rb') as file:
+        with open(f"./satellite_images/{file_name}", "rb") as file:
             data = file.read()
         file_id = map_fs.put(data, filename=file_name, chunk_size=256 * 1024)
         item = {
@@ -88,14 +88,14 @@ def pipeline():
         image_bytes = map_fs.get(ObjectId(image_info["fs_id"])).read()
         time.sleep(10)
         update(10)
-        # redis.hset(queue_item, 'status', 'compressing')
+        # redis.hset(queue_item, "status", "compressing")
         compresses_bytes = compress(image_bytes)
         time.sleep(10)
         update(20)
-        # redis.hset(queue_item, 'status', 'cropping')
+        # redis.hset(queue_item, "status", "cropping")
         cropped_byte = crop_image(compresses_bytes, 0, 0, 100, 100)
         update(30)
         time.sleep(10)
         redis.delete(f"slice_queue:{img_id}")
-    # raise Exception(f'>>>>>>>>>>>>>>>>>>>>>>>>>>>test<<<<<<<<<<<<<<<< {len(cropped_byte)}')
+    # raise Exception(f">>>>>>>>>>>>>>>>>>>>>>>>>>>test<<<<<<<<<<<<<<<< {len(cropped_byte)}")
     return "Done"
