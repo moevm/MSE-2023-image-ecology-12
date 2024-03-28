@@ -78,7 +78,6 @@ def add_image():
 
     slice.delay(str(img_id))
     thresholding_otsu.delay(str(img_id))
-    pipeline.delay(str(img_id))
 
     return jsonify({'message': 'Image added successfully'})
 

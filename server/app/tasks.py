@@ -22,5 +22,5 @@ def slice(fs_id):
 
 
 @app.task(name='pipeline', queue='pipeline')
-def pipeline(fs_id):
+def pipeline():
     pass
