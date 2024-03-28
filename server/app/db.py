@@ -1,8 +1,8 @@
 import pymongo
 import redis
+from flask import current_app as app
 from flask import g
 from gridfs import GridFS
-from flask import current_app as app
 
 
 def get_db():

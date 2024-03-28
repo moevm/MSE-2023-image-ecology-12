@@ -1,0 +1,65 @@
+[BASIC]
+
+argument-naming-style=snake_case
+attr-naming-style=snake_case
+
+bad-names=
+    foo,
+    bar,
+    baz,
+    toto,
+    tutu,
+    tata
+
+
+[MESSAGES CONTROL]
+disable=
+    fixme,
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    missing-docstring,
+    import-error,
+    protected-access,
+    invalid-name,
+    no-name-in-module,
+    redefined-outer-name,
+    no-member,
+    unused-argument,
+    redefined-builtin,
+    unnecessary-lambda-assignment,
+    unspecified-encoding,
+    wrong-import-position,
+    inconsistent-return-statements,
+    import-self,
+    cyclic-import
+
+enable=
+    unused-import,
+    missing-final-newline,
+    line-too-long,
+    wrong-import-order,
+    wildcard-import,
+    trailing-whitespace,
+    unused-wildcard-import,
+    trailing-newlines,
+    singleton-comparison,
+    unused-variable,
+    no-else-return,
+    f-string-without-interpolation,
+    ungrouped-imports,
+    too-many-arguments,
+    consider-using-with,
+    simplifiable-condition,
+    reimported,
+    super-with-arguments
+
+[FORMAT]
+max-line-length=150
+max-module-lines=1000
+
+[DESIGN]
+max-args=9
+max-branches=12
+max-returns=6
+max-locals=20

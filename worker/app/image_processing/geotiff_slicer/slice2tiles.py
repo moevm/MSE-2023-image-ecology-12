@@ -4,11 +4,11 @@ from osgeo import gdal
 
 # -b это слой, который берем, порядок слоев 1, 2, 3 так как sample.tif в формате rgb.
 def sliceToTiles(
-        geotiffName,
-        geotiffBytes,
-        slicesOutputPath,
-        optionsTranslate=['-if GTiff', '-ot Byte', '-b 1', '-b 2', '-b 3', '-of vrt', '-scale'],
-        optionsSliceToTiles={"nb_processes": 1}
+    geotiffName,
+    geotiffBytes,
+    slicesOutputPath,
+    optionsTranslate=None,
+    optionsSliceToTiles=None,
 ):
     """
     Function that prepares and cuts a geotiff file into fragments that are available for display in leaflet.js.
@@ -17,6 +17,9 @@ def sliceToTiles(
     - optionsTranslate - list of options for gdal_translate (Translate options to convert 16 bit images to 8 bit).
     - optionsSliceToTiles - dict of options for slicing (for gdal2tiles).
     """
+    optionsTranslate = optionsTranslate or ['-if GTiff', '-ot Byte', '-b 1', '-b 2', '-b 3', '-of vrt', '-scale']
+    optionsSliceToTiles = optionsSliceToTiles or {"nb_processes": 1}
+
     gdal.FileFromMemBuffer(f"/vsimem/{geotiffName}.tiff", geotiffBytes)
     image = gdal.Open(f"/vsimem/{geotiffName}.tiff")
 

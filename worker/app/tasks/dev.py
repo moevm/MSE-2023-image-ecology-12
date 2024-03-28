@@ -1,5 +1,4 @@
 from app import app
-from app.tasks.image_process import thresholding_otsu
 from app.db import local
 
 
@@ -7,4 +6,3 @@ from app.db import local
 def delete_all_data_in_db_and_fs():
     local.db.client.drop_database('ecologyDB')
     print('All database data deleted.')
-
