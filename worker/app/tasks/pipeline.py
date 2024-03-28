@@ -101,7 +101,6 @@ def pipeline():
         time.sleep(10)
         redis.delete(f"slice_queue:{img_id}")
     if os.path.exists(folder_path) and os.path.isdir(folder_path):
-        # Удаляем папку и все содержимое
         shutil.rmtree(folder_path)
     # raise Exception(f">>>>>>>>>>>>>>>>>>>>>>>>>>>test<<<<<<<<<<<<<<<< {len(cropped_byte)}")
     return "Done"
