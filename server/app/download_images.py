@@ -7,29 +7,31 @@ def downloader(username: str, password: str, start_date: str, end_date: str, pol
     session = asf.ASFSession().auth_with_creds(username=username, password=password)
 
     results = asf.geo_search(
-        intersectsWith=polygon or 'POLYGON((-91.97 28.78,-88.85 28.78,-88.85 30.31,-91.97 30.31,-91.97 28.78))',
-        platform=asf.PLATFORM.UAVSAR,
-        start=start_date or '2010-01-01',
-        end=end_date or '2010-02-01',
-        processingLevel=asf.PRODUCT_TYPE.METADATA,
-        maxResults=20,
+        intersectsWith=polygon or 'POLYGON((29.9569 59.9958,30.1349 59.9958,30.1349 60.0508,29.9569 60.0508,29.9569 59.9958))',
+        platform=asf.PLATFORM.SENTINEL1,
+        start=start_date or '2024-01-01',
+        end=end_date or '2024-01-31',
+        maxResults=2,
     )
 
+    print(results)
     makedirs('./satellite_images', exist_ok=True)
+
     results.download(
         path='./satellite_images',
         session=session,
-        processes=10
     )
-
-    listdir('./satellite_images')
+    print(listdir('./satellite_images'))
 
 
 if __name__ == '__main__':
     print('Downloader satellite images from web resource search.asf.alaska.edu')
-    username = input('Username:')
-    password = getpass.getpass('Password:')
-    start_date = input('Start date [sample: 2020-12-31 leave it blank for default]:')
-    end_date = input('End date [sample: 2021-01-31 leave it blank for default]:')
-    polygon = input('Enter polygin [sample: POLYGON((-91.97 28.78,-88.85 28.78,-88.85 30.31,-91.97 30.31,-91.97 28.78)) leave it blank for default]:')
-    downloader(username, password, start_date, end_date, polygon)
+    username = "etu_alaska_downloader"
+    password = "=;E46x?-X~kcr!%"
+
+    # username = input('Username:')
+    # password = getpass.getpass('Password:')
+    # start_date = input('Start date [sample: 2024-01-01 leave it blank for default]:')
+    # end_date = input('End date [sample: 2024-01-31 leave it blank for default]:')
+    # polygon = input('Enter polygin [sample: POLYGON((29.9569 59.9958,30.1349 59.9958,30.1349 60.0508,29.9569 60.0508,29.9569 59.9958)) leave it blank for default]:')
+    downloader(username, password, None, None, None, )

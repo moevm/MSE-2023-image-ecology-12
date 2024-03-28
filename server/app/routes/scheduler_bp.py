@@ -28,7 +28,6 @@ redis: StrictRedis = LocalProxy(get_redis)
 
 scheduler_bp = Blueprint('scheluler', __name__, url_prefix="/scheduler")
 
-tasks = []
 
 @scheduler_bp.route('/schedule', methods=['POST'])
 def schedule_task():

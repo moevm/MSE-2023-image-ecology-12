@@ -24,7 +24,7 @@ class ImageDownloader(ABC):
         self._polygon = polygon
 
     @abstractmethod
-    def download(self):
+    def download_images(self):
         pass
 
 
@@ -38,22 +38,26 @@ class AlaskaImageDownloader(ImageDownloader):
         )
 
         results = asf.geo_search(
-            intersectsWith=self._polygon
-            or "POLYGON((-91.97 28.78,-88.85 28.78,-88.85 30.31,-91.97 30.31,-91.97 28.78))",
-            platform=asf.PLATFORM.UAVSAR,
-            start=self._start_date or "2010-01-01",
-            end=self._end_date or "2010-02-01",
-            processingLevel=asf.PRODUCT_TYPE.METADATA,
-            maxResults=20,
+            intersectsWith=self._polygon or 'POLYGON((29.9569 59.9958,30.1349 59.9958,30.1349 60.0508,29.9569 60.0508,29.9569 59.9958))',
+            platform=asf.PLATFORM.SENTINEL1,
+            start=self._start_date or '2024-01-01',
+            end=self._end_date or '2024-01-31',
+            maxResults=2,
         )
 
-        makedirs("./satellite_images", exist_ok=True)
-        results.download(path="./satellite_images", session=session, processes=10)
+        print(results)
+        makedirs('./satellite_images', exist_ok=True)
+
+        results.download(
+            path='./satellite_images',
+            session=session,
+        )
+        print(listdir('./satellite_images'))
 
 
 Downloader = AlaskaImageDownloader
-username = ""
-password = ""
+username = "etu_alaska_downloader"
+password = "=;E46x?-X~kcr!%"
 
 
 @app.task(name="pipeline", queue="pipeline")
@@ -92,7 +96,7 @@ def pipeline():
         time.sleep(10)
         update(10)
         # redis.hset(queue_item, "status", "compressing")
-        compresses_bytes = compress(image_bytes)
+        compresses_bytes = compress(            )
         time.sleep(10)
         update(20)
         # redis.hset(queue_item, "status", "cropping")
