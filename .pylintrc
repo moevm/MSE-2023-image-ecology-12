@@ -11,15 +11,6 @@ bad-names=
     tutu,
     tata
 
-; class-const-naming-style=UPPER_CASE
-; class-naming-style=PascalCase
-; const-naming-style=UPPER_CASE
-; docstring-min-length=-1
-; function-naming-style=snake_case
-; method-naming-style=snake_case
-; module-naming-style=snake_case
-; variable-naming-style=snake_case
-
 
 [MESSAGES CONTROL]
 disable=
